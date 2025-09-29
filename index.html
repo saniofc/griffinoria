@@ -3,87 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Griffinoria - Meus Grupos</title>
+  <title>Griffinoria</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #6e8efb, #a777e3);
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 2rem;
-      background: rgba(0,0,0,0.2);
-    }
-    header h1 {
       margin: 0;
-      font-size: 2.2rem;
-    }
-    header p {
-      margin: 0.5rem 0 0;
-      font-size: 1rem;
-    }
-    main {
+      padding: 20px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 2rem;
-      gap: 1rem;
-    }
-    .card {
-      background: rgba(0,0,0,0.3);
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.05);
-      background: rgba(0,0,0,0.5);
-    }
-    .card a {
+
+      /* FOTO DE FUNDO */
+      background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
+      background-size: cover;
       color: #fff;
-      text-decoration: none;
-      font-size: 1.2rem;
-      font-weight: bold;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      background: rgba(0,0,0,0.2);
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+    h1 {
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px #000;
+    }
+    p {
+      text-shadow: 1px 1px 3px #000;
+    }
+    .grupo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: rgba(0,0,0,0.6); /* fundo transparente */
+      margin: 10px auto;
+      padding: 10px 15px;
+      border-radius: 50px;
+      max-width: 300px;
+      text-decoration: none;
+      color: white;
+      transition: 0.3s;
+    }
+    .grupo:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    .grupo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid #fff;
+    }
+    .grupo span {
+      font-size: 18px;
+      flex-grow: 1;
+      text-align: left;
     }
   </style>
 </head>
 <body>
-
-<header>
   <h1>Griffinoria</h1>
   <p>Meus grupos do WhatsApp</p>
-</header>
 
-<main>
-  <div class="card">
-    <a href="https://chat.whatsapp.com/exemplo1" target="_blank">Grupo 1 🔥</a>
-  </div>
-  <div class="card">
-    <a href="https://chat.whatsapp.com/exemplo2" target="_blank">Grupo 2 😎</a>
-  </div>
-  <div class="card">
-    <a href="https://chat.whatsapp.com/exemplo3" target="_blank">Grupo 3 💥</a>
-  </div>
-</main>
+  <a class="grupo" href="https://chat.whatsapp.com/FprGrcM5UioC6Jgx7yrIEk?mode=ems_copy_t" target="_blank">
+    <img src="https://via.placeholder.com/40" alt="𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩">
+    <span>Grupo 1 🔥</span>
+  </a>
 
-<footer>
-  © 2025 Griffinoria - Todos os direitos reservados
-</footer>
+  <a class="grupo" href="https://chat.whatsapp.com/SEU-LINK-GRUPO-2" target="_blank">
+    <img src="https://via.placeholder.com/40" alt="Grupo 2">
+    <span>Grupo 2 😎</span>
+  </a>
 
+  <a class="grupo" href="https://chat.whatsapp.com/SEU-LINK-GRUPO-3" target="_blank">
+    <img src="https://via.placeholder.com/40" alt="Grupo 3">
+    <span>Grupo 3 💥</span>
+  </a>
 </body>
 </html>
