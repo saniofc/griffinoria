@@ -9,6 +9,10 @@ const chalk = require('chalk');
 const yts = require("yt-search");
 const { downloadMediaMessage, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const os = require('os');
+
+// Adicione no topo do index.js, só pra Render parar de procurar porta
+const http = require('http');
+http.createServer((req, res) => res.end("Bot ativo!")).listen(process.env.PORT || 3000);
 // ============== CONFIGS ======================= //
 let sock;
 
