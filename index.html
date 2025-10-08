@@ -3,149 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GruposWhats</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/feather-icons"></script>
+<title>Griffinoria - Grupos WhatsApp</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <style>
-body { font-family: 'Inter', sans-serif; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 999px; }
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f0f0f0; }
+  header { background: #4CAF50; color: white; padding: 15px; text-align: center; }
+  nav { display: flex; justify-content: center; margin: 15px 0; }
+  nav button { margin: 0 10px; padding: 10px 20px; cursor: pointer; }
+  main { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
+  input[type="text"] { width: 70%; padding: 10px; margin-right: 10px; }
+  button.send { padding: 10px; }
+  .group { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+  footer { text-align: center; padding: 20px; margin-top: 20px; font-size: 14px; color: #555; background: #eee; }
 </style>
 </head>
-<body class="bg-gray-50">
+<body>
 
-<!-- HEADER -->
-<header class="bg-white shadow sticky top-0 z-30">
-  <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-    <div class="flex flex-col md:flex-row items-center gap-3">
-      <div class="text-2xl font-extrabold">Grupos<span class="text-indigo-600">Whats</span></div>
-      <div class="text-sm text-gray-500">Encontre e compartilhe grupos de WhatsApp</div>
-    </div>
-    <div class="flex-1 max-w-xl w-full mt-2 md:mt-0">
-      <div class="relative">
-        <input id="searchInput" type="text" placeholder="Pesquisar grupos, ex: React, descontos..." class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-200 rounded-md py-2 pl-10 pr-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
-        <svg class="absolute left-3 top-2.5 w-5 h-5 text-slate-400" data-feather="search"></svg>
-      </div>
-    </div>
-    <div class="flex items-center gap-2 mt-2 md:mt-0">
-      <button id="openModal" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700">
-        <svg class="w-5 h-5" data-feather="plus-circle"></svg> Enviar grupo
-      </button>
-    </div>
-  </div>
-  <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto" id="categoryFilter"></div>
+<header>
+  <h1>Griffinoria - Grupos WhatsApp</h1>
 </header>
 
-<!-- MAIN -->
-<main class="max-w-6xl mx-auto px-4 py-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="groupsGrid"></div>
-  <footer class="mt-12 text-sm text-gray-500 text-center">
-    © <span id="year"></span> GruposWhats Clone
-  </footer>
+<nav>
+  <button onclick="showPage('home')">Página Inicial</button>
+  <button onclick="showPage('meusGrupos')">Meus Grupos</button>
+</nav>
+
+<main>
+  <!-- Página Inicial -->
+  <div id="homePage">
+    <h2>Todos os grupos</h2>
+    <div id="allGroups"></div>
+  </div>
+
+  <!-- Meus Grupos -->
+  <div id="meusGruposPage" style="display:none;">
+    <h2>Meus grupos enviados</h2>
+    <input type="text" id="groupLink" placeholder="Cole o link do grupo WhatsApp">
+    <button class="send" onclick="sendGroup()">Enviar Grupo</button>
+    <div id="myGroups"></div>
+  </div>
 </main>
 
-<!-- MODAL -->
-<div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-2xl w-full max-w-xl p-6">
-    <h4 class="text-lg font-semibold">Enviar novo grupo</h4>
-    <form id="groupForm" class="mt-4 grid gap-3">
-      <input type="text" id="groupTitle" placeholder="Título" class="w-full border border-slate-200 rounded-md p-2" required>
-      <input type="text" id="groupLink" placeholder="Link do WhatsApp (https://chat.whatsapp.com/...)" class="w-full border border-slate-200 rounded-md p-2" required>
-      <input type="text" id="groupDesc" placeholder="Descrição curta" class="w-full border border-slate-200 rounded-md p-2">
-      <select id="groupCategory" class="w-full border border-slate-200 rounded-md p-2">
-        <option value="Compras">Compras</option>
-        <option value="Educação">Educação</option>
-        <option value="Trabalho">Trabalho</option>
-        <option value="Saúde">Saúde</option>
-        <option value="Entretenimento">Entretenimento</option>
-        <option value="Outros">Outros</option>
-      </select>
-      <div class="flex justify-end gap-2 mt-2">
-        <button type="button" id="closeModal" class="px-4 py-2 rounded-md border">Cancelar</button>
-        <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white">Enviar</button>
-      </div>
-    </form>
-  </div>
-</div>
+<footer>
+  Blog · Termos de Uso · Política de Privacidade · FAQ<br>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
+  TODOS OS DIREITOS RESERVADOS
+</footer>
 
 <script>
-  feather.replace();
-  document.getElementById('year').innerText = new Date().getFullYear();
-
-  const initialGroups = [
-    { id:1, title:'Ofertas e Promoções', desc:'Promoções do dia — descontos e cupons', category:'Compras', members:1245, link:'#' },
-    { id:2, title:'Estudos de React', desc:'Grupo para tirar dúvidas e compartilhar materiais', category:'Educação', members:842, link:'#' },
-    { id:3, title:'Vagas e Freelance', desc:'Oportunidades remotas e presenciais', category:'Trabalho', members:2300, link:'#' },
-    { id:4, title:'Fitness e Saúde', desc:'Treinos, dieta e motivação', category:'Saúde', members:512, link:'#' },
-    { id:5, title:'Memes e Alegria', desc:'Compartilhe memes e zoeiras', category:'Entretenimento', members:3300, link:'#' }
-  ];
-
-  let groups = [...initialGroups];
-  const categories = ['Todos','Compras','Educação','Trabalho','Saúde','Entretenimento','Outros'];
-  const groupsGrid = document.getElementById('groupsGrid');
-  const categoryFilter = document.getElementById('categoryFilter');
-  const searchInput = document.getElementById('searchInput');
-
-  function renderCategories(selected='Todos'){
-    categoryFilter.innerHTML='';
-    categories.forEach(cat=>{
-      const btn=document.createElement('button');
-      btn.innerText=cat;
-      btn.className=`whitespace-nowrap px-3 py-1 rounded-full text-sm ${cat===selected?'bg-indigo-600 text-white':'bg-white text-gray-700 border border-slate-200'}`;
-      btn.onclick=()=>{ renderCategories(cat); renderGroups(); };
-      categoryFilter.appendChild(btn);
-    });
-  }
-
-  function renderGroups(){
-    const query=searchInput.value.toLowerCase();
-    const selectedCat=Array.from(categoryFilter.children).find(btn=>btn.classList.contains('bg-indigo-600'))?.innerText||'Todos';
-    groupsGrid.innerHTML='';
-    const filtered=groups.filter(g=>(g.title+g.desc).toLowerCase().includes(query)&&(selectedCat==='Todos'?true:g.category===selectedCat));
-    if(filtered.length===0){ groupsGrid.innerHTML='<div class="col-span-full text-center text-gray-500 py-16">Nenhum grupo encontrado.</div>'; return; }
-    filtered.forEach(g=>{
-      const card=document.createElement('article');
-      card.className='bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition';
-      card.innerHTML=`
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <h3 class="text-lg font-semibold">${g.title}</h3>
-            <p class="text-sm text-gray-600 mt-1">${g.desc}</p>
-          </div>
-          <div class="text-right">
-            <div class="text-xs text-gray-500">${g.category}</div>
-            <div class="text-sm font-medium mt-2">${g.members.toLocaleString()} membros</div>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center gap-2">
-          <button class="flex-1 inline-flex items-center justify-center gap-2 border border-slate-200 rounded-md px-3 py-2 text-sm hover:bg-slate-50" onclick="navigator.clipboard.writeText('${g.link}') && alert('Link copiado!')">
-            Copiar link
-          </button>
-          <a href="${g.link}" target="_blank" class="inline-flex items-center gap-2 border border-transparent rounded-md px-3 py-2 text-sm bg-indigo-600 text-white hover:bg-indigo-700">Entrar</a>
-        </div>
-      `;
-      groupsGrid.appendChild(card);
-    });
-  }
-
-  renderCategories();
-  renderGroups();
-  searchInput.addEventListener('input', renderGroups);
-
-  const modal=document.getElementById('modal');
-  document.getElementById('openModal').onclick=()=>modal.classList.remove('hidden');
-  document.getElementById('closeModal').onclick=()=>modal.classList.add('hidden');
-  document.getElementById('groupForm').onsubmit=(e)=>{
-    e.preventDefault();
-    const title=document.getElementById('groupTitle').value;
-    const desc=document.getElementById('groupDesc').value;
-    const category=document.getElementById('groupCategory').value;
-    const link=document.getElementById('groupLink').value;
-    groups.unshift({id:Date.now(),title,desc,category,members:0,link});
-    modal.classList.add('hidden');
-    e.target.reset();
-    renderGroups();
+  // Configuração Firebase
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_DOMINIO.firebaseapp.com",
+    projectId: "SEU_PROJECT_ID",
+    storageBucket: "SEU_PROJECT_ID.appspot.com",
+    messagingSenderId: "SEU_MESSAGING_ID",
+    appId: "SEU_APP_ID"
   };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Gerar um ID de usuário temporário
+  let userId = localStorage.getItem('userId');
+  if(!userId){
+    userId = 'user-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('userId', userId);
+  }
+
+  function showPage(page){
+    document.getElementById('homePage').style.display = page === 'home' ? 'block' : 'none';
+    document.getElementById('meusGruposPage').style.display = page === 'meusGrupos' ? 'block' : 'none';
+  }
+
+  function sendGroup(){
+    const link = document.getElementById('groupLink').value.trim();
+    if(!link.includes("chat.whatsapp.com")){
+      alert("Só é permitido enviar links de grupos WhatsApp!");
+      return;
+    }
+    db.collection('groups').add({
+      user: userId,
+      link: link,
+      timestamp: Date.now()
+    }).then(() => {
+      document.getElementById('groupLink').value = '';
+      loadMyGroups();
+      loadAllGroups();
+    });
+  }
+
+  function loadAllGroups(){
+    const allDiv = document.getElementById('allGroups');
+    allDiv.innerHTML = '';
+    db.collection('groups').orderBy('timestamp', 'desc').get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement('div');
+        div.className = 'group';
+        div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
+        allDiv.appendChild(div);
+      });
+    });
+  }
+
+  function loadMyGroups(){
+    const myDiv = document.getElementById('myGroups');
+    myDiv.innerHTML = '';
+    db.collection('groups').where('user','==',userId).orderBy('timestamp','desc').get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement('div');
+        div.className = 'group';
+        div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
+        myDiv.appendChild(div);
+      });
+    });
+  }
+
+  loadAllGroups();
+  loadMyGroups();
 </script>
 
 </body>
