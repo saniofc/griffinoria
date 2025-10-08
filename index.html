@@ -8,18 +8,17 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding-top: 120px;
+      padding-top: 120px; /* espaço para o header fixo */
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
       align-items: center;
       background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
       background-size: cover;
       color: #fff;
-      text-align: center;
     }
 
+    /* HEADER */
     header {
       position: fixed;
       top: 0;
@@ -27,21 +26,73 @@
       width: 100%;
       padding: 20px;
       background: rgba(0,0,0,0.7);
-      text-align: center;
       z-index: 1000;
+      display: flex;
+      justify-content: space-between; /* espaço entre título e menu */
+      align-items: center;
+      box-sizing: border-box;
     }
 
     header h1 {
       margin: 0;
-      text-shadow: 2px 2px 5px #000;
       font-size: 32px;
+      text-shadow: 2px 2px 5px #000;
     }
 
     header p {
-      margin: 5px 0 0;
-      text-shadow: 1px 1px 3px #000;
+      display: none; /* ocultamos o texto para não atrapalhar o layout do menu */
     }
 
+    /* MENU HAMBURGUER */
+    .menu-btn {
+      width: 35px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .menu-btn div {
+      height: 5px;
+      background-color: #fff;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* PAINEL LATERAL */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -250px; /* escondido inicialmente */
+      width: 250px;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+      transition: right 0.3s ease;
+      padding: 50px 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1100;
+    }
+
+    .side-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      margin: 15px 0;
+      transition: color 0.3s;
+    }
+
+    .side-menu a:hover {
+      color: #b78cff;
+    }
+
+    .side-menu.active {
+      right: 0;
+    }
+
+    /* GRUPO */
     .grupo {
       display: flex;
       align-items: center;
@@ -94,7 +145,7 @@
       transform: scale(1.05);
     }
 
-    /* Rodapé */
+    /* RODAPÉ */
     footer {
       margin-top: auto;
       width: 100%;
@@ -115,14 +166,45 @@
     footer a:hover {
       text-decoration: underline;
     }
+
+    /* RESPONSIVO */
+    @media (max-width: 500px) {
+      .grupo {
+        max-width: 90%;
+        font-size: 18px;
+      }
+      .grupo img {
+        width: 50px;
+        height: 50px;
+      }
+      .botao {
+        font-size: 18px;
+        padding: 12px 25px;
+      }
+    }
   </style>
 </head>
 <body>
+
   <header>
-   <h1>Griffinoria</h1>
-  <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+    <h1>Griffinoria</h1>
+    <!-- Botão hamburguer -->
+    <div class="menu-btn" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </header>
 
+  <!-- Painel lateral -->
+  <div class="side-menu" id="sideMenu">
+    <a href="#">Home</a>
+    <a href="#">Sobre</a>
+    <a href="#">Contato</a>
+    <a href="#">Blog</a>
+  </div>
+
+  <!-- Conteúdo principal -->
   <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
     <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
     <span>𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩</span>
@@ -135,5 +217,12 @@
     © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
     TODOS OS DIREITOS RESERVADOS
   </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      menu.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
