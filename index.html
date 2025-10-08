@@ -3,280 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Griffinoria</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
-  background-size: cover;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-}
-
-/* FOOTER FIXO NO FINAL */
-footer {
-  background: rgba(0,0,0,0.7);
-  padding: 20px;
-  font-size: 14px;
-  color: #ddd;
-  text-align: center;
-  text-shadow: 1px 1px 2px #000;
-  margin-top: auto;
-}
-
-/* BARRINHA DO MENU ESQUERDO */
-#sideTab {
-  position: fixed;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 60px;
-  background: rgba(128,0,128,0.7);
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  cursor: pointer;
-  z-index: 1000;
-  padding: 10px 0;
-}
-
-#sideTab div {
-  width: 20px;
-  height: 3px;
-  background: #fff;
-  border-radius: 2px;
-}
-
-/* PAINEL LATERAL */
-#leftMenu {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  padding: 60px 20px;
-  display: flex;
-  flex-direction: column;
-  transition: left 0.3s ease;
-  z-index: 1100;
-}
-
-#leftMenu.active {
-  left: 0;
-}
-
-#leftMenu h3 {
-  color: #fff;
-  margin-bottom: 20px;
-}
-
-#leftMenu button {
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(128,0,128,0.6);
-  color: #fff;
-  cursor: pointer;
-}
-
-#leftMenu button:hover {
-  background: rgba(128,0,128,0.85);
-}
-
-/* CATEGORIAS */
-.categorias {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.categorias button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background: rgba(128,0,128,0.6);
-  color: #fff;
-  cursor: pointer;
-}
-
-.categorias button:hover {
-  background: rgba(128,0,128,0.85);
-}
-
-/* GRUPOS */
-#gruposLista {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.grupo {
-  display: flex;
-  align-items: center;
-  background: rgba(128,0,128,0.6);
-  margin: 10px;
-  padding: 20px;
-  border-radius: 50px;
-  max-width: 400px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 20px;
-  position: relative;
-}
-
-.grupo img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin-right: 15px;
-  border: 3px solid #fff;
-  object-fit: cover;
-}
-
-.grupo span {
-  flex-grow: 1;
-}
-
-.grupo.vip::after {
-  content: "⭐";
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 20px;
-}
-
-/* FORMULÁRIO DIVULGAR */
-#formDivulgar {
-  display: none;
-  flex-direction: column;
-  background: rgba(0,0,0,0.8);
-  padding: 20px;
-  border-radius: 15px;
-  max-width: 400px;
-  margin: 20px auto;
-}
-
-#formDivulgar input, #formDivulgar select {
-  margin: 10px 0;
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-  width: 100%;
-}
-
-#formDivulgar button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #b78cff;
-  color: #fff;
-  cursor: pointer;
-}
-</style>
+<title>GruposWhats Clone</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide/dist/umd/lucide.js"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-<!-- BARRINHA DO MENU ESQUERDO -->
-<div id="sideTab" onclick="toggleLeftMenu()">
-  <div></div>
-  <div></div>
-  <div></div>
+<!-- HEADER -->
+<header class="bg-white shadow-sm sticky top-0 z-20">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex flex-col md:flex-row items-center gap-3">
+      <div class="text-2xl font-extrabold">Grupos<span class="text-indigo-600">Whats</span></div>
+      <div class="text-sm text-gray-500">Encontre e compartilhe grupos de WhatsApp</div>
+    </div>
+    <div class="flex-1 max-w-xl w-full mt-2 md:mt-0">
+      <div class="relative">
+        <input id="searchInput" type="text" placeholder="Pesquisar grupos, ex: React, descontos..." class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-200 rounded-md py-2 pl-10 pr-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <svg class="absolute left-3 top-2.5 w-5 h-5 text-slate-400" data-feather="search"></svg>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 mt-2 md:mt-0">
+      <button id="openModal" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700">
+        <svg class="w-5 h-5" data-feather="plus-circle"></svg> Enviar grupo
+      </button>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto" id="categoryFilter">
+    <!-- Categories adicionadas via JS -->
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-6xl mx-auto px-4 py-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="groupsGrid">
+    <!-- Grupos adicionados via JS -->
+  </div>
+  <footer class="mt-12 text-sm text-gray-500 text-center">
+    © <span id="year"></span> GruposWhats Clone — Feito para você personalizar.
+  </footer>
+</main>
+
+<!-- MODAL -->
+<div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-30">
+  <div class="bg-white rounded-2xl w-full max-w-xl p-6">
+    <h4 class="text-lg font-semibold">Enviar novo grupo</h4>
+    <form id="groupForm" class="mt-4 grid gap-3">
+      <input type="text" id="groupTitle" placeholder="Título" class="w-full border border-slate-200 rounded-md p-2" required>
+      <input type="text" id="groupLink" placeholder="Link do WhatsApp (https://chat.whatsapp.com/...)" class="w-full border border-slate-200 rounded-md p-2" required>
+      <input type="text" id="groupDesc" placeholder="Descrição curta" class="w-full border border-slate-200 rounded-md p-2">
+      <select id="groupCategory" class="w-full border border-slate-200 rounded-md p-2">
+        <option value="Compras">Compras</option>
+        <option value="Educação">Educação</option>
+        <option value="Trabalho">Trabalho</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Entretenimento">Entretenimento</option>
+        <option value="Outros">Outros</option>
+      </select>
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="closeModal" class="px-4 py-2 rounded-md border">Cancelar</button>
+        <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white">Enviar</button>
+      </div>
+    </form>
+  </div>
 </div>
-
-<!-- PAINEL LATERAL -->
-<div id="leftMenu">
-  <h3>Menu</h3>
-  <button onclick="showDivulgar()">Divulgar meu grupo</button>
-  <button onclick="showMeusGrupos()">Meus Grupos</button>
-  <button onclick="impulsionarVIP()">Impulsionar VIP ($5)</button>
-</div>
-
-<!-- CATEGORIAS -->
-<div class="categorias">
-  <button onclick="filterCategory('Amizade')">Amizade</button>
-  <button onclick="filterCategory('Zoeira')">Zoeira</button>
-  <button onclick="filterCategory('Namoro')">Namoro</button>
-</div>
-
-<!-- FORMULÁRIO DIVULGAR -->
-<div id="formDivulgar">
-  <h3>Divulgar meu grupo</h3>
-  <input type="text" id="linkGrupo" placeholder="Link do grupo">
-  <select id="categoriaGrupo">
-    <option value="Amizade">Amizade</option>
-    <option value="Zoeira">Zoeira</option>
-    <option value="Namoro">Namoro</option>
-  </select>
-  <label><input type="checkbox" id="vipGrupo"> Tornar VIP ($5)</label>
-  <button onclick="enviarGrupo()">Enviar</button>
-</div>
-
-<!-- GRUPOS -->
-<div id="gruposLista">
-  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Amizade</span></a>
-  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Zoera</span></a>
-  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Namoro</span></a>
-</div>
-
-<footer>
-  Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
-  TODOS OS DIREITOS RESERVADOS
-</footer>
 
 <script>
-function toggleLeftMenu() {
-  document.getElementById('leftMenu').classList.toggle('active');
-}
+  feather.replace();
 
-function showDivulgar() {
-  document.getElementById('formDivulgar').style.display = 'flex';
-}
+  const year = document.getElementById('year');
+  year.innerText = new Date().getFullYear();
 
-function showMeusGrupos() {
-  alert("Aqui apareceriam os grupos enviados pelo usuário");
-}
+  const initialGroups = [
+    { id: 1, title: 'Ofertas e Promoções', desc: 'Promoções do dia — descontos e cupons', category: 'Compras', members: 1245, link: '#' },
+    { id: 2, title: 'Estudos de React', desc: 'Grupo para tirar dúvidas e compartilhar materiais', category: 'Educação', members: 842, link: '#' },
+    { id: 3, title: 'Vagas e Freelance', desc: 'Oportunidades remotas e presenciais', category: 'Trabalho', members: 2300, link: '#' },
+    { id: 4, title: 'Fitness e Saúde', desc: 'Treinos, dieta e motivação', category: 'Saúde', members: 512, link: '#' },
+    { id: 5, title: 'Memes e Alegria', desc: 'Compartilhe memes e zoeiras', category: 'Entretenimento', members: 3300, link: '#' }
+  ];
 
-function impulsionarVIP() {
-  alert("Funcionalidade VIP: O grupo ficará no topo por 24h com estrela ⭐");
-}
+  let groups = [...initialGroups];
+  const categories = ['Todos', 'Compras', 'Educação', 'Trabalho', 'Saúde', 'Entretenimento', 'Outros'];
 
-function filterCategory(cat) {
-  const grupos = document.querySelectorAll('.grupo');
-  grupos.forEach(g => {
-    if(g.textContent.includes(cat)) g.style.display='flex';
-    else g.style.display='none';
-  });
-}
+  const groupsGrid = document.getElementById('groupsGrid');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const searchInput = document.getElementById('searchInput');
 
-function enviarGrupo() {
-  const link = document.getElementById('linkGrupo').value;
-  const cat = document.getElementById('categoriaGrupo').value;
-  const vip = document.getElementById('vipGrupo').checked;
+  function renderCategories(selected = 'Todos') {
+    categoryFilter.innerHTML = '';
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.innerText = cat;
+      btn.className = `whitespace-nowrap px-3 py-1 rounded-full text-sm ${cat===selected?'bg-indigo-600 text-white':'bg-white text-gray-700 border border-slate-200'}`;
+      btn.onclick = () => { renderCategories(cat); renderGroups(); };
+      categoryFilter.appendChild(btn);
+    });
+  }
 
-  const lista = document.getElementById('gruposLista');
-  const novo = document.createElement('a');
-  novo.className = 'grupo';
-  if(vip) novo.classList.add('vip');
-  novo.href = link;
-  novo.innerHTML = `<img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo ${cat}</span>`;
-  lista.prepend(novo);
+  function renderGroups() {
+    const query = searchInput.value.toLowerCase();
+    const selectedCat = Array.from(categoryFilter.children).find(btn => btn.classList.contains('bg-indigo-600'))?.innerText || 'Todos';
 
-  document.getElementById('formDivulgar').style.display = 'none';
-  document.getElementById('linkGrupo').value = '';
-  document.getElementById('vipGrupo').checked = false;
-}
+    groupsGrid.innerHTML = '';
+    const filtered = groups.filter(g => (g.title + ' ' + g.desc).toLowerCase().includes(query) && (selectedCat==='Todos'?true:g.category===selectedCat));
+
+    if(filtered.length===0){
+      groupsGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-16">Nenhum grupo encontrado.</div>';
+      return;
+    }
+
+    filtered.forEach(g=>{
+      const card = document.createElement('article');
+      card.className = 'bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition';
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h3 class="text-lg font-semibold">${g.title}</h3>
+            <p class="text-sm text-gray-600 mt-1">${g.desc}</p>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-gray-500">${g.category}</div>
+            <div class="text-sm font-medium mt-2">${g.members.toLocaleString()} membros</div>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center gap-2">
+          <button class="flex-1 inline-flex items-center justify-center gap-2 border border-slate-200 rounded-md px-3 py-2 text-sm hover:bg-slate-50" onclick="navigator.clipboard.writeText('${g.link}') && alert('Link copiado!')">
+            Copiar link
+          </button>
+          <a href="${g.link}" target="_blank" class="inline-flex items-center gap-2 border border-transparent rounded-md px-3 py-2 text-sm bg-indigo-600 text-white hover:bg-indigo-700">Entrar</a>
+        </div>
+      `;
+      groupsGrid.appendChild(card);
+    });
+  }
+
+  renderCategories();
+  renderGroups();
+  searchInput.addEventListener('input', renderGroups);
+
+  // Modal
+  const modal = document.getElementById('modal');
+  document.getElementById('openModal').onclick = () => modal.classList.remove('hidden');
+  document.getElementById('closeModal').onclick = () => modal.classList.add('hidden');
+
+  document.getElementById('groupForm').onsubmit = (e) => {
+    e.preventDefault();
+    const title = document.getElementById('groupTitle').value;
+    const desc = document.getElementById('groupDesc').value;
+    const category = document.getElementById('groupCategory').value;
+    const link = document.getElementById('groupLink').value;
+    groups.unshift({id:Date.now(),title,desc,category,members:0,link});
+    modal.classList.add('hidden');
+    e.target.reset();
+    renderGroups();
+  };
 </script>
 
 </body>
