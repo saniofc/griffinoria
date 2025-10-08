@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Griffinoria - Grupos WhatsApp</title>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <style>
   body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f0f0f0; }
   header { background: #4CAF50; color: white; padding: 15px; text-align: center; }
@@ -13,7 +11,7 @@
   nav button { margin: 0 10px; padding: 10px 20px; cursor: pointer; }
   main { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
   input[type="text"] { width: 70%; padding: 10px; margin-right: 10px; }
-  button.send { padding: 10px; }
+  button.send { padding: 10px; cursor: pointer; }
   .group { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
   footer { text-align: center; padding: 20px; margin-top: 20px; font-size: 14px; color: #555; background: #eee; }
 </style>
@@ -51,21 +49,28 @@
   TODOS OS DIREITOS RESERVADOS
 </footer>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
   // Configuração Firebase
   const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_DOMINIO.firebaseapp.com",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_PROJECT_ID.appspot.com",
-    messagingSenderId: "SEU_MESSAGING_ID",
-    appId: "SEU_APP_ID"
+    apiKey: "AIzaSyD2EAWH3a1gpV8deciUCi8GKq7FVhzfZeg",
+    authDomain: "gruposwhatsapp-ed18b.firebaseapp.com",
+    projectId: "gruposwhatsapp-ed18b",
+    storageBucket: "gruposwhatsapp-ed18b.appspot.com",
+    messagingSenderId: "982330565891",
+    appId: "1:982330565891:web:772e47212f4f8d26a67536",
+    measurementId: "G-48Z40NHZ0L"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  // Inicializa Firebase e Firestore
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
 
-  // Gerar um ID de usuário temporário
+  // ID temporário do usuário
   let userId = localStorage.getItem('userId');
   if(!userId){
     userId = 'user-' + Math.random().toString(36).substr(2, 9);
@@ -77,51 +82,55 @@
     document.getElementById('meusGruposPage').style.display = page === 'meusGrupos' ? 'block' : 'none';
   }
 
-  function sendGroup(){
+  async function sendGroup(){
     const link = document.getElementById('groupLink').value.trim();
     if(!link.includes("chat.whatsapp.com")){
       alert("Só é permitido enviar links de grupos WhatsApp!");
       return;
     }
-    db.collection('groups').add({
-      user: userId,
-      link: link,
-      timestamp: Date.now()
-    }).then(() => {
+    try {
+      await addDoc(collection(db, "groups"), {
+        user: userId,
+        link: link,
+        timestamp: Date.now()
+      });
       document.getElementById('groupLink').value = '';
       loadMyGroups();
       loadAllGroups();
-    });
+    } catch(e){
+      alert("Erro ao enviar grupo: " + e);
+    }
   }
 
-  function loadAllGroups(){
+  async function loadAllGroups(){
     const allDiv = document.getElementById('allGroups');
     allDiv.innerHTML = '';
-    db.collection('groups').orderBy('timestamp', 'desc').get().then(snapshot => {
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const div = document.createElement('div');
-        div.className = 'group';
-        div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
-        allDiv.appendChild(div);
-      });
+    const q = query(collection(db, "groups"), orderBy("timestamp", "desc"));
+    const snapshot = await getDocs(q);
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'group';
+      div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
+      allDiv.appendChild(div);
     });
   }
 
-  function loadMyGroups(){
+  async function loadMyGroups(){
     const myDiv = document.getElementById('myGroups');
     myDiv.innerHTML = '';
-    db.collection('groups').where('user','==',userId).orderBy('timestamp','desc').get().then(snapshot => {
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const div = document.createElement('div');
-        div.className = 'group';
-        div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
-        myDiv.appendChild(div);
-      });
+    const q = query(collection(db, "groups"), where("user","==",userId), orderBy("timestamp","desc"));
+    const snapshot = await getDocs(q);
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'group';
+      div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
+      myDiv.appendChild(div);
     });
   }
 
+  // Carrega os grupos ao abrir a página
   loadAllGroups();
   loadMyGroups();
 </script>
