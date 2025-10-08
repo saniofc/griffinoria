@@ -1,228 +1,190 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Griffinoria</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding-top: 120px; /* espaço para o header fixo */
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Griffinoria</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-top: 60px;
+    min-height: 100vh;
+    background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+  }
 
-    /* HEADER */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 20px;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between; /* espaço entre título e menu */
-      align-items: center;
-      box-sizing: border-box;
-    }
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+  }
 
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-      text-shadow: 2px 2px 5px #000;
-    }
+  /* MENU DIREITO */
+  .menu-btn {
+    width: 35px; height: 30px;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+  }
+  .menu-btn div {
+    height: 5px; background-color: #fff; border-radius: 2px;
+  }
+  .side-menu {
+    position: fixed; top: 0; right: -300px;
+    width: 300px; height: 100%;
+    background: rgba(0,0,0,0.95);
+    padding: 60px 20px;
+    display: flex; flex-direction: column;
+    transition: right 0.3s ease;
+    z-index: 1100;
+  }
+  .side-menu.active { right: 0; }
+  .side-menu .close-btn {
+    position: absolute; top: 10px; right: 15px;
+    font-size: 25px; cursor: pointer; color: #fff;
+  }
+  .side-menu a { color: #fff; text-decoration: none; margin: 15px 0; font-size: 18px; }
+  .side-menu a:hover { color: #b78cff; }
 
-    header p {
-      display: none; /* ocultamos o texto para não atrapalhar o layout do menu */
-    }
+  /* MENU ESQUERDO */
+  .left-menu {
+    position: fixed; top: 50%; left: -200px;
+    width: 200px; background: rgba(0,0,0,0.9);
+    padding: 20px; transform: translateY(-50%);
+    transition: left 0.3s ease; z-index: 1100;
+  }
+  .left-menu.active { left: 0; }
+  .left-menu h3 { color: #fff; margin-bottom: 10px; }
+  .left-menu a { display: block; color: #fff; text-decoration: none; margin: 10px 0; }
+  .left-menu a:hover { color: #b78cff; }
 
-    /* MENU HAMBURGUER */
-    .menu-btn {
-      width: 35px;
-      height: 30px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+  /* CATEGORIAS */
+  .categorias {
+    display: flex; justify-content: center; gap: 20px; margin: 20px 0;
+  }
+  .categorias button {
+    padding: 10px 20px; border: none; border-radius: 20px;
+    background: rgba(128,0,128,0.6); color: #fff; cursor: pointer;
+  }
+  .categorias button:hover { background: rgba(128,0,128,0.85); }
 
-    .menu-btn div {
-      height: 5px;
-      background-color: #fff;
-      border-radius: 2px;
-      transition: 0.3s;
-    }
+  /* GRUPOS */
+  .grupo {
+    display: flex; align-items: center; background: rgba(128,0,128,0.6);
+    margin: 10px auto; padding: 20px; border-radius: 50px; max-width: 400px;
+    text-decoration: none; color: #fff; font-size: 20px;
+  }
+  .grupo img { width: 60px; height: 60px; border-radius: 50%; margin-right: 15px; border: 3px solid #fff; object-fit: cover; }
+  .grupo span { flex-grow: 1; }
 
-    /* PAINEL LATERAL */
-    .side-menu {
-      position: fixed;
-      top: 0;
-      right: -250px; /* escondido inicialmente */
-      width: 250px;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-      transition: right 0.3s ease;
-      padding: 50px 20px;
-      display: flex;
-      flex-direction: column;
-      z-index: 1100;
-    }
+  /* FORMULÁRIO DIVULGAR */
+  #formDivulgar {
+    display: none; flex-direction: column; background: rgba(0,0,0,0.8);
+    padding: 20px; border-radius: 15px; max-width: 400px; margin: 20px auto;
+  }
+  #formDivulgar input, #formDivulgar select {
+    margin: 10px 0; padding: 8px; border-radius: 5px; border: none; width: 100%;
+  }
+  #formDivulgar button {
+    padding: 10px; border: none; border-radius: 10px; background: #b78cff; color: #fff; cursor: pointer;
+  }
 
-    .side-menu a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 20px;
-      margin: 15px 0;
-      transition: color 0.3s;
-    }
+  footer {
+    margin-top: 30px; text-align: center; padding: 20px;
+    background: rgba(0,0,0,0.7); font-size: 14px; color: #ddd;
+  }
 
-    .side-menu a:hover {
-      color: #b78cff;
-    }
-
-    .side-menu.active {
-      right: 0;
-    }
-
-    /* GRUPO */
-    .grupo {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      background: rgba(128, 0, 128, 0.6);
-      margin: 20px auto;
-      padding: 25px 30px;
-      border-radius: 50px;
-      max-width: 400px;
-      text-decoration: none;
-      color: white;
-      transition: 0.3s;
-      font-size: 22px;
-    }
-
-    .grupo:hover {
-      background: rgba(128, 0, 128, 0.85);
-    }
-
-    .grupo img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      margin-right: 15px;
-      border: 3px solid #fff;
-      object-fit: cover;
-    }
-
-    .grupo span {
-      font-size: 24px;
-      flex-grow: 1;
-      text-align: left;
-    }
-
-    /* Botão "Outros Grupos" */
-    .botao {
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      border: 2px solid #fff;
-      border-radius: 30px;
-      padding: 15px 30px;
-      margin-top: 15px;
-      text-decoration: none;
-      font-size: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .botao:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-
-    /* RODAPÉ */
-    footer {
-      margin-top: auto;
-      width: 100%;
-      text-align: center;
-      padding: 30px 15px;
-      background: rgba(0, 0, 0, 0.7);
-      font-size: 14px;
-      color: #ddd;
-      text-shadow: 1px 1px 2px #000;
-    }
-
-    footer a {
-      color: #b78cff;
-      text-decoration: none;
-      margin: 0 5px;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* RESPONSIVO */
-    @media (max-width: 500px) {
-      .grupo {
-        max-width: 90%;
-        font-size: 18px;
-      }
-      .grupo img {
-        width: 50px;
-        height: 50px;
-      }
-      .botao {
-        font-size: 18px;
-        padding: 12px 25px;
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Griffinoria</h1>
-    <!-- Botão hamburguer -->
-    <div class="menu-btn" onclick="toggleMenu()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </header>
-
-  <!-- Painel lateral -->
-  <div class="side-menu" id="sideMenu">
-    <a href="#">Home</a>
-    <a href="#">Sobre</a>
-    <a href="#">Contato</a>
-    <a href="#">Blog</a>
+<header>
+  <div class="menu-btn" onclick="toggleRightMenu()">
+    <div></div><div></div><div></div>
   </div>
+</header>
 
-  <!-- Conteúdo principal -->
-  <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
-    <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
-    <span>𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩</span>
-  </a>
+<!-- MENU DIREITO -->
+<div class="side-menu" id="rightMenu">
+  <span class="close-btn" onclick="toggleRightMenu()">×</span>
+  <a href="#">Alugar Bot</a>
+  <a href="#">Comprar Bot</a>
+  <a href="#" onclick="showDivulgar()">Divulgar meu grupo</a>
+</div>
 
-  <a class="botao" href="https://linkfly.to/nexosfc" target="_blank">Outros Grupos</a>
+<!-- MENU ESQUERDO -->
+<div class="left-menu" id="leftMenu">
+  <h3>Meus Grupos</h3>
+  <a href="#">Grupo 1</a>
+  <a href="#">Grupo 2</a>
+</div>
 
-  <footer>
-    Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-    © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
-    TODOS OS DIREITOS RESERVADOS
-  </footer>
+<!-- CATEGORIAS -->
+<div class="categorias">
+  <button onclick="filterCategory('Amizade')">Amizade</button>
+  <button onclick="filterCategory('Zoeira')">Zoeira</button>
+  <button onclick="filterCategory('Namoro')">Namoro</button>
+</div>
 
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('sideMenu');
-      menu.classList.toggle('active');
-    }
-  </script>
+<!-- FORMULÁRIO DIVULGAR -->
+<div id="formDivulgar">
+  <h3>Divulgar meu grupo</h3>
+  <input type="text" id="linkGrupo" placeholder="Link do grupo">
+  <select id="categoriaGrupo">
+    <option value="Amizade">Amizade</option>
+    <option value="Zoeira">Zoeira</option>
+    <option value="Namoro">Namoro</option>
+  </select>
+  <label><input type="checkbox" id="vipGrupo"> Tornar VIP ($5)</label>
+  <button onclick="enviarGrupo()">Enviar</button>
+</div>
+
+<!-- LISTA DE GRUPOS EXEMPLO -->
+<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Amizade</span></a>
+<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Zoera</span></a>
+<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Namoro</span></a>
+
+<footer>
+  © 2025 Griffinoria
+</footer>
+
+<script>
+function toggleRightMenu() {
+  document.getElementById('rightMenu').classList.toggle('active');
+}
+function toggleLeftMenu() {
+  document.getElementById('leftMenu').classList.toggle('active');
+}
+function showDivulgar() {
+  document.getElementById('formDivulgar').style.display = 'flex';
+}
+
+// Filtrar categorias (exemplo básico)
+function filterCategory(cat) {
+  const grupos = document.querySelectorAll('.grupo');
+  grupos.forEach(g => {
+    if(g.textContent.includes(cat)) g.style.display='flex';
+    else g.style.display='none';
+  });
+}
+
+function enviarGrupo() {
+  const link = document.getElementById('linkGrupo').value;
+  const cat = document.getElementById('categoriaGrupo').value;
+  const vip = document.getElementById('vipGrupo').checked;
+  alert(`Grupo: ${link}\nCategoria: ${cat}\nVIP: ${vip}`);
+  document.getElementById('formDivulgar').reset;
+}
+</script>
 </body>
 </html>
