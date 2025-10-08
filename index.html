@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GruposWhats Clone</title>
+<title>GruposWhats</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+body { font-family: 'Inter', sans-serif; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 999px; }
+</style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50">
 
 <!-- HEADER -->
-<header class="bg-white shadow-sm sticky top-0 z-20">
+<header class="bg-white shadow sticky top-0 z-30">
   <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="flex flex-col md:flex-row items-center gap-3">
       <div class="text-2xl font-extrabold">Grupos<span class="text-indigo-600">Whats</span></div>
@@ -28,23 +33,19 @@
       </button>
     </div>
   </div>
-  <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto" id="categoryFilter">
-    <!-- Categories adicionadas via JS -->
-  </div>
+  <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto" id="categoryFilter"></div>
 </header>
 
 <!-- MAIN -->
 <main class="max-w-6xl mx-auto px-4 py-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="groupsGrid">
-    <!-- Grupos adicionados via JS -->
-  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="groupsGrid"></div>
   <footer class="mt-12 text-sm text-gray-500 text-center">
-    © <span id="year"></span> GruposWhats Clone — Feito para você personalizar.
+    © <span id="year"></span> GruposWhats Clone
   </footer>
 </main>
 
 <!-- MODAL -->
-<div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-30">
+<div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
   <div class="bg-white rounded-2xl w-full max-w-xl p-6">
     <h4 class="text-lg font-semibold">Enviar novo grupo</h4>
     <form id="groupForm" class="mt-4 grid gap-3">
@@ -69,52 +70,43 @@
 
 <script>
   feather.replace();
-
-  const year = document.getElementById('year');
-  year.innerText = new Date().getFullYear();
+  document.getElementById('year').innerText = new Date().getFullYear();
 
   const initialGroups = [
-    { id: 1, title: 'Ofertas e Promoções', desc: 'Promoções do dia — descontos e cupons', category: 'Compras', members: 1245, link: '#' },
-    { id: 2, title: 'Estudos de React', desc: 'Grupo para tirar dúvidas e compartilhar materiais', category: 'Educação', members: 842, link: '#' },
-    { id: 3, title: 'Vagas e Freelance', desc: 'Oportunidades remotas e presenciais', category: 'Trabalho', members: 2300, link: '#' },
-    { id: 4, title: 'Fitness e Saúde', desc: 'Treinos, dieta e motivação', category: 'Saúde', members: 512, link: '#' },
-    { id: 5, title: 'Memes e Alegria', desc: 'Compartilhe memes e zoeiras', category: 'Entretenimento', members: 3300, link: '#' }
+    { id:1, title:'Ofertas e Promoções', desc:'Promoções do dia — descontos e cupons', category:'Compras', members:1245, link:'#' },
+    { id:2, title:'Estudos de React', desc:'Grupo para tirar dúvidas e compartilhar materiais', category:'Educação', members:842, link:'#' },
+    { id:3, title:'Vagas e Freelance', desc:'Oportunidades remotas e presenciais', category:'Trabalho', members:2300, link:'#' },
+    { id:4, title:'Fitness e Saúde', desc:'Treinos, dieta e motivação', category:'Saúde', members:512, link:'#' },
+    { id:5, title:'Memes e Alegria', desc:'Compartilhe memes e zoeiras', category:'Entretenimento', members:3300, link:'#' }
   ];
 
   let groups = [...initialGroups];
-  const categories = ['Todos', 'Compras', 'Educação', 'Trabalho', 'Saúde', 'Entretenimento', 'Outros'];
-
+  const categories = ['Todos','Compras','Educação','Trabalho','Saúde','Entretenimento','Outros'];
   const groupsGrid = document.getElementById('groupsGrid');
   const categoryFilter = document.getElementById('categoryFilter');
   const searchInput = document.getElementById('searchInput');
 
-  function renderCategories(selected = 'Todos') {
-    categoryFilter.innerHTML = '';
-    categories.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.innerText = cat;
-      btn.className = `whitespace-nowrap px-3 py-1 rounded-full text-sm ${cat===selected?'bg-indigo-600 text-white':'bg-white text-gray-700 border border-slate-200'}`;
-      btn.onclick = () => { renderCategories(cat); renderGroups(); };
+  function renderCategories(selected='Todos'){
+    categoryFilter.innerHTML='';
+    categories.forEach(cat=>{
+      const btn=document.createElement('button');
+      btn.innerText=cat;
+      btn.className=`whitespace-nowrap px-3 py-1 rounded-full text-sm ${cat===selected?'bg-indigo-600 text-white':'bg-white text-gray-700 border border-slate-200'}`;
+      btn.onclick=()=>{ renderCategories(cat); renderGroups(); };
       categoryFilter.appendChild(btn);
     });
   }
 
-  function renderGroups() {
-    const query = searchInput.value.toLowerCase();
-    const selectedCat = Array.from(categoryFilter.children).find(btn => btn.classList.contains('bg-indigo-600'))?.innerText || 'Todos';
-
-    groupsGrid.innerHTML = '';
-    const filtered = groups.filter(g => (g.title + ' ' + g.desc).toLowerCase().includes(query) && (selectedCat==='Todos'?true:g.category===selectedCat));
-
-    if(filtered.length===0){
-      groupsGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-16">Nenhum grupo encontrado.</div>';
-      return;
-    }
-
+  function renderGroups(){
+    const query=searchInput.value.toLowerCase();
+    const selectedCat=Array.from(categoryFilter.children).find(btn=>btn.classList.contains('bg-indigo-600'))?.innerText||'Todos';
+    groupsGrid.innerHTML='';
+    const filtered=groups.filter(g=>(g.title+g.desc).toLowerCase().includes(query)&&(selectedCat==='Todos'?true:g.category===selectedCat));
+    if(filtered.length===0){ groupsGrid.innerHTML='<div class="col-span-full text-center text-gray-500 py-16">Nenhum grupo encontrado.</div>'; return; }
     filtered.forEach(g=>{
-      const card = document.createElement('article');
-      card.className = 'bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition';
-      card.innerHTML = `
+      const card=document.createElement('article');
+      card.className='bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition';
+      card.innerHTML=`
         <div class="flex items-start justify-between gap-3">
           <div>
             <h3 class="text-lg font-semibold">${g.title}</h3>
@@ -140,17 +132,15 @@
   renderGroups();
   searchInput.addEventListener('input', renderGroups);
 
-  // Modal
-  const modal = document.getElementById('modal');
-  document.getElementById('openModal').onclick = () => modal.classList.remove('hidden');
-  document.getElementById('closeModal').onclick = () => modal.classList.add('hidden');
-
-  document.getElementById('groupForm').onsubmit = (e) => {
+  const modal=document.getElementById('modal');
+  document.getElementById('openModal').onclick=()=>modal.classList.remove('hidden');
+  document.getElementById('closeModal').onclick=()=>modal.classList.add('hidden');
+  document.getElementById('groupForm').onsubmit=(e)=>{
     e.preventDefault();
-    const title = document.getElementById('groupTitle').value;
-    const desc = document.getElementById('groupDesc').value;
-    const category = document.getElementById('groupCategory').value;
-    const link = document.getElementById('groupLink').value;
+    const title=document.getElementById('groupTitle').value;
+    const desc=document.getElementById('groupDesc').value;
+    const category=document.getElementById('groupCategory').value;
+    const link=document.getElementById('groupLink').value;
     groups.unshift({id:Date.now(),title,desc,category,members:0,link});
     modal.classList.add('hidden');
     e.target.reset();
