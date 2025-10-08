@@ -35,10 +35,12 @@
     cursor: pointer;
     display: flex; flex-direction: column;
     justify-content: space-between;
+    z-index: 1200;
   }
   .menu-btn div {
     height: 5px; background-color: #fff; border-radius: 2px;
   }
+
   .side-menu {
     position: fixed; top: 0; right: -300px;
     width: 300px; height: 100%;
@@ -58,15 +60,15 @@
 
   /* MENU ESQUERDO */
   .left-menu {
-    position: fixed; top: 50%; left: -200px;
-    width: 200px; background: rgba(0,0,0,0.9);
+    position: fixed; top: 50%; left: 0;
+    width: 220px; background: rgba(0,0,0,0.9);
     padding: 20px; transform: translateY(-50%);
-    transition: left 0.3s ease; z-index: 1100;
+    z-index: 1100;
+    display: flex; flex-direction: column;
   }
-  .left-menu.active { left: 0; }
   .left-menu h3 { color: #fff; margin-bottom: 10px; }
-  .left-menu a { display: block; color: #fff; text-decoration: none; margin: 10px 0; }
-  .left-menu a:hover { color: #b78cff; }
+  .left-menu button { margin: 5px 0; padding: 10px; border-radius: 10px; border: none; cursor: pointer; background: rgba(128,0,128,0.6); color: #fff; }
+  .left-menu button:hover { background: rgba(128,0,128,0.85); }
 
   /* CATEGORIAS */
   .categorias {
@@ -82,10 +84,16 @@
   .grupo {
     display: flex; align-items: center; background: rgba(128,0,128,0.6);
     margin: 10px auto; padding: 20px; border-radius: 50px; max-width: 400px;
-    text-decoration: none; color: #fff; font-size: 20px;
+    text-decoration: none; color: #fff; font-size: 20px; position: relative;
   }
   .grupo img { width: 60px; height: 60px; border-radius: 50%; margin-right: 15px; border: 3px solid #fff; object-fit: cover; }
   .grupo span { flex-grow: 1; }
+  .grupo.vip::after {
+    content: "⭐";
+    position: absolute;
+    top: 5px; right: 10px;
+    font-size: 20px;
+  }
 
   /* FORMULÁRIO DIVULGAR */
   #formDivulgar {
@@ -124,9 +132,10 @@
 
 <!-- MENU ESQUERDO -->
 <div class="left-menu" id="leftMenu">
-  <h3>Meus Grupos</h3>
-  <a href="#">Grupo 1</a>
-  <a href="#">Grupo 2</a>
+  <h3>Menu</h3>
+  <button onclick="showDivulgar()">Divulgar meu grupo</button>
+  <button onclick="showMeusGrupos()">Meus Grupos</button>
+  <button onclick="impulsionarVIP()">Impulsionar VIP ($5)</button>
 </div>
 
 <!-- CATEGORIAS -->
@@ -150,41 +159,36 @@
 </div>
 
 <!-- LISTA DE GRUPOS EXEMPLO -->
-<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Amizade</span></a>
-<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Zoera</span></a>
-<a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Namoro</span></a>
+<div id="gruposLista">
+  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Amizade</span></a>
+  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Zoera</span></a>
+  <a class="grupo" href="#"><img src="https://files.catbox.moe/r7gnm5.jpg"><span>Grupo de Namoro</span></a>
+</div>
 
 <footer>
-  © 2025 Griffinoria
+  Blog · Termos de Uso · Política de Privacidade · FAQ<br>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
+  TODOS OS DIREITOS RESERVADOS
 </footer>
 
 <script>
 function toggleRightMenu() {
   document.getElementById('rightMenu').classList.toggle('active');
 }
-function toggleLeftMenu() {
-  document.getElementById('leftMenu').classList.toggle('active');
-}
+
 function showDivulgar() {
   document.getElementById('formDivulgar').style.display = 'flex';
 }
 
-// Filtrar categorias (exemplo básico)
+function showMeusGrupos() {
+  alert("Aqui apareceria os grupos enviados pelo usuário");
+}
+
+function impulsionarVIP() {
+  alert("Funcionalidade VIP: O grupo ficará no topo por 24h com estrela ⭐");
+}
+
 function filterCategory(cat) {
   const grupos = document.querySelectorAll('.grupo');
   grupos.forEach(g => {
     if(g.textContent.includes(cat)) g.style.display='flex';
-    else g.style.display='none';
-  });
-}
-
-function enviarGrupo() {
-  const link = document.getElementById('linkGrupo').value;
-  const cat = document.getElementById('categoriaGrupo').value;
-  const vip = document.getElementById('vipGrupo').checked;
-  alert(`Grupo: ${link}\nCategoria: ${cat}\nVIP: ${vip}`);
-  document.getElementById('formDivulgar').reset;
-}
-</script>
-</body>
-</html>
