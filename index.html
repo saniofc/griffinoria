@@ -17,7 +17,7 @@ body {
   flex-direction: column;
 }
 
-/* FOOTER FIXO */
+/* FOOTER FIXO NO FINAL */
 footer {
   background: rgba(0,0,0,0.7);
   padding: 20px;
@@ -28,26 +28,34 @@ footer {
   margin-top: auto;
 }
 
-/* MENU LATERAL ESQUERDO */
+/* BARRINHA DO MENU ESQUERDO */
 #sideTab {
   position: fixed;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
   width: 40px;
-  height: 120px;
+  height: 60px;
   background: rgba(128,0,128,0.7);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
   cursor: pointer;
   z-index: 1000;
-  writing-mode: vertical-rl;
-  text-align: center;
+  padding: 10px 0;
 }
 
+#sideTab div {
+  width: 20px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* PAINEL LATERAL */
 #leftMenu {
   position: fixed;
   top: 0;
@@ -179,8 +187,12 @@ footer {
 </head>
 <body>
 
-<!-- BARRINHA LATERAL ESQUERDA -->
-<div id="sideTab" onclick="toggleLeftMenu()">MENU</div>
+<!-- BARRINHA DO MENU ESQUERDO -->
+<div id="sideTab" onclick="toggleLeftMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
 
 <!-- PAINEL LATERAL -->
 <div id="leftMenu">
