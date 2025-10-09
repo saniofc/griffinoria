@@ -130,57 +130,57 @@
     TODOS OS DIREITOS RESERVADOS
   </footer>
 
-  <script>
-    // Menu lateral
-    const menu = document.getElementById('sideMenu');
-    const menuBtn = document.getElementById('menuBtn');
-    const closeBtn = document.getElementById('closeBtn');
-    menuBtn.addEventListener('click', () => menu.classList.add('open'));
-    closeBtn.addEventListener('click', () => menu.classList.remove('open'));
+<script>
+  // Menu lateral
+  const menu = document.getElementById('sideMenu');
+  const menuBtn = document.getElementById('menuBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  menuBtn.addEventListener('click', () => menu.classList.add('open'));
+  closeBtn.addEventListener('click', () => menu.classList.remove('open'));
 
-    // Carregar grupos do JSON
-    async function carregarGrupos() {
-      try {
-        const resposta = await fetch('grupos.json');
-        const grupos = await resposta.json();
-        const lista = document.getElementById('lista-grupos');
-        lista.innerHTML = '';
+  // Carregar grupos do JSON
+  async function carregarGrupos() {
+    try {
+      const resposta = await fetch('grupos.json');
+      const grupos = await resposta.json();
+      const lista = document.getElementById('lista-grupos');
+      lista.innerHTML = '';
 
-        grupos.forEach(g => {
-          const item = document.createElement('a');
-          item.className = 'grupo';
-          item.href = g.link;
-          item.target = '_blank';
-          item.innerHTML = `
-            <img src="${g.foto}" alt="Foto do grupo">
-            <span>${g.nome}</span>
-            <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-          `;
-          lista.appendChild(item);
-        });
-      } catch (err) {
-        console.error('Erro ao carregar grupos.json:', err);
-      }
+      grupos.forEach(g => {
+        const item = document.createElement('a');
+        item.className = 'grupo';
+        item.href = g.link;
+        item.target = '_blank';
+        item.innerHTML = `
+          <img src="${g.foto}" alt="Foto do grupo">
+          <span>${g.nome}</span>
+          <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        `;
+        lista.appendChild(item);
+      });
+    } catch (err) {
+      console.error('Erro ao carregar grupos.json:', err);
     }
+  }
 
-    carregarGrupos();
-
-    // CONTADOR FALSO PERSISTENTE
-    const contador = document.getElementById('contador');
-    
-    // Recupera visitas do localStorage ou inicia com 18000
-    let visitas = parseInt(localStorage.getItem('visitas')) || 18000;
+  carregarGrupos();
+  const contador = document.getElementById('contador');
+  let visitas = parseInt(localStorage.getItem('visitas')) || 18000;
+  contador.textContent = `Visitas: ${visitas}`;
+  let minutos = 0;
+  function atualizarContador() {
+    minutos++;
+    let incremento1 = Math.floor(Math.random() * 17) + 1;
+    visitas += incremento1;
+    if (minutos % 4 === 0) {
+      let incremento4 = Math.floor(Math.random() * 8) + 1;
+      visitas += incremento4;
+    }
     contador.textContent = `Visitas: ${visitas}`;
-
-    function atualizarContador() {
-      visitas += 5; // incrementa 5 visitas a cada minuto
-      contador.textContent = `Visitas: ${visitas}`;
-      localStorage.setItem('visitas', visitas);
-    }
-
-    // Atualiza a cada minuto
-    setInterval(atualizarContador, 60000);
-  </script>
+    localStorage.setItem('visitas', visitas);
+  }
+  setInterval(atualizarContador, 60000);
+</script>
 
 </body>
 </html>
