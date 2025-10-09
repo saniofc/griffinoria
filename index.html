@@ -105,7 +105,7 @@
   <header>
     <h1>Griffinoria</h1>
     <p>amaldiçoado seja tu q não entra no grupo🪄</p>
-    <p id="contador">Visitas: 0</p>
+    <p id="contador">Visitas: 1234</p>
   </header>
 
   <div class="menu-icon" id="menuBtn">☰</div>
@@ -165,17 +165,16 @@
 
     carregarGrupos();
 
-    // Contador de visitas usando CountAPI
+    // CONTADOR FALSO AUTOMÁTICO
     const contador = document.getElementById('contador');
-    fetch('https://api.countapi.xyz/hit/saniofc.github.io/griffinoria/visitas')
-      .then(res => res.json())
-      .then(data => {
-        contador.textContent = `Visitas: ${data.value}`;
-      })
-      .catch(err => {
-        console.error('Erro ao atualizar contador:', err);
-        contador.textContent = 'Visitas: N/A';
-      });
+    let visitas = 1234; // número inicial
+
+    function atualizarContador() {
+      visitas += 3; // adiciona 3 a cada minuto
+      contador.textContent = `Visitas: ${visitas}`;
+    }
+
+    setInterval(atualizarContador, 60000); // 60000ms = 1 minuto
   </script>
 
 </body>
