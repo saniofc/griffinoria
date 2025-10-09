@@ -247,12 +247,37 @@
     <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
   </div>
 
-  <!-- Botão do grupo com ícone WhatsApp -->
-  <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
-    <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
-    <span>𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩</span>
-    <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-  </a>
+<!-- LISTA DE GRUPOS -->
+<div id="lista-grupos"></div>
+
+<script>
+  async function carregarGrupos() {
+    try {
+      const resposta = await fetch('grupos.json');
+      const grupos = await resposta.json();
+
+      const lista = document.getElementById('lista-grupos');
+      lista.innerHTML = '';
+
+      grupos.forEach(g => {
+        const item = document.createElement('a');
+        item.className = 'grupo';
+        item.href = g.link;
+        item.target = '_blank';
+        item.innerHTML = `
+          <img src="${g.foto}" alt="Foto do grupo">
+          <span>${g.nome}</span>
+          <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        `;
+        lista.appendChild(item);
+      });
+    } catch (err) {
+      console.error('Erro ao carregar grupos.json:', err);
+    }
+  }
+
+  carregarGrupos();
+</script>
 
   <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
