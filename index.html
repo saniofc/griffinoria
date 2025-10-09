@@ -38,6 +38,12 @@
     }
     header h1 { margin: 0; text-shadow: 2px 2px 5px #000; font-size: 32px; }
     header p { margin: 5px 0 0; text-shadow: 1px 1px 3px #000; }
+    #contador {
+      margin-top: 5px;
+      font-size: 16px;
+      color: #ffd700;
+      text-shadow: 1px 1px 2px #000;
+    }
 
     .menu-icon {
       position: fixed; top: 25px; right: 25px; font-size: 30px;
@@ -104,17 +110,18 @@
   <header>
     <h1>Griffinoria</h1>
     <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+    <p id="contador">Visitas: 0</p>
   </header>
 
-<div class="menu-icon" id="menuBtn">☰</div>
+  <div class="menu-icon" id="menuBtn">☰</div>
 
-<div class="menu" id="sideMenu">
-  <button class="close-btn" id="closeBtn">✕</button>
-  <h2>Informações</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
-  <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
-</div>
+  <div class="menu" id="sideMenu">
+    <button class="close-btn" id="closeBtn">✕</button>
+    <h2>Informações</h2>
+    <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
+    <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
+    <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
+  </div>
 
   <!-- LISTA DE GRUPOS -->
   <div id="lista-grupos"></div>
@@ -163,6 +170,17 @@
     }
 
     carregarGrupos();
+
+    // Contador de visitas
+    const contador = document.getElementById('contador');
+    fetch('https://api.countapi.xyz/hit/saniofc.github.io/griffinoria/visitas')
+      .then(res => res.json())
+      .then(data => {
+        contador.textContent = `Visitas: ${data.value}`;
+      })
+      .catch(err => {
+        console.error('Erro ao atualizar contador:', err);
+      });
   </script>
 
 </body>
