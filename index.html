@@ -165,24 +165,26 @@
 
   carregarGrupos();
   const contador = document.getElementById('contador');
-  let visitas = parseInt(localStorage.getItem('visitas')) || 18000;
-  let ultimaAtualizacao = parseInt(localStorage.getItem('ultimaAtualizacao')) || Date.now();
-
-  function atualizarContador() {
+  const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
+  const visitasBase = 18000;
+  function random(seed, max) {
+    const x = Math.sin(seed) * 10000;
+    return Math.floor((x - Math.floor(x)) * max) + 1;
+  }
+  function calcularVisitas() {
     const agora = Date.now();
-    const minutosPassados = Math.floor((agora - ultimaAtualizacao) / 60000);
-
+    const minutosPassados = Math.floor((agora - dataInicial) / 60000);
+    let totalVisitas = visitasBase;
     for (let i = 1; i <= minutosPassados; i++) {
-      visitas += Math.floor(Math.random() * 17) + 1;
+      totalVisitas += random(i, 17);
       if (i % 4 === 0) {
-        visitas += Math.floor(Math.random() * 8) + 1;
+        totalVisitas += random(i + 10000, 8);
       }
     }
-
-    ultimaAtualizacao = agora;
-    localStorage.setItem('visitas', visitas);
-    localStorage.setItem('ultimaAtualizacao', ultimaAtualizacao);
-
+    return totalVisitas;
+  }
+  function atualizarContador() {
+    const visitas = calcularVisitas();
     contador.textContent = `Visitas: ${visitas}`;
   }
   atualizarContador();
