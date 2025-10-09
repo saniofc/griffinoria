@@ -164,17 +164,13 @@
     }
 
     carregarGrupos();
-
-    // CONTADOR FALSO AUTOMÁTICO
     const contador = document.getElementById('contador');
-    let visitas = 18000; // número inicial
+    let visitas = 18000;
 
     function atualizarContador() {
-      visitas += 5 / 60; // 5 visitas por minuto, incrementando a cada segundo
+      visitas += 5 / 60;
       contador.textContent = `Visitas: ${Math.floor(visitas)}`;
     }
-
-    // Atualiza a cada segundo
     setInterval(atualizarContador, 1000);
   </script>
 
