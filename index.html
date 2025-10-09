@@ -14,19 +14,36 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding-top: 120px;
       min-height: 100vh;
+      color: #fff;
+      text-align: center;
+      padding-top: 120px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* === FUNDO DE VÍDEO === */
+    #video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.4); /* escurece o fundo pra texto aparecer bem */
     }
 
     header {
@@ -35,7 +52,7 @@
       left: 0;
       width: 100%;
       padding: 20px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       text-align: center;
       z-index: 1000;
     }
@@ -51,7 +68,7 @@
       text-shadow: 1px 1px 3px #000;
     }
 
-    /* === Ícone do menu (barrinha direita) === */
+    /* === Ícone do menu === */
     .menu-icon {
       position: fixed;
       top: 25px;
@@ -178,7 +195,6 @@
       transform: scale(1.05);
     }
 
-    /* Rodapé */
     footer {
       margin-top: auto;
       width: 100%;
@@ -202,9 +218,14 @@
   </style>
 </head>
 <body>
+  <!-- 🔥 VÍDEO DE FUNDO EM LOOP -->
+  <video id="video-bg" autoplay muted loop playsinline>
+    <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
+  </video>
+
   <header>
-   <h1>Griffinoria</h1>
-   <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+    <h1>Griffinoria</h1>
+    <p>amaldiçoado seja tu q não entra no grupo🪄</p>
   </header>
 
   <!-- Ícone do menu -->
@@ -235,13 +256,8 @@
     const menuBtn = document.getElementById('menuBtn');
     const closeBtn = document.getElementById('closeBtn');
 
-    menuBtn.addEventListener('click', () => {
-      menu.classList.add('open');
-    });
-
-    closeBtn.addEventListener('click', () => {
-      menu.classList.remove('open');
-    });
+    menuBtn.addEventListener('click', () => menu.classList.add('open'));
+    closeBtn.addEventListener('click', () => menu.classList.remove('open'));
   </script>
 </body>
 </html>
