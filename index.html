@@ -166,19 +166,26 @@
   carregarGrupos();
   const contador = document.getElementById('contador');
   let visitas = parseInt(localStorage.getItem('visitas')) || 18000;
-  contador.textContent = `Visitas: ${visitas}`;
-  let minutos = 0;
+  let ultimaAtualizacao = parseInt(localStorage.getItem('ultimaAtualizacao')) || Date.now();
+
   function atualizarContador() {
-    minutos++;
-    let incremento1 = Math.floor(Math.random() * 17) + 1;
-    visitas += incremento1;
-    if (minutos % 4 === 0) {
-      let incremento4 = Math.floor(Math.random() * 8) + 1;
-      visitas += incremento4;
+    const agora = Date.now();
+    const minutosPassados = Math.floor((agora - ultimaAtualizacao) / 60000);
+
+    for (let i = 1; i <= minutosPassados; i++) {
+      visitas += Math.floor(Math.random() * 17) + 1;
+      if (i % 4 === 0) {
+        visitas += Math.floor(Math.random() * 8) + 1;
+      }
     }
-    contador.textContent = `Visitas: ${visitas}`;
+
+    ultimaAtualizacao = agora;
     localStorage.setItem('visitas', visitas);
+    localStorage.setItem('ultimaAtualizacao', ultimaAtualizacao);
+
+    contador.textContent = `Visitas: ${visitas}`;
   }
+  atualizarContador();
   setInterval(atualizarContador, 60000);
 </script>
 
