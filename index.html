@@ -105,7 +105,7 @@
   <header>
     <h1>Griffinoria</h1>
     <p>amaldiçoado seja tu q não entra no grupo🪄</p>
-    <p id="contador">Visitas: 1234</p>
+    <p id="contador">Visitas: 18000</p>
   </header>
 
   <div class="menu-icon" id="menuBtn">☰</div>
@@ -170,11 +170,12 @@
     let visitas = 18000; // número inicial
 
     function atualizarContador() {
-      visitas += 5; // adiciona 3 a cada minuto
-      contador.textContent = `Visitas: ${visitas}`;
+      visitas += 5 / 60; // 5 visitas por minuto, incrementando a cada segundo
+      contador.textContent = `Visitas: ${Math.floor(visitas)}`;
     }
 
-    setInterval(atualizarContador, 60000); // 60000ms = 1 minuto
+    // Atualiza a cada segundo
+    setInterval(atualizarContador, 1000);
   </script>
 
 </body>
