@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Griffinoria</title>
+
+  <!-- 🔮 META TAGS PARA PRÉVIA NO WHATSAPP, TELEGRAM, ETC -->
+  <meta property="og:title" content="Grifinoria💛🔥🚩">
+  <meta property="og:description" content="Convite para conversar em grupo">
+  <meta property="og:image" content="https://files.catbox.moe/r7gnm5.jpg">
+  <meta property="og:url" content="https://saniofc.github.io/griffinoria/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      text-align: center;
+      padding-top: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* === FUNDO DE VÍDEO === */
+    #video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.4);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+      text-align: center;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      text-shadow: 2px 2px 5px #000;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    /* === Ícone do menu === */
+    .menu-icon {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
+      z-index: 1100;
+      background: rgba(0,0,0,0.6);
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .menu-icon:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* === Menu lateral === */
+    .menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.7);
+      transition: right 0.3s ease;
+      padding: 30px 20px;
+      z-index: 1200;
+    }
+
+    .menu.open {
+      right: 0;
+    }
+
+    .menu .close-btn {
+      font-size: 26px;
+      color: #fff;
+      cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+    }
+
+    .menu h2 {
+      margin-top: 50px;
+      font-size: 22px;
+      color: #b78cff;
+      border-bottom: 1px solid #b78cff;
+      padding-bottom: 5px;
+      text-align: left;
+    }
+
+    .menu a {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(183, 140, 255, 0.2);
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: left;
+      transition: 0.3s;
+      font-size: 18px;
+    }
+
+    .menu a:hover {
+      background: rgba(183, 140, 255, 0.5);
+    }
+
+    /* === Botão do grupo === */
+    .grupo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.5); /* preto transparente */
+      margin: 20px auto;
+      padding: 18px 22px;
+      border-radius: 40px;
+      max-width: 360px;
+      text-decoration: none;
+      color: white;
+      transition: 0.3s;
+      font-size: 20px;
+    }
+
+    .grupo:hover {
+      background: rgba(0, 0, 0, 0.7);
+      transform: scale(1.03);
+    }
+
+    .grupo img {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .grupo span {
+      flex-grow: 1;
+      text-align: left;
+      font-size: 22px;
+    }
+
+    .grupo .whatsapp-icon {
+      width: 28px;
+      height: 28px;
+      margin-left: 10px;
+      filter: drop-shadow(0 0 3px #25D366);
+    }
+
+    /* === Botão principal === */
+    .botao {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 30px;
+      padding: 12px 26px;
+      margin-top: 15px;
+      text-decoration: none;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .botao:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: auto;
+      width: 100%;
+      text-align: center;
+      padding: 30px 15px;
+      background: rgba(0, 0, 0, 0.7);
+      font-size: 14px;
+      color: #ddd;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    footer a {
+      color: #b78cff;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔥 VÍDEO DE FUNDO -->
+  <video id="video-bg" autoplay muted loop playsinline>
+    <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
+  </video>
+
+  <header>
+    <h1>Griffinoria</h1>
+    <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+  </header>
+
+  <!-- Ícone do menu -->
+  <div class="menu-icon" id="menuBtn">☰</div>
+
+  <!-- Menu lateral -->
+  <div class="menu" id="sideMenu">
+    <button class="close-btn" id="closeBtn">✕</button>
+    <h2>informações</h2>
+    <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
+  </div>
+
+  <!-- Botão do grupo com ícone WhatsApp -->
+  <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
+    <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
+    <span>𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩</span>
+    <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+  </a>
+
+  <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+
+  <footer>
+    Blog · Termos de Uso · Política de Privacidade · FAQ<br>
+    © COPYRIGHT 2025 - 
+    <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
+    TODOS OS DIREITOS RESERVADOS
+  </footer>
+
+  <script>
+    const menu = document.getElementById('sideMenu');
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    menuBtn.addEventListener('click', () => menu.classList.add('open'));
+    closeBtn.addEventListener('click', () => menu.classList.remove('open'));
+  </script>
+
+</body>
+</html>
