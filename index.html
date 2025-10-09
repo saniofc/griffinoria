@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Griffinoria</title>
 
-  <!-- 🔮 META TAGS PARA PRÉVIA NO WHATSAPP, TELEGRAM, ETC -->
+  <!-- META TAGS PARA PRÉVIA -->
   <meta property="og:title" content="Grifinoria💛🔥🚩">
   <meta property="og:description" content="Convite para conversar em grupo">
   <meta property="og:image" content="https://files.catbox.moe/r7gnm5.jpg">
@@ -14,12 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       min-height: 100vh;
@@ -33,201 +28,75 @@
       overflow-x: hidden;
       position: relative;
     }
-
-    /* === FUNDO DE VÍDEO === */
     #video-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      filter: brightness(0.4);
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -1; filter: brightness(0.4);
     }
-
     header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 20px;
-      background: rgba(0,0,0,0.6);
-      text-align: center;
-      z-index: 1000;
+      position: fixed; top: 0; left: 0; width: 100%; padding: 20px;
+      background: rgba(0,0,0,0.6); text-align: center; z-index: 1000;
     }
+    header h1 { margin: 0; text-shadow: 2px 2px 5px #000; font-size: 32px; }
+    header p { margin: 5px 0 0; text-shadow: 1px 1px 3px #000; }
 
-    header h1 {
-      margin: 0;
-      text-shadow: 2px 2px 5px #000;
-      font-size: 32px;
-    }
-
-    header p {
-      margin: 5px 0 0;
-      text-shadow: 1px 1px 3px #000;
-    }
-
-    /* === Ícone do menu === */
     .menu-icon {
-      position: fixed;
-      top: 25px;
-      right: 25px;
-      font-size: 30px;
-      cursor: pointer;
-      color: white;
-      z-index: 1100;
-      background: rgba(0,0,0,0.6);
-      padding: 8px 14px;
-      border-radius: 10px;
+      position: fixed; top: 25px; right: 25px; font-size: 30px;
+      cursor: pointer; color: white; z-index: 1100;
+      background: rgba(0,0,0,0.6); padding: 8px 14px; border-radius: 10px;
       transition: 0.3s;
     }
+    .menu-icon:hover { background: rgba(255,255,255,0.2); }
 
-    .menu-icon:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* === Menu lateral === */
     .menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 250px;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      box-shadow: -2px 0 8px rgba(0,0,0,0.7);
-      transition: right 0.3s ease;
-      padding: 30px 20px;
-      z-index: 1200;
+      position: fixed; top: 0; right: -300px; width: 250px; height: 100%;
+      background: rgba(0,0,0,0.9); box-shadow: -2px 0 8px rgba(0,0,0,0.7);
+      transition: right 0.3s ease; padding: 30px 20px; z-index: 1200;
     }
-
-    .menu.open {
-      right: 0;
-    }
-
+    .menu.open { right: 0; }
     .menu .close-btn {
-      font-size: 26px;
-      color: #fff;
-      cursor: pointer;
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      background: none;
-      border: none;
+      font-size: 26px; color: #fff; cursor: pointer;
+      position: absolute; top: 15px; right: 20px; background: none; border: none;
     }
-
     .menu h2 {
-      margin-top: 50px;
-      font-size: 22px;
-      color: #b78cff;
-      border-bottom: 1px solid #b78cff;
-      padding-bottom: 5px;
-      text-align: left;
+      margin-top: 50px; font-size: 22px; color: #b78cff;
+      border-bottom: 1px solid #b78cff; padding-bottom: 5px; text-align: left;
     }
-
     .menu a {
-      display: block;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(183, 140, 255, 0.2);
-      padding: 12px 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-      text-align: left;
-      transition: 0.3s;
-      font-size: 18px;
+      display: block; text-decoration: none; color: #fff;
+      background: rgba(183, 140, 255, 0.2); padding: 12px 15px; border-radius: 10px;
+      margin-top: 15px; text-align: left; transition: 0.3s; font-size: 18px;
     }
+    .menu a:hover { background: rgba(183, 140, 255, 0.5); }
 
-    .menu a:hover {
-      background: rgba(183, 140, 255, 0.5);
-    }
-
-    /* === Botão do grupo === */
     .grupo {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0, 0, 0, 0.5); /* preto transparente */
-      margin: 20px auto;
-      padding: 18px 22px;
-      border-radius: 40px;
-      max-width: 360px;
-      text-decoration: none;
-      color: white;
-      transition: 0.3s;
-      font-size: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0, 0, 0, 0.5); margin: 20px auto; padding: 18px 22px;
+      border-radius: 40px; max-width: 360px; text-decoration: none; color: white;
+      transition: 0.3s; font-size: 20px;
     }
+    .grupo:hover { background: rgba(0,0,0,0.7); transform: scale(1.03); }
+    .grupo img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: 10px; }
+    .grupo span { flex-grow: 1; text-align: left; font-size: 22px; }
+    .grupo .whatsapp-icon { width: 28px; height: 28px; margin-left: 10px; filter: drop-shadow(0 0 3px #25D366); }
 
-    .grupo:hover {
-      background: rgba(0, 0, 0, 0.7);
-      transform: scale(1.03);
-    }
-
-    .grupo img {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      object-fit: cover;
-      margin-right: 10px;
-    }
-
-    .grupo span {
-      flex-grow: 1;
-      text-align: left;
-      font-size: 22px;
-    }
-
-    .grupo .whatsapp-icon {
-      width: 28px;
-      height: 28px;
-      margin-left: 10px;
-      filter: drop-shadow(0 0 3px #25D366);
-    }
-
-    /* === Botão principal === */
     .botao {
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      border: 2px solid #fff;
-      border-radius: 30px;
-      padding: 12px 26px;
-      margin-top: 15px;
-      text-decoration: none;
-      font-size: 18px;
-      transition: all 0.3s ease;
+      background: rgba(0, 0, 0, 0.7); color: #fff; border: 2px solid #fff;
+      border-radius: 30px; padding: 12px 26px; margin-top: 15px;
+      text-decoration: none; font-size: 18px; transition: all 0.3s ease;
     }
-
-    .botao:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
+    .botao:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
 
     footer {
-      margin-top: auto;
-      width: 100%;
-      text-align: center;
-      padding: 30px 15px;
-      background: rgba(0, 0, 0, 0.7);
-      font-size: 14px;
-      color: #ddd;
-      text-shadow: 1px 1px 2px #000;
+      margin-top: auto; width: 100%; text-align: center;
+      padding: 30px 15px; background: rgba(0,0,0,0.7); font-size: 14px;
+      color: #ddd; text-shadow: 1px 1px 2px #000;
     }
-
-    footer a {
-      color: #b78cff;
-      text-decoration: none;
-      margin: 0 5px;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer a { color: #b78cff; text-decoration: none; margin: 0 5px; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <!-- 🔥 VÍDEO DE FUNDO -->
   <video id="video-bg" autoplay muted loop playsinline>
     <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
   </video>
@@ -237,47 +106,16 @@
     <p>amaldiçoado seja tu q não entra no grupo🪄</p>
   </header>
 
-  <!-- Ícone do menu -->
   <div class="menu-icon" id="menuBtn">☰</div>
 
-  <!-- Menu lateral -->
   <div class="menu" id="sideMenu">
     <button class="close-btn" id="closeBtn">✕</button>
     <h2>informações</h2>
     <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
   </div>
 
-<!-- LISTA DE GRUPOS -->
-<div id="lista-grupos"></div>
-
-<script>
-  async function carregarGrupos() {
-    try {
-      const resposta = await fetch('grupos.json');
-      const grupos = await resposta.json();
-
-      const lista = document.getElementById('lista-grupos');
-      lista.innerHTML = '';
-
-      grupos.forEach(g => {
-        const item = document.createElement('a');
-        item.className = 'grupo';
-        item.href = g.link;
-        item.target = '_blank';
-        item.innerHTML = `
-          <img src="${g.foto}" alt="Foto do grupo">
-          <span>${g.nome}</span>
-          <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        `;
-        lista.appendChild(item);
-      });
-    } catch (err) {
-      console.error('Erro ao carregar grupos.json:', err);
-    }
-  }
-
-  carregarGrupos();
-</script>
+  <!-- LISTA DE GRUPOS -->
+  <div id="lista-grupos"></div>
 
   <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
@@ -288,13 +126,41 @@
     TODOS OS DIREITOS RESERVADOS
   </footer>
 
+  <!-- SCRIPTS -->
   <script>
+    // Menu lateral
     const menu = document.getElementById('sideMenu');
     const menuBtn = document.getElementById('menuBtn');
     const closeBtn = document.getElementById('closeBtn');
-
     menuBtn.addEventListener('click', () => menu.classList.add('open'));
     closeBtn.addEventListener('click', () => menu.classList.remove('open'));
+
+    // Carregar grupos do JSON
+    async function carregarGrupos() {
+      try {
+        const resposta = await fetch('grupos.json');
+        const grupos = await resposta.json();
+        const lista = document.getElementById('lista-grupos');
+        lista.innerHTML = '';
+
+        grupos.forEach(g => {
+          const item = document.createElement('a');
+          item.className = 'grupo';
+          item.href = g.link;
+          item.target = '_blank';
+          item.innerHTML = `
+            <img src="${g.foto}" alt="Foto do grupo">
+            <span>${g.nome}</span>
+            <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+          `;
+          lista.appendChild(item);
+        });
+      } catch (err) {
+        console.error('Erro ao carregar grupos.json:', err);
+      }
+    }
+
+    carregarGrupos();
   </script>
 
 </body>
