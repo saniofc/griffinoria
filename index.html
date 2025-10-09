@@ -1,139 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Griffinoria - Grupos WhatsApp</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f0f0f0; }
-  header { background: #4CAF50; color: white; padding: 15px; text-align: center; }
-  nav { display: flex; justify-content: center; margin: 15px 0; }
-  nav button { margin: 0 10px; padding: 10px 20px; cursor: pointer; }
-  main { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
-  input[type="text"] { width: 70%; padding: 10px; margin-right: 10px; }
-  button.send { padding: 10px; cursor: pointer; }
-  .group { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
-  footer { text-align: center; padding: 20px; margin-top: 20px; font-size: 14px; color: #555; background: #eee; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Griffinoria</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 120px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background: url("https://files.catbox.moe/hzhkn1.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      text-shadow: 2px 2px 5px #000;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .grupo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: rgba(128, 0, 128, 0.6);
+      margin: 20px auto;
+      padding: 25px 30px;
+      border-radius: 50px;
+      max-width: 400px;
+      text-decoration: none;
+      color: white;
+      transition: 0.3s;
+      font-size: 22px;
+    }
+
+    .grupo:hover {
+      background: rgba(128, 0, 128, 0.85);
+    }
+
+    .grupo img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin-right: 15px;
+      border: 3px solid #fff;
+      object-fit: cover;
+    }
+
+    .grupo span {
+      font-size: 24px;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    /* Botão "Outros Grupos" */
+    .botao {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 30px;
+      padding: 15px 30px;
+      margin-top: 15px;
+      text-decoration: none;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .botao:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Rodapé */
+    footer {
+      margin-top: auto;
+      width: 100%;
+      text-align: center;
+      padding: 30px 15px;
+      background: rgba(0, 0, 0, 0.7);
+      font-size: 14px;
+      color: #ddd;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    footer a {
+      color: #b78cff;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
+  <header>
+   <h1>Griffinoria</h1>
+  <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+  </header>
 
-<header>
-  <h1>Griffinoria - Grupos WhatsApp</h1>
-</header>
+  <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
+    <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
+    <span>𝐆𝖗𝖎𝖋𝖎𝖓𝖔𝖗𝖎𝖆💛🔥🚩</span>
+  </a>
 
-<nav>
-  <button onclick="showPage('home')">Página Inicial</button>
-  <button onclick="showPage('meusGrupos')">Meus Grupos</button>
-</nav>
+  <a class="botao" href="https://linkfly.to/nexosfc" target="_blank">Outros Grupos</a>
 
-<main>
-  <!-- Página Inicial -->
-  <div id="homePage">
-    <h2>Todos os grupos</h2>
-    <div id="allGroups"></div>
-  </div>
-
-  <!-- Meus Grupos -->
-  <div id="meusGruposPage" style="display:none;">
-    <h2>Meus grupos enviados</h2>
-    <input type="text" id="groupLink" placeholder="Cole o link do grupo WhatsApp">
-    <button class="send" onclick="sendGroup()">Enviar Grupo</button>
-    <div id="myGroups"></div>
-  </div>
-</main>
-
-<footer>
-  Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
-  TODOS OS DIREITOS RESERVADOS
-</footer>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-  import { getFirestore, collection, addDoc, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-  // Configuração Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyD2EAWH3a1gpV8deciUCi8GKq7FVhzfZeg",
-    authDomain: "gruposwhatsapp-ed18b.firebaseapp.com",
-    projectId: "gruposwhatsapp-ed18b",
-    storageBucket: "gruposwhatsapp-ed18b.appspot.com",
-    messagingSenderId: "982330565891",
-    appId: "1:982330565891:web:772e47212f4f8d26a67536",
-    measurementId: "G-48Z40NHZ0L"
-  };
-
-  // Inicializa Firebase e Firestore
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-
-  // ID temporário do usuário
-  let userId = localStorage.getItem('userId');
-  if(!userId){
-    userId = 'user-' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('userId', userId);
-  }
-
-  function showPage(page){
-    document.getElementById('homePage').style.display = page === 'home' ? 'block' : 'none';
-    document.getElementById('meusGruposPage').style.display = page === 'meusGrupos' ? 'block' : 'none';
-  }
-
-  async function sendGroup(){
-    const link = document.getElementById('groupLink').value.trim();
-    if(!link.includes("chat.whatsapp.com")){
-      alert("Só é permitido enviar links de grupos WhatsApp!");
-      return;
-    }
-    try {
-      await addDoc(collection(db, "groups"), {
-        user: userId,
-        link: link,
-        timestamp: Date.now()
-      });
-      document.getElementById('groupLink').value = '';
-      loadMyGroups();
-      loadAllGroups();
-    } catch(e){
-      alert("Erro ao enviar grupo: " + e);
-    }
-  }
-
-  async function loadAllGroups(){
-    const allDiv = document.getElementById('allGroups');
-    allDiv.innerHTML = '';
-    const q = query(collection(db, "groups"), orderBy("timestamp", "desc"));
-    const snapshot = await getDocs(q);
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'group';
-      div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
-      allDiv.appendChild(div);
-    });
-  }
-
-  async function loadMyGroups(){
-    const myDiv = document.getElementById('myGroups');
-    myDiv.innerHTML = '';
-    const q = query(collection(db, "groups"), where("user","==",userId), orderBy("timestamp","desc"));
-    const snapshot = await getDocs(q);
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'group';
-      div.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
-      myDiv.appendChild(div);
-    });
-  }
-
-  // Carrega os grupos ao abrir a página
-  loadAllGroups();
-  loadMyGroups();
-</script>
-
+  <footer>
+    Blog · Termos de Uso · Política de Privacidade · FAQ<br>
+    © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
+    TODOS OS DIREITOS RESERVADOS
+  </footer>
 </body>
 </html>
