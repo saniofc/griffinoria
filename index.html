@@ -42,6 +42,81 @@
       text-shadow: 1px 1px 3px #000;
     }
 
+    /* === Ícone do menu (barrinha direita) === */
+    .menu-icon {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
+      z-index: 1100;
+      background: rgba(0,0,0,0.6);
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .menu-icon:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* === Menu lateral === */
+    .menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.7);
+      transition: right 0.3s ease;
+      padding: 30px 20px;
+      z-index: 1200;
+    }
+
+    .menu.open {
+      right: 0;
+    }
+
+    .menu .close-btn {
+      font-size: 26px;
+      color: #fff;
+      cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+    }
+
+    .menu h2 {
+      margin-top: 50px;
+      font-size: 22px;
+      color: #b78cff;
+      border-bottom: 1px solid #b78cff;
+      padding-bottom: 5px;
+      text-align: left;
+    }
+
+    .menu a {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(183, 140, 255, 0.2);
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: left;
+      transition: 0.3s;
+      font-size: 18px;
+    }
+
+    .menu a:hover {
+      background: rgba(183, 140, 255, 0.5);
+    }
+
+    /* === Seção principal === */
     .grupo {
       display: flex;
       align-items: center;
@@ -76,7 +151,7 @@
       text-align: left;
     }
 
-    /* Botão "Outros Grupos" */
+    /* Botão principal */
     .botao {
       background: rgba(0, 0, 0, 0.7);
       color: #fff;
@@ -120,8 +195,18 @@
 <body>
   <header>
    <h1>Griffinoria</h1>
-  <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+   <p>amaldiçoado seja tu q não entra no grupo🪄</p>
   </header>
+
+  <!-- Ícone do menu -->
+  <div class="menu-icon" id="menuBtn">☰</div>
+
+  <!-- Menu lateral -->
+  <div class="menu" id="sideMenu">
+    <button class="close-btn" id="closeBtn">✕</button>
+    <h2>Menu</h2>
+    <a href="https://linkfly.to/lojadamiih" target="_blank">💎 Loja da Miih</a>
+  </div>
 
   <a class="grupo" href="https://chat.whatsapp.com/GjO49pjdaOf6zbauyHntyq?mode=ems_copy_t" target="_blank">
     <img src="https://files.catbox.moe/r7gnm5.jpg" alt="Foto do grupo">
@@ -135,5 +220,19 @@
     © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a><br>
     TODOS OS DIREITOS RESERVADOS
   </footer>
+
+  <script>
+    const menu = document.getElementById('sideMenu');
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    menuBtn.addEventListener('click', () => {
+      menu.classList.add('open');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      menu.classList.remove('open');
+    });
+  </script>
 </body>
 </html>
