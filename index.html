@@ -15,7 +15,7 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     color:#fff;
     min-height:100vh;
     display:flex;
@@ -40,7 +40,6 @@
   .menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px}
   .menu a:hover{background:rgba(183,140,255,0.25)}
 
-  /* lista e card */
   #lista-grupos{width:100%;max-width:420px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px}
   .grupo{
     width:100%;
@@ -60,45 +59,13 @@
   }
   .grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.62)}
   .grupo img.foto{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid #fff;flex-shrink:0}
-
   .grupo span.nome{flex:1;text-align:left;font-size:20px;display:block;padding-left:4px}
-
   .grupo img.whatsapp-icon{width:28px;height:28px;margin-left:10px;flex-shrink:0;filter:drop-shadow(0 0 3px #25D366)}
+  .grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35)}
 
-  /* VIP: brilho ao redor do card (apenas VIP) */
-  .grupo.vip{
-    box-shadow:0 0 18px 6px rgba(255,215,0,0.12), 0 0 28px rgba(255,215,0,0.08) inset;
-    border:1px solid rgba(255,215,0,0.35);
-  }
-
-  /* Estrela: círculo dourado na Borda superior-esquerda do card */
-  .vip-star{
-    position:absolute;
-    top:-10px;           /* acima da borda do card */
-    left:-10px;          /* na borda esquerda do card */
-    width:34px; height:34px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(180deg,#ffd700,#ffb400);
-    color:#222;
-    font-weight:700;
-    font-size:16px;
-    box-shadow:0 0 10px rgba(255,215,0,0.9), 0 0 18px rgba(255,200,0,0.6);
-    border:2px solid rgba(255,255,255,0.3);
-    transform:translateZ(0);
-    animation:vipPulse 1.4s infinite ease-in-out;
-    z-index:30;
-  }
-  @keyframes vipPulse{
-    0%{transform:translateY(0) scale(1); opacity:0.9}
-    50%{transform:translateY(-3px) scale(1.08); opacity:1}
-    100%{transform:translateY(0) scale(1); opacity:0.9}
-  }
-
-  /* botao "Outros Grupos" sem brilho (normal) */
+  /* botão principal */
   .botao{
+    position:relative;
     background:rgba(0,0,0,0.7);
     color:#fff;
     border:2px solid #fff;
@@ -108,107 +75,126 @@
     text-decoration:none;
     font-size:18px;
     transition:transform .18s,box-shadow .18s;
+    display:inline-block;
   }
   .botao:hover{transform:scale(1.04)}
 
-  footer{margin-top:18px;padding:28px;font-size:14px;color:#ccc;text-align:center}
+  /* ESTRELA VIP NA BORDA DO BOTÃO */
+  .botao.vip::before{
+    content:"⭐";
+    position:absolute;
+    left:-20px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:24px;
+    color:#ffd700;
+    text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;
+    animation:shine 1.4s infinite alternate;
+  }
+
+  @keyframes shine{
+    from{opacity:0.7;transform:translateY(-50%) scale(1);}
+    to{opacity:1;transform:translateY(-50%) scale(1.2);}
+  }
+
+  footer{
+    margin-top:25px;
+    padding:28px;
+    font-size:14px;
+    color:#ccc;
+    text-align:center;
+    line-height:1.6;
+  }
+  footer a{color:#b78cff;text-decoration:none}
 </style>
 </head>
 <body>
 
-  <video id="video-bg" autoplay muted loop playsinline>
-    <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
-  </video>
+<video id="video-bg" autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
+</video>
 
-  <header>
-    <h1>Grifinoria</h1>
-    <p>amaldiçoado seja tu q não entra no grupo🪄</p>
-    <p id="contador">Visitas: 18000</p>
-  </header>
+<header>
+  <h1>Grifinoria</h1>
+  <p>amaldiçoado seja tu q não entra no grupo🪄</p>
+  <p id="contador">Visitas: 18000</p>
+</header>
 
-  <div class="menu-icon" id="menuBtn">☰</div>
-  <div class="menu" id="sideMenu">
-    <button class="close-btn" id="closeBtn">✕</button>
-    <h2>Informações</h2>
-    <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
-    <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
-    <a href="https://wa.me//5521977231625" target="_blank">🚀Divulgar meu grupo</a>
-    <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
-  </div>
+<div class="menu-icon" id="menuBtn">☰</div>
+<div class="menu" id="sideMenu">
+  <button class="close-btn" id="closeBtn">✕</button>
+  <h2>Informações</h2>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
+  <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
+  <a href="https://wa.me//5521977231625" target="_blank">🚀 Divulgar meu grupo</a>
+  <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
+</div>
 
-  <div id="lista-grupos"></div>
+<div id="lista-grupos"></div>
 
-  <!-- botão "Outros Grupos" permanece aqui, sem brilho -->
-  <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+<!-- Botão com estrela VIP se for true -->
+<a id="botaoGrifinoria" class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
-  <footer>
-    Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-    © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank" style="color:#b78cff;text-decoration:none">saniofc.github.io/griffinoria/</a>
-  </footer>
+<footer>
+  Blog · Termos de Uso · Política de Privacidade · FAQ<br>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
+</footer>
 
 <script>
-  // menu lateral
-  const menu = document.getElementById('sideMenu');
-  document.getElementById('menuBtn').addEventListener('click', ()=>menu.classList.add('open'));
-  document.getElementById('closeBtn').addEventListener('click', ()=>menu.classList.remove('open'));
+const menu = document.getElementById('sideMenu');
+document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
+document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
-  // carregar grupos
-  async function carregarGrupos(){
-    try{
-      const res = await fetch('grupos.json');
-      const grupos = await res.json();
-      const lista = document.getElementById('lista-grupos');
-      lista.innerHTML = '';
+async function carregarGrupos(){
+  try{
+    const res = await fetch('grupos.json');
+    const grupos = await res.json();
+    const lista = document.getElementById('lista-grupos');
+    lista.innerHTML = '';
 
-      grupos.forEach(g=>{
-        const a = document.createElement('a');
-        a.className = 'grupo' + (g.vip ? ' vip' : '');
-        a.href = g.link || '#';
-        a.target = '_blank';
+    let temVip = false;
+    grupos.forEach(g=>{
+      const a=document.createElement('a');
+      a.className='grupo'+(g.vip?' vip':'');
+      a.href=g.link||'#';
+      a.target='_blank';
+      a.innerHTML=`
+        <img class="foto" src="${g.foto}" alt="foto do grupo">
+        <span class="nome">${g.nome}</span>
+        <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+      `;
+      lista.appendChild(a);
+      if(g.vip) temVip = true;
+    });
 
-        // constrói o HTML interno: foto + nome + icon
-        a.innerHTML = `
-          <img class="foto" src="${g.foto}" alt="foto do grupo">
-          <span class="nome">${g.nome}</span>
-          <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        `;
+    // se existir algum grupo VIP → estrela no botão final
+    const botao = document.getElementById('botaoGrifinoria');
+    if(temVip) botao.classList.add('vip');
 
-        // se VIP: adiciona a estrela na borda superior-esquerda do card
-        if (g.vip){
-          const star = document.createElement('div');
-          star.className = 'vip-star';
-          star.innerText = '⭐';
-          a.appendChild(star);
-        }
-
-        lista.appendChild(a);
-      });
-
-    }catch(err){
-      console.error('Erro ao carregar grupos.json', err);
-    }
+  }catch(err){
+    console.error('Erro ao carregar grupos.json',err);
   }
+}
+carregarGrupos();
 
-  carregarGrupos();
-
-  // contador (mantive o seu cálculo)
-  const contador = document.getElementById('contador');
-  const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
-  const visitasBase = 18000;
-  function random(seed,max){const x=Math.sin(seed)*10000;return Math.floor((x-Math.floor(x))*max)+1}
-  function calcularVisitas(){
-    const agora = Date.now();
-    const minutosPassados = Math.floor((agora-dataInicial)/60000);
-    let total = visitasBase;
-    for(let i=1;i<=minutosPassados;i++){
-      total += random(i,17);
-      if(i%4===0) total += random(i+10000,8);
-    }
-    return total;
+// contador
+const contador=document.getElementById('contador');
+const dataInicial=new Date('2025-01-01T00:00:00Z').getTime();
+const visitasBase=18000;
+function random(seed,max){const x=Math.sin(seed)*10000;return Math.floor((x-Math.floor(x))*max)+1}
+function calcularVisitas(){
+  const agora=Date.now();
+  const minutos=Math.floor((agora-dataInicial)/60000);
+  let total=visitasBase;
+  for(let i=1;i<=minutos;i++){
+    total+=random(i,17);
+    if(i%4===0) total+=random(i+10000,8);
   }
-  function atualizarContador(){contador.textContent = `Visitas: ${calcularVisitas()}`;}
-  atualizarContador();
-  setInterval(atualizarContador,60000);
+  return total;
+}
+function atualizarContador(){contador.textContent=`Visitas: ${calcularVisitas()}`;}
+atualizarContador();
+setInterval(atualizarContador,60000);
 </script>
 
 </body>
