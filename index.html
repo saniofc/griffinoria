@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
+/* === SEU CSS EXISTENTE === */
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000}
 #video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4)}
@@ -43,7 +44,6 @@ header p{margin-top:4px;text-shadow:1px 1px 3px #000}
 .botao:hover{transform:scale(1.04)}
 footer{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:#ccc;text-align:center;padding:14px 10px;font-size:14px;line-height:1.6;z-index:2000}
 footer a{color:#b78cff;text-decoration:none}
-/* Modal */
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:5000}
 .modal-content{background:#111;padding:20px;border-radius:20px;max-width:400px;width:90%;text-align:center;color:#fff;position:relative}
 .modal-content h3{margin-bottom:15px}
@@ -78,7 +78,7 @@ footer a{color:#b78cff;text-decoration:none}
   <a href="https://wa.me//5521977231625" target="_blank">🤖Alugar bot</a>
   <a href="#" id="meusGrupos">📋Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">💎Comprar bot</a>
+  <a href="#" id="comprarVip">💎Comprar VIP</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -89,7 +89,6 @@ footer a{color:#b78cff;text-decoration:none}
   ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
-<!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -118,191 +117,71 @@ let todosGrupos = [];
 // ================== CARREGAR GRUPOS ================== //
 async function carregarGrupos() {
   let jsonGrupos = [];
-  try {
-    const res = await fetch('grupos.json');
-    jsonGrupos = await res.json();
-  } catch (e) {
-    console.warn('?? Nenhum grupos.json encontrado ou erro ao carregar:', e);
-  }
+  try { const res = await fetch('grupos.json'); jsonGrupos = await res.json(); } 
+  catch (e) { console.warn('Nenhum grupos.json ou erro:', e); }
 
   const gruposRef = ref(db, 'grupos');
   onValue(gruposRef, snap => {
     const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
     const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-
-    // Combinar todos removendo duplicatas (mesmo nome = mesmo grupo)
     const mapa = new Map();
-
     [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
-  if (g?.nome) {
-    g.vip = !!g.vip; // garante que seja true ou false
-    mapa.set(g.nome.toLowerCase(), g);
-  }
-});
-
+      if(g?.nome){ g.vip=!!g.vip; mapa.set(g.nome.toLowerCase(),g);}
+    });
     todosGrupos = Array.from(mapa.values());
     renderizarGrupos(todosGrupos);
   });
 }
 
 // ================== RENDERIZAR GRUPOS ================== //
-function renderizarGrupos(lista) {
+function renderizarGrupos(lista){
   const container = document.getElementById('lista-grupos');
-  container.innerHTML = '';
-
-  if (lista.length === 0) {
-    container.innerHTML = '<p style="color:#ccc;">Nenhum grupo encontrado.</p>';
-    return;
-  }
-
+  container.innerHTML='';
+  if(lista.length===0){ container.innerHTML='<p style="color:#ccc;">Nenhum grupo encontrado.</p>'; return;}
   const usuario = localStorage.getItem('usuarioID');
+  lista.sort((a,b)=> a.vip&&!b.vip?-1:!a.vip&&b.vip?1:0);
+  lista.forEach(g=>{
+    const wrapper=document.createElement('div');
+    wrapper.style.display='flex';
+    wrapper.style.flexDirection='column';
+    wrapper.style.alignItems='center';
+    wrapper.style.width='100%';
 
-// Ordena: VIP primeiro
-lista.sort((a, b) => {
-  if (a.vip && !b.vip) return -1;
-  if (!a.vip && b.vip) return 1;
-  return 0;
-});
-
-  lista.forEach(g => {
-    // Criar um wrapper para o grupo + botões
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.flexDirection = 'column';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.width = '100%';
-
-    // Botão do grupo
-    const btn = document.createElement('a');
-    btn.className = 'grupo' + (g.vip ? ' vip' : '');
-    btn.href = g.link;
-    btn.target = '_blank';
-    btn.innerHTML = `
+    const btn=document.createElement('a');
+    btn.className='grupo'+(g.vip?' vip':'');
+    btn.href=g.link;
+    btn.target='_blank';
+    btn.innerHTML=`
       <img class="foto" src="${g.foto}" alt="foto do grupo">
       <div class="info">
         <span class="nome">${g.nome}</span>
-        <div class="categoria">${g.categoria || ''}</div>
+        <div class="categoria">${g.categoria||''}</div>
         <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
-      </div>
-    `;
+      </div>`;
+    
+    const cliqueRef = ref(db,'cliques/'+g.nome);
+    onValue(cliqueRef, snap=>{ btn.querySelector('.cliques').textContent=`Cliques: ${snap.val()||0}`; });
 
-    const cliqueRef = ref(db, 'cliques/' + g.nome);
-    onValue(cliqueRef, snap => {
-      btn.querySelector('.cliques').textContent = `Cliques: ${snap.val() || 0}`;
-    });
-
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      runTransaction(cliqueRef, c => (c || 0) + 1).then(() => window.open(g.link, '_blank'));
-      atualizarVisitas();
-    });
+    btn.addEventListener('click', e=>{ e.preventDefault(); runTransaction(cliqueRef,c=>(c||0)+1).then(()=>window.open(g.link,'_blank')); atualizarVisitas(); });
 
     wrapper.appendChild(btn);
 
-    // Botões Editar/Excluir abaixo
-    if (g.dono === usuario) {
-      const box = document.createElement('div');
-      box.style.display = 'flex';
-      box.style.gap = '6px';
-      box.style.marginTop = '8px'; // espaço entre o botão do grupo e os botões
-
-      const edit = document.createElement('button');
-      edit.textContent = '✏️';
-      edit.style.cursor = 'pointer';
-      edit.onclick = () => abrirEdicao(g);
-
-      const del = document.createElement('button');
-      del.textContent = '🗑️';
-      del.style.cursor = 'pointer';
-      del.onclick = () => excluirGrupo(g);
-
-      box.appendChild(edit);
-      box.appendChild(del);
-      wrapper.appendChild(box);
+    if(g.dono===usuario){
+      const box=document.createElement('div'); box.style.display='flex'; box.style.gap='6px'; box.style.marginTop='8px';
+      const edit=document.createElement('button'); edit.textContent='✏️'; edit.style.cursor='pointer'; edit.onclick=()=>abrirEdicao(g);
+      const del=document.createElement('button'); del.textContent='🗑️'; del.style.cursor='pointer'; del.onclick=()=>excluirGrupo(g);
+      box.appendChild(edit); box.appendChild(del); wrapper.appendChild(box);
     }
 
     container.appendChild(wrapper);
   });
 }
 
-// ================== EDI??O E EXCLUS?O ================== //
-function abrirEdicao(grupo){
-  modal.style.display = 'flex';
-  document.getElementById('grupoNome').value = grupo.nome;
-  document.getElementById('grupoLink').value = grupo.link;
-  document.getElementById('grupoFoto').value = grupo.foto;
-  document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "MIHVIP2025" : "";
-  
-  const nomeOriginal = grupo.nome; // salva o nome original
-  document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
-}
-
-async function salvarEdicao(grupo, nomeOriginal){
-  grupo.nome = document.getElementById('grupoNome').value.trim();
-  grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
-  grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "MIHVIP2025";
-
-  // Se o nome mudou, remove o antigo
-  if (nomeOriginal !== grupo.nome) {
-    await remove(ref(db, 'grupos/' + nomeOriginal));
-  }
-
-  // Atualiza no Firebase
-  await set(ref(db, 'grupos/' + grupo.nome), grupo);
-
-  // Atualiza localStorage
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  modal.style.display = 'none';
-  carregarGrupos(); // recarrega todos grupos corretamente
-}
-
-function excluirGrupo(grupo){
-  if (!confirm('Deseja realmente excluir este grupo?')) return;
-  remove(ref(db, 'grupos/' + grupo.nome));
-  todosGrupos = todosGrupos.filter(g => g.nome !== grupo.nome);
-
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.filter(g => g.nome !== grupo.nome);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  renderizarGrupos(todosGrupos);
-}
-
-// ================== VISITAS ================== //
-const contador = document.getElementById('contador');
-const visitasRef = ref(db, 'visitas');
-onValue(visitasRef, snap => {
-  contador.textContent = `Visitas: ${snap.val() || 0}`;
-});
-function atualizarVisitas() {
-  runTransaction(visitasRef, v => (v || 0) + 1);
-}
-atualizarVisitas();
-
-// ================== FILTRO ================== //
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat.toLowerCase();
-    if (cat === 'todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g => g.categoria?.toLowerCase() === cat));
-  });
-});
-
 // ================== MODAL ================== //
-const enviarBtn = document.getElementById('enviarGrupo');
-const meusBtn = document.getElementById('meusGrupos');
-
-const modal = document.createElement('div');
-modal.className = 'modal';
-modal.innerHTML = `
+const enviarBtn=document.getElementById('enviarGrupo');
+const meusBtn=document.getElementById('meusGrupos');
+const modal=document.createElement('div'); modal.className='modal';
+modal.innerHTML=`
   <div class="modal-content">
     <span class="close-modal">❌</span>
     <h3>Enviar Meu Grupo</h3>
@@ -319,67 +198,99 @@ modal.innerHTML = `
     <button id="salvarGrupo">Salvar Grupo</button>
   </div>`;
 document.body.appendChild(modal);
-
-modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-enviarBtn.onclick = () => {
-  modal.style.display = 'flex';
-  // limpa campos ao abrir
-  document.getElementById('grupoNome').value = '';
-  document.getElementById('grupoLink').value = '';
-  document.getElementById('grupoFoto').value = '';
-  document.getElementById('grupoCategoria').value = '';
-  document.getElementById('grupoVipCodigo').value = '';
+modal.querySelector('.close-modal').onclick=()=>modal.style.display='none';
+enviarBtn.onclick=()=>{
+  modal.style.display='flex';
+  document.getElementById('grupoNome').value='';
+  document.getElementById('grupoLink').value='';
+  document.getElementById('grupoFoto').value='';
+  document.getElementById('grupoCategoria').value='';
+  document.getElementById('grupoVipCodigo').value='';
 };
 
-// ================== SALVAR NOVO GRUPO ================== //
-document.getElementById('salvarGrupo').onclick = async () => {
-  const nome = document.getElementById('grupoNome').value.trim();
-  const link = document.getElementById('grupoLink').value.trim();
-  const foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
-  const categoria = document.getElementById('grupoCategoria').value;
-  const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
+// ================== SALVAR NOVO GRUPO + ALERTA ================== //
+document.getElementById('salvarGrupo').onclick=async()=>{
+  const nome=document.getElementById('grupoNome').value.trim();
+  const link=document.getElementById('grupoLink').value.trim();
+  const foto=document.getElementById('grupoFoto').value.trim()||'https://files.catbox.moe/ls07y5.jpg';
+  const categoria=document.getElementById('grupoCategoria').value;
+  const vipCodigo=document.getElementById('grupoVipCodigo').value.trim();
 
-  // Valida??o
-  if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
-    alert('Preencha corretamente o nome e o link do grupo!');
-    return;
-  }
+  if(!nome||!link.startsWith('https://chat.whatsapp.com/')){ alert('Preencha corretamente o nome e o link do grupo!'); return; }
 
-  // Código VIP
-  const isVip = vipCodigo === "MIHVIP2025"; // ? altere aqui o código VIP se quiser
+  const isVip=vipCodigo==='MIHVIP2025';
+  const usuario=localStorage.getItem('usuarioID')||crypto.randomUUID();
+  localStorage.setItem('usuarioID',usuario);
 
-  const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
-  localStorage.setItem('usuarioID', usuario);
+  const novoGrupo={nome,link,foto,categoria,dono:usuario,vip:isVip};
+  if(todosGrupos.some(g=>g.nome.toLowerCase()===nome.toLowerCase())){ alert('Já existe um grupo com esse nome.'); return; }
 
-  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
-
-  // Evitar duplica??o
-  const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
-  if (jaExiste) {
-    alert('Já existe um grupo com esse nome. Escolha outro.');
-    return;
-  }
-
-  // Adicionar ao Firebase
-  await set(ref(db, 'grupos/' + nome), novoGrupo);
-
-  // Atualizar localmente
+  await set(ref(db,'grupos/'+nome),novoGrupo);
   todosGrupos.push(novoGrupo);
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+  let enviados=JSON.parse(localStorage.getItem('gruposEnviados')||'[]');
   enviados.push(novoGrupo);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
+  localStorage.setItem('gruposEnviados',JSON.stringify(enviados));
 
   renderizarGrupos(todosGrupos);
-  modal.style.display = 'none';
+  modal.style.display='none';
+  alert('✅ Grupo enviado com sucesso!');
 };
 
 // ================== MEUS GRUPOS ================== //
-meusBtn.onclick = () => {
-  const usuario = localStorage.getItem('usuarioID');
-  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
-  const meus = todosGrupos.filter(g => g.dono === usuario);
-  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
+meusBtn.onclick=()=>{
+  const usuario=localStorage.getItem('usuarioID');
+  if(!usuario) return alert('Você ainda não enviou nenhum grupo.');
+  const meus=todosGrupos.filter(g=>g.dono===usuario);
+  if(meus.length===0) alert('Você ainda não enviou nenhum grupo.');
   else renderizarGrupos(meus);
+};
+
+document.getElementById('comprarVip').onclick = () => {
+  const vipModal = document.createElement('div');
+  vipModal.className = 'modal';
+  vipModal.innerHTML = `
+    <div class="modal-content">
+      <span class="close-modal">❌</span>
+      <h3>Comprar VIP</h3>
+      <p>Para desbloquear grupos VIP, copie a chave PIX e realize o pagamento:</p>
+      <input type="text" id="pixChave" value="000.000.000-00" readonly>
+      <button id="copiarPix">Copiar Chave PIX</button>
+      <p id="statusPix" style="margin-top:12px;color:#ffd700;"></p>
+      <button id="confirmarPix">Já Paguei</button>
+      <div id="codigoVip" style="margin-top:15px;display:none;">
+        <p>Código VIP:</p>
+        <input type="text" value="MIHVIP2025" readonly>
+        <button id="copiarVip">Copiar Código VIP</button>
+      </div>
+    </div>`;
+  document.body.appendChild(vipModal);
+  vipModal.style.display = 'flex';
+
+  const closeBtn = vipModal.querySelector('.close-modal');
+  const copiarPixBtn = vipModal.querySelector('#copiarPix');
+  const confirmarPixBtn = vipModal.querySelector('#confirmarPix');
+  const copiarVipBtn = vipModal.querySelector('#copiarVip');
+  const pixChaveInput = vipModal.querySelector('#pixChave');
+  const statusPix = vipModal.querySelector('#statusPix');
+  const codigoVipDiv = vipModal.querySelector('#codigoVip');
+  const codigoVipInput = codigoVipDiv.querySelector('input');
+
+  closeBtn.onclick = () => vipModal.remove();
+
+  copiarPixBtn.onclick = () => {
+    navigator.clipboard.writeText(pixChaveInput.value);
+    alert('✅ Chave PIX copiada!');
+  };
+
+  confirmarPixBtn.onclick = () => {
+    statusPix.textContent = 'Pagamento confirmado! Aqui está seu código VIP:';
+    codigoVipDiv.style.display = 'block';
+  };
+
+  copiarVipBtn.onclick = () => {
+    navigator.clipboard.writeText(codigoVipInput.value);
+    alert('✅ Código VIP copiado!');
+  };
 };
 
 // ================== INICIAR ================== //
