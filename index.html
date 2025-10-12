@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Grupos WhatsApp</title>
-<meta property="og:title" content="Grifinória 🦁">
+<meta property="og:title" content="Grifinória ?">
 <meta property="og:description" content="Convite para conversar em grupo">
 <meta property="og:image" content="https://files.catbox.moe/ls07y5.jpg">
 <meta property="og:url" content="https://saniofc.github.io/griffinoria/">
@@ -37,7 +37,7 @@ header p{margin-top:4px;text-shadow:1px 1px 3px #000}
 .grupo span.nome{font-size:19px;font-weight:bold;line-height:1.2}
 .grupo .categoria{font-size:14px;color:#ffd700;margin-top:4px}
 .grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35)}
-.grupo.vip::before{content:"⭐";position:absolute;left:-14px;top:50%;transform:translateY(-50%);font-size:24px;color:#ffd700;text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;animation:shine 1.4s infinite alternate}
+.grupo.vip::before{content:"?";position:absolute;left:-14px;top:50%;transform:translateY(-50%);font-size:24px;color:#ffd700;text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;animation:shine 1.4s infinite alternate}
 @keyframes shine{from{opacity:0.7;transform:translateY(-50%) scale(1);}to{opacity:1;transform:translateY(-50%) scale(1.2)}}
 .botao{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;border-radius:30px;padding:12px 28px;margin-top:20px;text-decoration:none;font-size:18px;transition:transform .18s,box-shadow .18s;display:inline-block}
 .botao:hover{transform:scale(1.04)}
@@ -70,15 +70,15 @@ footer a{color:#b78cff;text-decoration:none}
   </div>
 </header>
 
-<div class="menu-icon" id="menuBtn">📝</div>
+<div class="menu-icon" id="menuBtn">?</div>
 <div class="menu" id="sideMenu">
-  <button class="close-btn" id="closeBtn">❌</button>
-  <h2>Informações</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🤖 Alugar bot</a>
-  <a href="#" id="meusGrupos">📋 Meus Grupos</a>
-  <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">💎 Comprar bot</a>
+  <button class="close-btn" id="closeBtn">?</button>
+  <h2>Informa??es</h2>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">?? Loja da Miih</a>
+  <a href="https://wa.me//5521977231625" target="_blank">? Alugar bot</a>
+  <a href="#" id="meusGrupos">? Meus Grupos</a>
+  <a href="#" id="enviarGrupo">? Enviar Meu Grupo</a>
+  <a href="https://wa.me//5521977231625" target="_blank">? Comprar bot</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -86,10 +86,10 @@ footer a{color:#b78cff;text-decoration:none}
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
+  ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
-<!-- ==== SCRIPT FIREBASE E LÓGICA ==== -->
+<!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -116,21 +116,28 @@ document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.
 let todosGrupos = [];
 
 // ================== CARREGAR GRUPOS ================== //
-async function carregarGrupos(){
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+async function carregarGrupos() {
   let jsonGrupos = [];
-
   try {
     const res = await fetch('grupos.json');
     jsonGrupos = await res.json();
   } catch (e) {
-    console.error('Erro ao carregar grupos.json', e);
+    console.warn('⚠️ Nenhum grupos.json encontrado ou erro ao carregar:', e);
   }
 
   const gruposRef = ref(db, 'grupos');
   onValue(gruposRef, snap => {
-    const dados = snap.val() ? Object.values(snap.val()) : [];
-    todosGrupos = [...jsonGrupos, ...dados, ...enviados];
+    const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
+    const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+
+    // Combinar todos removendo duplicatas (mesmo nome = mesmo grupo)
+    const mapa = new Map();
+
+    [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
+      if (g?.nome) mapa.set(g.nome.toLowerCase(), g);
+    });
+
+    todosGrupos = Array.from(mapa.values());
     renderizarGrupos(todosGrupos);
   });
 }
@@ -182,12 +189,12 @@ function renderizarGrupos(lista) {
       box.style.gap = '6px';
 
       const edit = document.createElement('button');
-      edit.textContent = '✏️';
+      edit.textContent = '??';
       edit.style.cursor = 'pointer';
       edit.onclick = () => abrirEdicao(g);
 
       const del = document.createElement('button');
-      del.textContent = '🗑️';
+      del.textContent = '??';
       del.style.cursor = 'pointer';
       del.onclick = () => excluirGrupo(g);
 
@@ -200,7 +207,7 @@ function renderizarGrupos(lista) {
   });
 }
 
-// ================== EDIÇÃO E EXCLUSÃO ================== //
+// ================== EDI??O E EXCLUS?O ================== //
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
@@ -280,12 +287,21 @@ modal.innerHTML = `
       <option value="Zoeira">Zoeira</option>
       <option value="Namoro">Namoro</option>
     </select>
+    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
     <button id="salvarGrupo">Salvar Grupo</button>
   </div>`;
 document.body.appendChild(modal);
 
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-enviarBtn.onclick = () => modal.style.display = 'flex';
+enviarBtn.onclick = () => {
+  modal.style.display = 'flex';
+  // limpa campos ao abrir
+  document.getElementById('grupoNome').value = '';
+  document.getElementById('grupoLink').value = '';
+  document.getElementById('grupoFoto').value = '';
+  document.getElementById('grupoCategoria').value = '';
+  document.getElementById('grupoVipCodigo').value = '';
+};
 
 // ================== SALVAR NOVO GRUPO ================== //
 document.getElementById('salvarGrupo').onclick = async () => {
@@ -293,23 +309,38 @@ document.getElementById('salvarGrupo').onclick = async () => {
   const link = document.getElementById('grupoLink').value.trim();
   const foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   const categoria = document.getElementById('grupoCategoria').value;
+  const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
+  // Validação
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
-    alert('Preencha corretamente o nome e link do grupo!');
+    alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
+
+  // Código VIP
+  const isVip = vipCodigo === "MIHVIP2025"; // 🔑 altere aqui o código VIP se quiser
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
-  const novo = { nome, link, foto, categoria, dono: usuario, vip: false };
-  todosGrupos.push(novo);
+  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
 
+  // Evitar duplicação
+  const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
+  if (jaExiste) {
+    alert('Já existe um grupo com esse nome. Escolha outro.');
+    return;
+  }
+
+  // Adicionar ao Firebase
+  await set(ref(db, 'grupos/' + nome), novoGrupo);
+
+  // Atualizar localmente
+  todosGrupos.push(novoGrupo);
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados.push(novo);
+  enviados.push(novoGrupo);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
-  set(ref(db, 'grupos/' + nome), novo);
   renderizarGrupos(todosGrupos);
   modal.style.display = 'none';
 };
@@ -317,9 +348,9 @@ document.getElementById('salvarGrupo').onclick = async () => {
 // ================== MEUS GRUPOS ================== //
 meusBtn.onclick = () => {
   const usuario = localStorage.getItem('usuarioID');
-  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
+  if (!usuario) return alert('Você ainda n?o enviou nenhum grupo.');
   const meus = todosGrupos.filter(g => g.dono === usuario);
-  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
+  if (meus.length === 0) alert('Você ainda n?o enviou nenhum grupo.');
   else renderizarGrupos(meus);
 };
 
