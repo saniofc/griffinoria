@@ -293,8 +293,6 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
     else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
   });
 });
-
-// Contador fake de visitas
 const contador = document.getElementById('contador');
 const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
 const visitasBase = 18000;
