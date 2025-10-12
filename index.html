@@ -111,16 +111,8 @@
     justify-content:center;
     text-align:left;
   }
-  .grupo span.nome{
-    font-size:19px;
-    font-weight:bold;
-    line-height:1.2;
-  }
-  .grupo .categoria{
-    font-size:14px;
-    color:#ffd700;
-    margin-top:4px;
-  }
+  .grupo span.nome{font-size:19px;font-weight:bold;line-height:1.2;}
+  .grupo .categoria{font-size:14px;color:#ffd700;margin-top:4px;}
 
   .grupo.vip{
     box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;
@@ -211,7 +203,6 @@
   <h1>Grupos whatsapp</h1>
   <p>amaldiçoado seja tu q não entra no grupo🪄</p>
   <p id="contador">Visitas: 0</p>
-
   <div id="categorias">
     <button class="cat-btn active" data-cat="Todos">Todos</button>
     <button class="cat-btn" data-cat="amizade">Amizade</button>
@@ -226,7 +217,7 @@
   <h2>Informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
   <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
-  <a href="#" id="meusGruposBtn">👥 Meus Grupos</a>
+  <a href="https://wa.me//5521999999999" target="_blank">🤖 Comprar Bot</a>
   <a href="#" id="novoGrupoBtn">➕ Enviar Meu Grupo</a>
 </div>
 
@@ -254,14 +245,14 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
+  authDomain: "cliques-4a2c1.firebaseapp.com",
   databaseURL: "https://cliques-4a2c1-default-rtdb.firebaseio.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
+  projectId: "cliques-4a2c1",
+  storageBucket: "cliques-4a2c1.appspot.com",
   messagingSenderId: "SEU_ID",
   appId: "SEU_APP_ID"
 };
@@ -269,118 +260,75 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Menu
+// MENU
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
+const lista = document.getElementById('lista-grupos');
 let todosGrupos = [];
 
-async function carregarGrupos(){
-  try{
-    const res = await fetch('grupos.json');
-    if(!res.ok) throw new Error('Erro ao acessar grupos.json');
-    todosGrupos = await res.json();
-  }catch(err){
-    todosGrupos = [
-      {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
-      {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
-    ];
-  }
-  renderizarGrupos(todosGrupos);
-}
-
-function renderizarGrupos(lista){
-  const container = document.getElementById('lista-grupos');
-  container.innerHTML = '';
-  lista.forEach(g=>{
-    const a = document.createElement('a');
-    a.className = 'grupo' + (g.vip?' vip':'');
-    a.href = g.link||'#';
-    a.target='_blank';
-    a.innerHTML = `
-      <img class="foto" src="${g.foto||'https://files.catbox.moe/6r4qwl.png'}" alt="foto do grupo">
+function renderizarGrupos(listaGrupos){
+  lista.innerHTML='';
+  listaGrupos.forEach(g=>{
+    const a=document.createElement('a');
+    a.className='grupo'+(g.vip?' vip':'');
+    a.href=g.link; a.target='_blank';
+    a.innerHTML=`
+      <img class="foto" src="${g.foto||'https://files.catbox.moe/6r4qwl.png'}">
       <div class="info">
         <span class="nome">${g.nome}</span>
         <div class="categoria">${g.categoria||''}</div>
         <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
-      </div>
-    `;
-    const cliqueRef = ref(db, `cliques/${g.nome}`);
-    onValue(cliqueRef, snapshot=>{
-      a.querySelector('.cliques').textContent = `Cliques: ${snapshot.val()||0}`;
-    });
-    a.addEventListener('click', e=>{
+      </div>`;
+    const cliqueRef = ref(db,'cliques/'+g.nome);
+    onValue(cliqueRef,s=>a.querySelector('.cliques').textContent=`Cliques: ${s.val()||0}`);
+    a.addEventListener('click',e=>{
       e.preventDefault();
-      runTransaction(cliqueRef, c => (c||0)+1).then(()=>{
-        window.open(g.link,'_blank');
-        atualizarVisitas();
-      });
+      runTransaction(cliqueRef,c=>(c||0)+1);
+      window.open(g.link,'_blank');
     });
-    container.appendChild(a);
+    lista.appendChild(a);
   });
 }
 
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat.toLowerCase();
-    if(cat==='todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
-  });
+const gruposRef = ref(db,'grupos');
+onValue(gruposRef,snap=>{
+  const data=snap.val()||{};
+  todosGrupos=Object.values(data);
+  renderizarGrupos(todosGrupos);
 });
 
-// =================== VISITAS ===================
-const contador = document.getElementById('contador');
-const visitasRef = ref(db, 'visitas');
-onValue(visitasRef, s=>contador.textContent = `Visitas: ${s.val()||0}`);
-runTransaction(visitasRef, c => (c||0)+1);
-function atualizarVisitas(){ runTransaction(visitasRef, c => (c||0)+1); }
+// VISITAS
+const contador=document.getElementById('contador');
+const visitasRef=ref(db,'visitas');
+onValue(visitasRef,s=>contador.textContent=`Visitas: ${s.val()||0}`);
+runTransaction(visitasRef,c=>(c||0)+1);
 
-// =================== MEUS GRUPOS ===================
-const meusGruposBtn = document.getElementById('meusGruposBtn');
-const novoGrupoBtn = document.getElementById('novoGrupoBtn');
-const form = document.getElementById('form-grupo');
-const lista = document.getElementById('lista-grupos');
-
-novoGrupoBtn.addEventListener('click', ()=>{
-  form.style.display = 'flex';
-  lista.style.display = 'none';
+// FORMULÁRIO
+const form=document.getElementById('form-grupo');
+document.getElementById('novoGrupoBtn').addEventListener('click',()=>{
+  form.style.display='flex';
+  lista.style.display='none';
   menu.classList.remove('open');
 });
-
-document.getElementById('cancelarForm').addEventListener('click', ()=>{
-  form.style.display = 'none';
-  lista.style.display = 'flex';
+document.getElementById('cancelarForm').addEventListener('click',()=>{
+  form.style.display='none';
+  lista.style.display='flex';
 });
-
-document.getElementById('salvarGrupo').addEventListener('click', ()=>{
-  const nome = document.getElementById('nomeGrupo').value.trim();
-  const link = document.getElementById('linkGrupo').value.trim();
-  const foto = document.getElementById('fotoGrupo').value.trim();
-  const categoria = document.getElementById('categoriaGrupo').value;
-
-  if(!nome || !link) return alert('Preencha nome e link!');
-
-  const meus = JSON.parse(localStorage.getItem('meusGrupos')||'[]');
-  meus.push({nome, link, foto, categoria, vip:false});
-  localStorage.setItem('meusGrupos', JSON.stringify(meus));
-  alert('✅ Grupo salvo com sucesso!');
+document.getElementById('salvarGrupo').addEventListener('click',()=>{
+  const nome=document.getElementById('nomeGrupo').value.trim();
+  const link=document.getElementById('linkGrupo').value.trim();
+  const foto=document.getElementById('fotoGrupo').value.trim();
+  const categoria=document.getElementById('categoriaGrupo').value;
+  if(!nome||!link)return alert('Preencha nome e link!');
+  const novo={nome,link,foto,categoria,vip:false};
+  push(ref(db,'grupos'),novo);
+  alert('✅ Grupo enviado com sucesso!');
   form.reset();
-  form.style.display = 'none';
-  lista.style.display = 'flex';
-  renderizarGrupos(meus);
+  form.style.display='none';
+  lista.style.display='flex';
 });
-
-meusGruposBtn.addEventListener('click', ()=>{
-  const meus = JSON.parse(localStorage.getItem('meusGrupos')||'[]');
-  if(meus.length===0) alert('Você ainda não adicionou grupos!');
-  else renderizarGrupos(meus);
-  menu.classList.remove('open');
-});
-
-carregarGrupos();
 </script>
 
 </body>
