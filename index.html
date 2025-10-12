@@ -11,46 +11,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000}
-#video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4)}
-header{position:fixed;top:0;left:0;width:100%;padding:12px 10px;background:rgba(0,0,0,0.6);text-align:center;z-index:1000}
-header h1{font-size:28px;text-shadow:2px 2px 5px #000}
-header p{margin-top:4px;text-shadow:1px 1px 3px #000}
-#contador{margin-top:4px;color:#ffd700;text-shadow:1px 1px 2px #000;font-size:15px}
-#categorias{margin-top:8px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
-.cat-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:13px;padding:5px 11px;cursor:pointer;transition:all .2s}
-.cat-btn:hover{background:rgba(255,255,255,0.25)}
-.cat-btn.active{background:#b78cff;border-color:#b78cff}
-.menu-icon{position:fixed;top:20px;right:20px;font-size:28px;z-index:1100;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:10px;cursor:pointer}
-.menu{position:fixed;top:0;right:-300px;width:250px;height:100%;background:rgba(0,0,0,0.9);padding:30px 20px;transition:right .3s;z-index:1200}
-.menu.open{right:0}
-.menu .close-btn{position:absolute;top:15px;right:20px;background:none;border:none;color:#fff;font-size:26px;cursor:pointer}
-.menu h2{margin-top:50px;color:#b78cff;border-bottom:1px solid #b78cff;padding-bottom:5px;text-align:left}
-.menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px}
-.menu a:hover{background:rgba(183,140,255,0.25)}
-#lista-grupos{width:100%;max-width:420px;padding:30px 20px 60px;display:flex;flex-direction:column;align-items:center;gap:22px}
-.grupo{width:100%;max-width:380px;display:flex;align-items:center;gap:14px;background:rgba(0,0,0,0.55);padding:14px 20px;border-radius:40px;text-decoration:none;color:#fff;position:relative;transition:transform .18s,background .18s;border:1px solid rgba(255,255,255,0.1)}
-.grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.65)}
-.grupo img.foto{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #fff}
-.grupo .info{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left}
-.grupo span.nome{font-size:19px;font-weight:bold;line-height:1.2}
-.grupo .categoria{font-size:14px;color:#ffd700;margin-top:4px}
-.grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35)}
-.grupo.vip::before{content:"⭐";position:absolute;left:-14px;top:50%;transform:translateY(-50%);font-size:24px;color:#ffd700;text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;animation:shine 1.4s infinite alternate}
-@keyframes shine{from{opacity:0.7;transform:translateY(-50%) scale(1);}to{opacity:1;transform:translateY(-50%) scale(1.2)}}
-.botao{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;border-radius:30px;padding:12px 28px;margin-top:20px;text-decoration:none;font-size:18px;transition:transform .18s,box-shadow .18s;display:inline-block}
-.botao:hover{transform:scale(1.04)}
-footer{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:#ccc;text-align:center;padding:14px 10px;font-size:14px;line-height:1.6;z-index:2000}
-footer a{color:#b78cff;text-decoration:none}
-/* Modal */
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:5000}
-.modal-content{background:#111;padding:20px;border-radius:20px;max-width:400px;width:90%;text-align:center;color:#fff;position:relative}
-.modal-content h3{margin-bottom:15px}
-.modal-content input, .modal-content select{width:90%;margin:5px 0;padding:8px;border-radius:10px;border:none}
-.modal-content button{padding:10px 20px;margin-top:10px;border:none;border-radius:15px;background:#b78cff;color:#fff;cursor:pointer;transition:0.2s}
-.modal-content button:hover{background:#a56be0}
-.modal .close-modal{position:absolute;top:10px;right:15px;font-size:22px;cursor:pointer}
+/* ... seu CSS aqui ... */
 </style>
 </head>
 <body>
@@ -73,7 +34,7 @@ footer a{color:#b78cff;text-decoration:none}
 <div class="menu-icon" id="menuBtn">📝</div>
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
-  <h2>informações</h2>
+  <h2>Informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️Loja da Miih</a>
   <a href="https://wa.me//5521977231625" target="_blank">🤖Alugar bot</a>
   <a href="#" id="meusGrupos">📋Meus Grupos</a>
@@ -84,12 +45,26 @@ footer a{color:#b78cff;text-decoration:none}
 <div id="lista-grupos"></div>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
+<!-- Modal -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="close-modal">×</span>
+    <h3>Enviar / Editar Grupo</h3>
+    <input type="text" id="grupoNome" placeholder="Nome do Grupo">
+    <input type="text" id="grupoLink" placeholder="Link do Grupo">
+    <input type="text" id="grupoFoto" placeholder="URL da Foto">
+    <input type="text" id="grupoCategoria" placeholder="Categoria">
+    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
+    <button id="salvarGrupo">Salvar</button>
+    <button id="comprarVip">Comprar Código VIP</button>
+  </div>
+</div>
+
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
   ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
-<!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -108,228 +83,115 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// MENU
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
 let todosGrupos = [];
 
-// ================== CARREGAR GRUPOS ================== //
+const modal = document.querySelector('.modal');
+const modalContent = modal.querySelector('.modal-content');
+const meusBtn = document.getElementById('meusGrupos');
+const enviarBtn = document.getElementById('enviarGrupo');
+const salvarBtn = document.getElementById('salvarGrupo');
+const vipBtn = document.getElementById('comprarVip');
+const usuario = localStorage.getItem('usuarioID');
+
+modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+
 async function carregarGrupos() {
   let jsonGrupos = [];
-  try {
-    const res = await fetch('grupos.json');
-    jsonGrupos = await res.json();
-  } catch (e) {
-    console.warn('?? Nenhum grupos.json encontrado ou erro ao carregar:', e);
-  }
+  try { jsonGrupos = await (await fetch('grupos.json')).json(); } 
+  catch(e){ console.warn('Nenhum grupos.json encontrado ou erro ao carregar:', e); }
 
   const gruposRef = ref(db, 'grupos');
   onValue(gruposRef, snap => {
     const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
     const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-
-    // Combinar todos removendo duplicatas (mesmo nome = mesmo grupo)
     const mapa = new Map();
-
-    [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
-  if (g?.nome) {
-    g.vip = !!g.vip; // garante que seja true ou false
-    mapa.set(g.nome.toLowerCase(), g);
-  }
-});
-
+    [...jsonGrupos,...dadosFirebase,...enviadosLocais].forEach(g=>{
+      if(g?.nome){ g.vip = !!g.vip; mapa.set(g.nome.toLowerCase(),g);}
+    });
     todosGrupos = Array.from(mapa.values());
     renderizarGrupos(todosGrupos);
   });
 }
 
-// ================== RENDERIZAR GRUPOS ================== //
-function renderizarGrupos(lista) {
+function renderizarGrupos(lista){
   const container = document.getElementById('lista-grupos');
   container.innerHTML = '';
-
-  if (lista.length === 0) {
-    container.innerHTML = '<p style="color:#ccc;">Nenhum grupo encontrado.</p>';
-    return;
-  }
-
-  const usuario = localStorage.getItem('usuarioID');
-
-// Ordena: VIP primeiro
-lista.sort((a, b) => {
-  if (a.vip && !b.vip) return -1;
-  if (!a.vip && b.vip) return 1;
-  return 0;
-});
-
-  lista.forEach(g => {
-    // Criar um wrapper para o grupo + botões
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.flexDirection = 'column';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.width = '100%';
-
-    // Botão do grupo
-    const btn = document.createElement('a');
-    btn.className = 'grupo' + (g.vip ? ' vip' : '');
-    btn.href = g.link;
-    btn.target = '_blank';
-    btn.innerHTML = `
-      <img class="foto" src="${g.foto}" alt="foto do grupo">
+  if(lista.length===0){ container.innerHTML='<p style="color:#ccc;">Nenhum grupo encontrado.</p>'; return; }
+  lista.sort((a,b)=>a.vip&&!b.vip?-1:!a.vip&&b.vip?1:0);
+  lista.forEach(g=>{
+    const wrapper=document.createElement('div'); wrapper.style.display='flex'; wrapper.style.flexDirection='column'; wrapper.style.alignItems='center'; wrapper.style.width='100%';
+    const btn=document.createElement('a'); btn.className='grupo'+(g.vip?' vip':''); btn.href=g.link; btn.target='_blank';
+    btn.innerHTML=`<img class="foto" src="${g.foto}" alt="foto do grupo">
       <div class="info">
         <span class="nome">${g.nome}</span>
-        <div class="categoria">${g.categoria || ''}</div>
+        <div class="categoria">${g.categoria||''}</div>
         <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
-      </div>
-    `;
-
-    const cliqueRef = ref(db, 'cliques/' + g.nome);
-    onValue(cliqueRef, snap => {
-      btn.querySelector('.cliques').textContent = `Cliques: ${snap.val() || 0}`;
-    });
-
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      runTransaction(cliqueRef, c => (c || 0) + 1).then(() => window.open(g.link, '_blank'));
-      atualizarVisitas();
-    });
-
+      </div>`;
+    const cliqueRef = ref(db,'cliques/'+g.nome);
+    onValue(cliqueRef,snap=>{ btn.querySelector('.cliques').textContent=`Cliques: ${snap.val()||0}`; });
+    btn.addEventListener('click',e=>{ e.preventDefault(); runTransaction(cliqueRef,c=>(c||0)+1).then(()=>window.open(g.link,'_blank')); });
     wrapper.appendChild(btn);
 
-    // Botões Editar/Excluir abaixo
-    if (g.dono === usuario) {
-      const box = document.createElement('div');
-      box.style.display = 'flex';
-      box.style.gap = '6px';
-      box.style.marginTop = '8px'; // espaço entre o botão do grupo e os botões
-
-      const edit = document.createElement('button');
-      edit.textContent = '✏️';
-      edit.style.cursor = 'pointer';
-      edit.onclick = () => abrirEdicao(g);
-
-      const del = document.createElement('button');
-      del.textContent = '🗑️';
-      del.style.cursor = 'pointer';
-      del.onclick = () => excluirGrupo(g);
-
-      box.appendChild(edit);
-      box.appendChild(del);
-      wrapper.appendChild(box);
+    if(g.dono===usuario){
+      const box=document.createElement('div'); box.style.display='flex'; box.style.gap='6px'; box.style.marginTop='8px';
+      const edit=document.createElement('button'); edit.textContent='Editar'; edit.style.cssText='padding:4px 10px;font-size:12px;border-radius:8px;cursor:pointer;background:#b78cff;color:#fff;';
+      edit.onclick=()=>abrirEdicao(g);
+      const del=document.createElement('button'); del.textContent='Excluir'; del.style.cssText='padding:4px 10px;font-size:12px;border-radius:8px;cursor:pointer;background:#ff4d4d;color:#fff;';
+      del.onclick=()=>excluirGrupo(g);
+      box.appendChild(edit); box.appendChild(del); wrapper.appendChild(box);
     }
-
     container.appendChild(wrapper);
   });
 }
 
-// ================== EDI??O E EXCLUS?O ================== //
-function abrirEdicao(grupo){
-  modal.style.display = 'flex';
-  document.getElementById('grupoNome').value = grupo.nome;
-  document.getElementById('grupoLink').value = grupo.link;
-  document.getElementById('grupoFoto').value = grupo.foto;
-  document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "htmly" : "";
-  
-  const nomeOriginal = grupo.nome; // salva o nome original
-  document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
-}
+// EDIÇÃO / ENVIO
+meusBtn.onclick=()=>{ const meus = todosGrupos.filter(g=>g.dono===usuario); renderizarGrupos(meus.length?meus:[]); };
+enviarBtn.onclick=()=>{ modal.style.display='flex'; salvarBtn.onclick=null; };
 
-async function salvarEdicao(grupo, nomeOriginal){
-  grupo.nome = document.getElementById('grupoNome').value.trim();
-  grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
-  grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "htmly";
-
-  // Se o nome mudou, remove o antigo
-  if (nomeOriginal !== grupo.nome) {
-    await remove(ref(db, 'grupos/' + nomeOriginal));
-  }
-
-  // Atualiza no Firebase
-  await set(ref(db, 'grupos/' + grupo.nome), grupo);
-
-  // Atualiza localStorage
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  modal.style.display = 'none';
-  carregarGrupos(); // recarrega todos grupos corretamente
-}
-
-function excluirGrupo(grupo){
-  if (!confirm('Deseja realmente excluir este grupo?')) return;
-  remove(ref(db, 'grupos/' + grupo.nome));
-  todosGrupos = todosGrupos.filter(g => g.nome !== grupo.nome);
-
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.filter(g => g.nome !== grupo.nome);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  renderizarGrupos(todosGrupos);
-}
-
-// ================== VISITAS ================== //
-const contador = document.getElementById('contador');
-const visitasRef = ref(db, 'visitas');
-onValue(visitasRef, snap => {
-  contador.textContent = `Visitas: ${snap.val() || 0}`;
-});
-function atualizarVisitas() {
-  runTransaction(visitasRef, v => (v || 0) + 1);
-}
-atualizarVisitas();
-
-// ================== FILTRO ================== //
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat.toLowerCase();
-    if (cat === 'todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g => g.categoria?.toLowerCase() === cat));
-  });
-});
-
-// ================== MODAL ================== //
-const enviarBtn = document.getElementById('enviarGrupo');
-const meusBtn = document.getElementById('meusGrupos');
-
-const modal = document.createElement('div');
-modal.className = 'modal';
-modal.innerHTML = `
-  <div class="modal-content">
-    <span class="close-modal">❌</span>
-    <h3>Enviar Meu Grupo</h3>
-    <input type="text" id="grupoNome" placeholder="Nome do grupo">
-    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)">
-    <input type="text" id="grupoFoto" placeholder="URL da foto (opcional)">
-    <select id="grupoCategoria">
-      <option value="">Selecione a categoria</option>
-      <option value="Amizade">Amizade</option>
-      <option value="Zoeira">Zoeira</option>
-      <option value="Namoro">Namoro</option>
-    </select>
-    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
-    <button id="salvarGrupo">Salvar Grupo</button>
-  </div>`;
-document.body.appendChild(modal);
-
-modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-enviarBtn.onclick = () => {
-  modal.style.display = 'flex';
-  // limpa campos ao abrir
-  document.getElementById('grupoNome').value = '';
-  document.getElementById('grupoLink').value = '';
-  document.getElementById('grupoFoto').value = '';
-  document.getElementById('grupoCategoria').value = '';
-  document.getElementById('grupoVipCodigo').value = '';
+vipBtn.onclick=()=>{
+  const pix="SEU_PIX_AQUI";
+  const codigoVip=crypto.randomUUID().slice(0,8);
+  alert(`💰 Para comprar o código VIP, envie PIX para:\n\n${pix}\nApós, confirme.`);
+  if(confirm("Confirmou o pagamento?")){ document.getElementById('grupoVipCodigo').value=codigoVip; alert(`✅ Código VIP: ${codigoVip}`); }
 };
+
+function abrirEdicao(g){
+  modal.style.display='flex';
+  document.getElementById('grupoNome').value=g.nome;
+  document.getElementById('grupoLink').value=g.link;
+  document.getElementById('grupoFoto').value=g.foto;
+  document.getElementById('grupoCategoria').value=g.categoria;
+  document.getElementById('grupoVipCodigo').value=g.vip?"htmly":"";
+  const nomeOriginal=g.nome;
+  salvarBtn.onclick=()=>salvarEdicao(g,nomeOriginal);
+}
+
+async function salvarEdicao(g,nomeOriginal){
+  g.nome=document.getElementById('grupoNome').value.trim();
+  g.link=document.getElementById('grupoLink').value.trim();
+  g.foto=document.getElementById('grupoFoto').value.trim()||'https://files.catbox.moe/ls07y5.jpg';
+  g.categoria=document.getElementById('grupoCategoria').value;
+  g.vip=document.getElementById('grupoVipCodigo').value.trim()!=""?true:false;
+  if(nomeOriginal!==g.nome) await remove(ref(db,'grupos/'+nomeOriginal));
+  await set(ref(db,'grupos/'+g.nome),g);
+  let enviados=JSON.parse(localStorage.getItem('gruposEnviados')||'[]');
+  enviados=enviados.map(x=>x.nome===nomeOriginal?g:x); localStorage.setItem('gruposEnviados',JSON.stringify(enviados));
+  modal.style.display='none';
+  renderizarGrupos(todosGrupos.filter(x=>x.dono===usuario));
+}
+
+function excluirGrupo(g){
+  if(!confirm('Deseja realmente excluir este grupo?')) return;
+  remove(ref(db,'grupos/'+g.nome));
+  todosGrupos=todosGrupos.filter(x=>x.nome!==g.nome);
+  let enviados=JSON.parse(localStorage.getItem('gruposEnviados')||'[]');
+  enviados=enviados.filter(x=>x.nome!==g.nome); localStorage.setItem('gruposEnviados',JSON.stringify(enviados));
+  renderizarGrupos(todosGrupos.filter(x=>x.dono===usuario));
+}
 
 // ================== SALVAR NOVO GRUPO ================== //
 document.getElementById('salvarGrupo').onclick = async () => {
@@ -339,38 +201,33 @@ document.getElementById('salvarGrupo').onclick = async () => {
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
-  // Valida??o
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
     alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
 
-  // Código VIP
-  const isVip = vipCodigo === "htmly"; // ? altere aqui o código VIP se quiser
-
+  const isVip = vipCodigo === "htmly";
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
   const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
 
-  // Evitar duplica??o
-  const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
-  if (jaExiste) {
+  if (todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase())) {
     alert('Já existe um grupo com esse nome. Escolha outro.');
     return;
   }
 
-  // Adicionar ao Firebase
   await set(ref(db, 'grupos/' + nome), novoGrupo);
 
-  // Atualizar localmente
   todosGrupos.push(novoGrupo);
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   enviados.push(novoGrupo);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
-  renderizarGrupos(todosGrupos);
+  // Renderiza apenas os grupos do usuário
+  renderizarGrupos(todosGrupos.filter(g => g.dono === usuario));
   modal.style.display = 'none';
+  alert('✅ Grupo enviado com sucesso!');
 };
 
 // ================== MEUS GRUPOS ================== //
