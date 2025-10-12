@@ -155,6 +155,14 @@ function renderizarGrupos(lista) {
   const usuario = localStorage.getItem('usuarioID');
 
   lista.forEach(g => {
+    // Criar um wrapper para o grupo + botões
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.alignItems = 'center';
+    wrapper.style.width = '100%';
+
+    // Botão do grupo
     const btn = document.createElement('a');
     btn.className = 'grupo' + (g.vip ? ' vip' : '');
     btn.href = g.link;
@@ -179,31 +187,31 @@ function renderizarGrupos(lista) {
       atualizarVisitas();
     });
 
-    // Editar/Excluir
+    wrapper.appendChild(btn);
+
+    // Botões Editar/Excluir abaixo
     if (g.dono === usuario) {
       const box = document.createElement('div');
-      box.style.position = 'absolute';
-      box.style.left = '10px';
-      box.style.top = '10px';
       box.style.display = 'flex';
       box.style.gap = '6px';
+      box.style.marginTop = '8px'; // espaço entre o botão do grupo e os botões
 
       const edit = document.createElement('button');
-      edit.textContent = '??';
+      edit.textContent = '✏️';
       edit.style.cursor = 'pointer';
       edit.onclick = () => abrirEdicao(g);
 
       const del = document.createElement('button');
-      del.textContent = '??';
+      del.textContent = '🗑️';
       del.style.cursor = 'pointer';
       del.onclick = () => excluirGrupo(g);
 
       box.appendChild(edit);
       box.appendChild(del);
-      btn.appendChild(box);
+      wrapper.appendChild(box);
     }
 
-    container.appendChild(btn);
+    container.appendChild(wrapper);
   });
 }
 
