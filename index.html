@@ -116,6 +116,8 @@ let todosGrupos = [];
 
 // CARREGAR GRUPOS JSON
 async function carregarGrupos(){
+  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+
   try{
     const res = await fetch('grupos.json');
     todosGrupos = await res.json();
@@ -123,6 +125,10 @@ async function carregarGrupos(){
     console.error('Erro ao carregar grupos.json', e);
     todosGrupos = [];
   }
+
+  // Juntar grupos enviados pelo usuário
+  todosGrupos = [...todosGrupos, ...enviados];
+
   renderizarGrupos(todosGrupos);
 }
 
@@ -216,8 +222,14 @@ document.getElementById('salvarGrupo').addEventListener('click', async () => {
   localStorage.setItem('usuarioID', usuario);
 
   const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: false };
-  todosGrupos.push(novoGrupo);
-  renderizarGrupos(todosGrupos);
+todosGrupos.push(novoGrupo);
+
+// Salvar no localStorage
+let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+enviados.push(novoGrupo);
+localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
+
+renderizarGrupos(todosGrupos);
   
   // Salvar no Firebase
   const grupoRef = ref(db, 'grupos/' + nome);
