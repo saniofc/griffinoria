@@ -348,9 +348,9 @@ document.getElementById('salvarGrupo').onclick = async () => {
 // ================== MEUS GRUPOS ================== //
 meusBtn.onclick = () => {
   const usuario = localStorage.getItem('usuarioID');
-  if (!usuario) return alert('Você ainda n?o enviou nenhum grupo.');
+  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
   const meus = todosGrupos.filter(g => g.dono === usuario);
-  if (meus.length === 0) alert('Você ainda n?o enviou nenhum grupo.');
+  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
   else renderizarGrupos(meus);
 };
 
