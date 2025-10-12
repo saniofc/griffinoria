@@ -61,29 +61,16 @@
   .grupo img.foto{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid #fff;flex-shrink:0}
   .grupo span.nome{flex:1;text-align:left;font-size:20px;display:block;padding-left:4px}
   .grupo img.whatsapp-icon{width:28px;height:28px;margin-left:10px;flex-shrink:0;filter:drop-shadow(0 0 3px #25D366)}
-  .grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35)}
 
-  /* botão principal */
-  .botao{
-    position:relative;
-    background:rgba(0,0,0,0.7);
-    color:#fff;
-    border:2px solid #fff;
-    border-radius:30px;
-    padding:12px 26px;
-    margin-top:18px;
-    text-decoration:none;
-    font-size:18px;
-    transition:transform .18s,box-shadow .18s;
-    display:inline-block;
+  /* GRUPO VIP */
+  .grupo.vip{
+    box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;
+    border:1px solid rgba(255,215,0,0.35);
   }
-  .botao:hover{transform:scale(1.04)}
-
-  /* ESTRELA VIP NA BORDA DO BOTÃO */
-  .botao.vip::before{
+  .grupo.vip::before{
     content:"⭐";
     position:absolute;
-    left:-20px;
+    left:-12px;
     top:50%;
     transform:translateY(-50%);
     font-size:24px;
@@ -97,13 +84,34 @@
     to{opacity:1;transform:translateY(-50%) scale(1.2);}
   }
 
+  /* Botão normal (sem estrela!) */
+  .botao{
+    background:rgba(0,0,0,0.7);
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:12px 26px;
+    margin-top:18px;
+    text-decoration:none;
+    font-size:18px;
+    transition:transform .18s,box-shadow .18s;
+    display:inline-block;
+  }
+  .botao:hover{transform:scale(1.04);}
+
+  /* Rodapé fixo */
   footer{
-    margin-top:25px;
-    padding:28px;
-    font-size:14px;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:rgba(0,0,0,0.8);
     color:#ccc;
     text-align:center;
+    padding:14px 10px;
+    font-size:14px;
     line-height:1.6;
+    z-index:2000;
   }
   footer a{color:#b78cff;text-decoration:none}
 </style>
@@ -132,8 +140,8 @@
 
 <div id="lista-grupos"></div>
 
-<!-- Botão com estrela VIP se for true -->
-<a id="botaoGrifinoria" class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+<!-- Botão normal, sem estrela -->
+<a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
@@ -152,7 +160,6 @@ async function carregarGrupos(){
     const lista = document.getElementById('lista-grupos');
     lista.innerHTML = '';
 
-    let temVip = false;
     grupos.forEach(g=>{
       const a=document.createElement('a');
       a.className='grupo'+(g.vip?' vip':'');
@@ -164,20 +171,14 @@ async function carregarGrupos(){
         <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
       `;
       lista.appendChild(a);
-      if(g.vip) temVip = true;
     });
-
-    // se existir algum grupo VIP → estrela no botão final
-    const botao = document.getElementById('botaoGrifinoria');
-    if(temVip) botao.classList.add('vip');
-
   }catch(err){
     console.error('Erro ao carregar grupos.json',err);
   }
 }
 carregarGrupos();
 
-// contador
+// contador visitas
 const contador=document.getElementById('contador');
 const dataInicial=new Date('2025-01-01T00:00:00Z').getTime();
 const visitasBase=18000;
