@@ -14,36 +14,162 @@
 
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000;}
-  #video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4);}
-  header{position:fixed;top:0;left:0;width:100%;padding:12px 10px;background:rgba(0,0,0,0.6);text-align:center;z-index:1000;}
-  header h1{font-size:28px;text-shadow:2px 2px 5px #000;}
-  header p{margin-top:4px;text-shadow:1px 1px 3px #000;}
-  #contador{margin-top:4px;color:#ffd700;text-shadow:1px 1px 2px #000;font-size:15px;}
-  #categorias{margin-top:8px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
-  .cat-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:13px;padding:5px 11px;cursor:pointer;transition:all .2s;}
+  body{
+    font-family:Arial,sans-serif;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:120px;
+    background:#000;
+  }
+  #video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4)}
+
+  header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    padding:12px 10px;
+    background:rgba(0,0,0,0.6);
+    text-align:center;
+    z-index:1000;
+  }
+  header h1{font-size:28px;text-shadow:2px 2px 5px #000}
+  header p{margin-top:4px;text-shadow:1px 1px 3px #000}
+  #contador{margin-top:4px;color:#ffd700;text-shadow:1px 1px 2px #000;font-size:15px}
+
+  #categorias{
+    margin-top:8px;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .cat-btn{
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:20px;
+    color:#fff;
+    font-size:13px;
+    padding:5px 11px;
+    cursor:pointer;
+    transition:all .2s;
+  }
   .cat-btn:hover{background:rgba(255,255,255,0.25);}
-  .cat-btn.active{background:#b78cff;border-color:#b78cff;}
-  .menu-icon{position:fixed;top:20px;right:20px;font-size:28px;z-index:1100;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:10px;cursor:pointer;}
-  .menu{position:fixed;top:0;right:-300px;width:250px;height:100%;background:rgba(0,0,0,0.9);padding:30px 20px;transition:right .3s;z-index:1200;}
-  .menu.open{right:0;}
-  .menu .close-btn{position:absolute;top:15px;right:20px;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;}
-  .menu h2{margin-top:50px;color:#b78cff;border-bottom:1px solid #b78cff;padding-bottom:5px;text-align:left;}
-  .menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px;}
-  .menu a:hover{background:rgba(183,140,255,0.25);}
-  #lista-grupos{width:100%;max-width:420px;padding:30px 20px 60px;display:flex;flex-direction:column;align-items:center;gap:22px;}
-  .grupo{width:100%;max-width:380px;display:flex;align-items:center;gap:14px;background:rgba(0,0,0,0.55);padding:14px 20px;border-radius:40px;text-decoration:none;color:#fff;position:relative;transition:transform .18s,background .18s;border:1px solid rgba(255,255,255,0.1);}
+  .cat-btn.active{
+    background:#b78cff;
+    border-color:#b78cff;
+  }
+
+  .menu-icon{position:fixed;top:20px;right:20px;font-size:28px;z-index:1100;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:10px;cursor:pointer}
+  .menu{position:fixed;top:0;right:-300px;width:250px;height:100%;background:rgba(0,0,0,0.9);padding:30px 20px;transition:right .3s;z-index:1200}
+  .menu.open{right:0}
+  .menu .close-btn{position:absolute;top:15px;right:20px;background:none;border:none;color:#fff;font-size:26px;cursor:pointer}
+  .menu h2{margin-top:50px;color:#b78cff;border-bottom:1px solid #b78cff;padding-bottom:5px;text-align:left}
+  .menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px}
+  .menu a:hover{background:rgba(183,140,255,0.25)}
+
+  #lista-grupos{
+    width:100%;
+    max-width:420px;
+    padding:30px 20px 60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+
+  .grupo{
+    width:100%;
+    max-width:380px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:rgba(0,0,0,0.55);
+    padding:14px 20px;
+    border-radius:40px;
+    text-decoration:none;
+    color:#fff;
+    position:relative;
+    transition:transform .18s,background .18s;
+    border:1px solid rgba(255,255,255,0.1);
+  }
   .grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.65);}
-  .grupo img.foto{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #fff;}
-  .grupo .info{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;}
-  .grupo span.nome{font-size:19px;font-weight:bold;line-height:1.2;}
-  .grupo .categoria{font-size:14px;color:#ffd700;margin-top:4px;}
-  .grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35);}
-  .grupo.vip::before{content:"⭐";position:absolute;left:-14px;top:50%;transform:translateY(-50%);font-size:24px;color:#ffd700;text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;animation:shine 1.4s infinite alternate;}
-  @keyframes shine{from{opacity:0.7;transform:translateY(-50%) scale(1);}to{opacity:1;transform:translateY(-50%) scale(1.2);}}
-  .botao{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;border-radius:30px;padding:12px 28px;margin-top:20px;text-decoration:none;font-size:18px;transition:transform .18s,box-shadow .18s;display:inline-block;}
+  .grupo img.foto{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #fff;
+  }
+  .grupo .info{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    text-align:left;
+  }
+  .grupo span.nome{
+    font-size:19px;
+    font-weight:bold;
+    line-height:1.2;
+  }
+  .grupo .categoria{
+    font-size:14px;
+    color:#ffd700;
+    margin-top:4px;
+  }
+
+  .grupo.vip{
+    box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;
+    border:1px solid rgba(255,215,0,0.35);
+  }
+  .grupo.vip::before{
+    content:"⭐";
+    position:absolute;
+    left:-14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:24px;
+    color:#ffd700;
+    text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;
+    animation:shine 1.4s infinite alternate;
+  }
+
+  @keyframes shine{
+    from{opacity:0.7;transform:translateY(-50%) scale(1);}
+    to{opacity:1;transform:translateY(-50%) scale(1.2);}
+  }
+
+  .botao{
+    background:rgba(0,0,0,0.7);
+    color:#fff;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:12px 28px;
+    margin-top:20px;
+    text-decoration:none;
+    font-size:18px;
+    transition:transform .18s,box-shadow .18s;
+    display:inline-block;
+  }
   .botao:hover{transform:scale(1.04);}
-  footer{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:#ccc;text-align:center;padding:14px 10px;font-size:14px;line-height:1.6;z-index:2000;}
+
+  footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:rgba(0,0,0,0.8);
+    color:#ccc;
+    text-align:center;
+    padding:14px 10px;
+    font-size:14px;
+    line-height:1.6;
+    z-index:2000;
+  }
   footer a{color:#b78cff;text-decoration:none}
 </style>
 </head>
@@ -57,6 +183,7 @@
   <h1>Grupos whatsapp</h1>
   <p>amaldiçoado seja tu q não entra no grupo🪄</p>
   <p id="contador">Visitas: 18000</p>
+
   <div id="categorias">
     <button class="cat-btn active" data-cat="Todos">Todos</button>
     <button class="cat-btn" data-cat="amizade">Amizade</button>
@@ -84,66 +211,53 @@
   © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
-<script type="module">
-// Firebase Realtime Database
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, get, set, onValue, increment, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-
-// Substitua pelas suas credenciais do Firebase
-const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_ID",
-  appId: "SEU_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
+<script>
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
 let todosGrupos = [];
-let cliquesGrupos = {};
+let cliquesGrupos = {}; // armazenará os cliques
 
-// Carrega grupos e inicializa cliques do Firebase
+// Carrega grupos do JSON de forma confiável
 async function carregarGrupos(){
   try{
     const res = await fetch('grupos.json');
     if(!res.ok) throw new Error('Erro ao acessar grupos.json');
-    todosGrupos = await res.json();
-    if(!Array.isArray(todosGrupos)) throw new Error('JSON inválido, esperado um array');
+    const grupos = await res.json();
+    if(!Array.isArray(grupos)) throw new Error('JSON inválido, esperado um array');
+    todosGrupos = grupos;
 
-    // Inicializa contadores de cliques no Firebase
-    for(const g of todosGrupos){
-      const cliqueRef = ref(db, `cliques/${g.nome}`);
-      // Se não existir, cria com 0
-      get(cliqueRef).then(snapshot=>{
-        if(!snapshot.exists()){
-          set(cliqueRef, 0);
-        }
-      });
-    }
+    // Inicializa contadores de cliques
+    todosGrupos.forEach(g=>{
+      const key = `cliques_${g.nome}`;
+      if(!localStorage.getItem(key)) localStorage.setItem(key, 0);
+      cliquesGrupos[g.nome] = parseInt(localStorage.getItem(key));
+    });
 
     renderizarGrupos(todosGrupos);
   }catch(err){
-    console.error(err);
+    console.error('Erro ao carregar grupos.json',err);
+    // fallback: exibir grupo de teste
     todosGrupos = [
       {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
       {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
     ];
+
+    todosGrupos.forEach(g=>{
+      const key = `cliques_${g.nome}`;
+      if(!localStorage.getItem(key)) localStorage.setItem(key, 0);
+      cliquesGrupos[g.nome] = parseInt(localStorage.getItem(key));
+    });
+
     renderizarGrupos(todosGrupos);
   }
 }
 
+// Renderiza a lista de grupos com contador de cliques
 function renderizarGrupos(lista){
   const container = document.getElementById('lista-grupos');
   container.innerHTML = '';
-
   lista.forEach(g=>{
     const a = document.createElement('a');
     a.className = 'grupo' + (g.vip?' vip':'');
@@ -153,33 +267,31 @@ function renderizarGrupos(lista){
       <img class="foto" src="${g.foto}" alt="foto do grupo">
       <div class="info">
         <span class="nome">${g.nome}</span>
-        <div class="categoria">${g.categoria||''}</div>
-        <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
+        <div class="categoria">${g.categoria || ''}</div>
+        <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">
+          Cliques: ${cliquesGrupos[g.nome]}
+        </div>
       </div>
     `;
-
-    const cliqueRef = ref(db, `cliques/${g.nome}`);
-    onValue(cliqueRef, snapshot=>{
-      a.querySelector('.cliques').textContent = `Cliques: ${snapshot.val()||0}`;
+    // Adiciona evento de clique que aumenta o contador
+    a.addEventListener('click',()=>{
+      cliquesGrupos[g.nome]++;
+      localStorage.setItem(`cliques_${g.nome}`, cliquesGrupos[g.nome]);
+      a.querySelector('.cliques').textContent = `Cliques: ${cliquesGrupos[g.nome]}`;
     });
-
-    // Incrementa contador universal ao clicar
-    a.addEventListener('click', e=>{
-      e.preventDefault(); // para não abrir imediatamente
-      runTransaction(cliqueRef, current=> (current||0)+1).then(()=>{
-        window.open(g.link,'_blank');
-      });
-    });
-
     container.appendChild(a);
   });
 }
+
+carregarGrupos();
+
+// Filtragem de categorias (ignora maiúsculas/minúsculas e espaços)
 document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const cat = btn.dataset.cat.toLowerCase();
-    if(cat==='todos') renderizarGrupos(todosGrupos);
+    if(cat === 'todos') renderizarGrupos(todosGrupos);
     else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
   });
 });
@@ -188,12 +300,19 @@ const contador = document.getElementById('contador');
 const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
 const visitasBase = 18000;
 function random(seed,max){const x=Math.sin(seed)*10000;return Math.floor((x-Math.floor(x))*max)+1}
-function calcularVisitas(){const agora = Date.now();const minutos = Math.floor((agora-dataInicial)/60000);let total = visitasBase;for(let i=1;i<=minutos;i++){total+=random(i,17);if(i%4===0)total+=random(i+10000,8);}return total;}
+function calcularVisitas(){
+  const agora = Date.now();
+  const minutos = Math.floor((agora-dataInicial)/60000);
+  let total = visitasBase;
+  for(let i=1;i<=minutos;i++){
+    total += random(i,17);
+    if(i%4===0) total += random(i+10000,8);
+  }
+  return total;
+}
 function atualizarContador(){contador.textContent=`Visitas: ${calcularVisitas()}`;}
 atualizarContador();
 setInterval(atualizarContador,60000);
-
-carregarGrupos();
 </script>
 
 </body>
