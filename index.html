@@ -21,18 +21,17 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding-top:100px; /* reduzido */
+    padding-top:120px;
     background:#000;
   }
   #video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4)}
-  
-  /* barra do topo menor */
+
   header{
     position:fixed;
     top:0;
     left:0;
     width:100%;
-    padding:12px 10px; /* diminuído */
+    padding:12px 10px;
     background:rgba(0,0,0,0.6);
     text-align:center;
     z-index:1000;
@@ -41,7 +40,6 @@
   header p{margin-top:4px;text-shadow:1px 1px 3px #000}
   #contador{margin-top:4px;color:#ffd700;text-shadow:1px 1px 2px #000;font-size:15px}
 
-  /* ==== BOTÕES DE CATEGORIA ==== */
   #categorias{
     margin-top:8px;
     display:flex;
@@ -73,38 +71,57 @@
   .menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px}
   .menu a:hover{background:rgba(183,140,255,0.25)}
 
-  #lista-grupos{width:100%;max-width:420px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  #lista-grupos{
+    width:100%;
+    max-width:420px;
+    padding:30px 20px 60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+
   .grupo{
     width:100%;
-    max-width:360px;
+    max-width:380px;
     display:flex;
     align-items:center;
-    gap:12px;
-    justify-content:center;
-    flex-direction:column;
-    background:rgba(0,0,0,0.5);
-    padding:16px 18px;
+    gap:14px;
+    background:rgba(0,0,0,0.55);
+    padding:14px 20px;
     border-radius:40px;
     text-decoration:none;
     color:#fff;
     position:relative;
     transition:transform .18s,background .18s;
-    border:1px solid rgba(255,255,255,0.06);
-    text-align:center;
+    border:1px solid rgba(255,255,255,0.1);
   }
-  .grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.62)}
-  .grupo img.foto{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-bottom:6px}
-  .grupo span.nome{font-size:20px;display:block;}
+  .grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.65);}
+  .grupo img.foto{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #fff;
+  }
+  .grupo .info{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    text-align:left;
+  }
+  .grupo span.nome{
+    font-size:19px;
+    font-weight:bold;
+    line-height:1.2;
+  }
   .grupo .categoria{
-    font-size:13px;
+    font-size:14px;
     color:#ffd700;
     margin-top:4px;
   }
 
-  /* removido ícone dentro do botão */
-  .grupo img.whatsapp-icon{display:none;}
-
-  /* GRUPO VIP */
   .grupo.vip{
     box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;
     border:1px solid rgba(255,215,0,0.35);
@@ -112,7 +129,7 @@
   .grupo.vip::before{
     content:"⭐";
     position:absolute;
-    left:-12px;
+    left:-14px;
     top:50%;
     transform:translateY(-50%);
     font-size:24px;
@@ -131,8 +148,8 @@
     color:#fff;
     border:2px solid #fff;
     border-radius:30px;
-    padding:12px 26px;
-    margin-top:16px;
+    padding:12px 28px;
+    margin-top:20px;
     text-decoration:none;
     font-size:18px;
     transition:transform .18s,box-shadow .18s;
@@ -222,8 +239,10 @@ function renderizarGrupos(lista){
     a.target='_blank';
     a.innerHTML=`
       <img class="foto" src="${g.foto}" alt="foto do grupo">
-      <span class="nome">${g.nome}</span>
-      <div class="categoria">${g.categoria || ''}</div>
+      <div class="info">
+        <span class="nome">${g.nome}</span>
+        <div class="categoria">${g.categoria || ''}</div>
+      </div>
     `;
     container.appendChild(a);
   });
@@ -231,7 +250,6 @@ function renderizarGrupos(lista){
 
 carregarGrupos();
 
-// filtro categorias
 document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -242,7 +260,6 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
   });
 });
 
-// contador visitas
 const contador=document.getElementById('contador');
 const dataInicial=new Date('2025-01-01T00:00:00Z').getTime();
 const visitasBase=18000;
