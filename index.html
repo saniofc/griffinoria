@@ -185,7 +185,7 @@
   <p id="contador">Visitas: 18000</p>
 
   <div id="categorias">
-    <button class="cat-btn active" data-cat="todos">todos</button>
+    <button class="cat-btn active" data-cat="Todos">Todos</button>
     <button class="cat-btn" data-cat="amizade">Amizade</button>
     <button class="cat-btn" data-cat="zoeira">Zoeira</button>
     <button class="cat-btn" data-cat="namoro">Namoro</button>
@@ -255,7 +255,7 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const cat = btn.dataset.cat;
-    if(cat === 'todos') renderizarGrupos(todosGrupos);
+    if(cat === 'Todos') renderizarGrupos(todosGrupos);
     else renderizarGrupos(todosGrupos.filter(g=>g.categoria===cat));
   });
 });
