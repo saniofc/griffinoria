@@ -192,13 +192,15 @@
   </div>
 </header>
 
+<!-- MENU COMPLETO -->
 <div class="menu-icon" id="menuBtn">☰</div>
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">✕</button>
   <h2>Informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
   <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🚀 Divulgar meu grupo</a>
+  <a href="#" id="meusGrupos">👥 Meus Grupos</a>
+  <a href="#" id="enviarGrupo">➕ Enviar Meu Grupo</a>
   <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
 </div>
 
@@ -211,16 +213,17 @@
   © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
+<!-- SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
+  authDomain: "cliques-4a2c1.firebaseapp.com",
   databaseURL: "https://cliques-4a2c1-default-rtdb.firebaseio.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
+  projectId: "cliques-4a2c1",
+  storageBucket: "cliques-4a2c1.appspot.com",
   messagingSenderId: "SEU_ID",
   appId: "SEU_APP_ID"
 };
@@ -228,90 +231,78 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Menu
+// ===== MENU =====
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
 let todosGrupos = [];
 
-// Carrega grupos do JSON
+// ======= CARREGAR GRUPOS =======
 async function carregarGrupos(){
   try{
     const res = await fetch('grupos.json');
-    if(!res.ok) throw new Error('Erro ao acessar grupos.json');
     todosGrupos = await res.json();
-  }catch(err){
-    console.error(err);
-    todosGrupos = [
-      {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
-      {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
-    ];
+  }catch(e){
+    console.error('Erro ao carregar grupos.json', e);
+    todosGrupos = [];
   }
   renderizarGrupos(todosGrupos);
 }
 
-// Renderiza grupos com Firebase
+// ======= RENDERIZAR =======
 function renderizarGrupos(lista){
   const container = document.getElementById('lista-grupos');
   container.innerHTML = '';
   lista.forEach(g=>{
     const a = document.createElement('a');
-    a.className = 'grupo' + (g.vip?' vip':'');
-    a.href = g.link||'#';
-    a.target='_blank';
+    a.className = 'grupo' + (g.vip ? ' vip' : '');
+    a.href = g.link;
+    a.target = '_blank';
     a.innerHTML = `
       <img class="foto" src="${g.foto}" alt="foto do grupo">
       <div class="info">
         <span class="nome">${g.nome}</span>
         <div class="categoria">${g.categoria||''}</div>
         <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
-      </div>
-    `;
-    const cliqueRef = ref(db, `cliques/${g.nome}`);
-    onValue(cliqueRef, snapshot=>{
-      a.querySelector('.cliques').textContent = `Cliques: ${snapshot.val()||0}`;
+      </div>`;
+    const cliqueRef = ref(db, 'cliques/'+g.nome);
+    onValue(cliqueRef, snap=>{
+      a.querySelector('.cliques').textContent = `Cliques: ${snap.val()||0}`;
     });
     a.addEventListener('click', e=>{
       e.preventDefault();
-      runTransaction(cliqueRef, current => (current||0)+1).then(()=>{
-        window.open(g.link,'_blank');
-        atualizarVisitas();
-      });
+      runTransaction(cliqueRef, c=>(c||0)+1);
+      window.open(g.link,'_blank');
+      atualizarVisitas();
     });
     container.appendChild(a);
   });
 }
 
-// Categorias
+// ======= FILTRAR =======
 document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const cat = btn.dataset.cat.toLowerCase();
     if(cat==='todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
+    else renderizarGrupos(todosGrupos.filter(g=>g.categoria?.toLowerCase()===cat));
   });
 });
 
-// ================= Contador global de visitas =================
+// ======= VISITAS =======
 const contador = document.getElementById('contador');
-const visitasRef = ref(db, 'visitas');
-
-// Inicializa visitas
-onValue(visitasRef, snapshot=>{
-  contador.textContent = `Visitas: ${snapshot.val()||0}`;
+const visitasRef = ref(db,'visitas');
+onValue(visitasRef,snap=>{
+  contador.textContent = `Visitas: ${snap.val()||0}`;
 });
-
-// Aumenta visitas a cada acesso
-runTransaction(visitasRef, current => (current||0)+1);
-
+runTransaction(visitasRef,v=>(v||0)+1);
 function atualizarVisitas(){
-  runTransaction(visitasRef, current => (current||0)+1);
+  runTransaction(visitasRef,v=>(v||0)+1);
 }
 
 carregarGrupos();
 </script>
-
 </body>
 </html>
