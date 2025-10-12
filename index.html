@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Grupos WhatsApp</title>
-<meta property="og:title" content="Grifinoria???">
+<meta property="og:title" content="Grifinória 🦁">
 <meta property="og:description" content="Convite para conversar em grupo">
 <meta property="og:image" content="https://files.catbox.moe/ls07y5.jpg">
 <meta property="og:url" content="https://saniofc.github.io/griffinoria/">
@@ -60,7 +60,7 @@ footer a{color:#b78cff;text-decoration:none}
 
 <header>
   <h1>Grupos WhatsApp</h1>
-  <p>amaldi?oado seja tu q n?o entra no grupo?</p>
+  <p></p>
   <p id="contador">Visitas: 0</p>
   <div id="categorias">
     <button class="cat-btn active" data-cat="Todos">Todos</button>
@@ -70,15 +70,15 @@ footer a{color:#b78cff;text-decoration:none}
   </div>
 </header>
 
-<div class="menu-icon" id="menuBtn">?</div>
+<div class="menu-icon" id="menuBtn">📝</div>
 <div class="menu" id="sideMenu">
-  <button class="close-btn" id="closeBtn">?</button>
-  <h2>Informa??es</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">? Loja da Miih</a>
-  <a href="https://wa.me//5521977231625" target="_blank">? Alugar bot</a>
-  <a href="#" id="meusGrupos">? Meus Grupos</a>
-  <a href="#" id="enviarGrupo">? Enviar Meu Grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">? Comprar bot</a>
+  <button class="close-btn" id="closeBtn">❌</button>
+  <h2>Informações</h2>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
+  <a href="https://wa.me//5521977231625" target="_blank">🤖 Alugar bot</a>
+  <a href="#" id="meusGrupos">📋 Meus Grupos</a>
+  <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
+  <a href="https://wa.me//5521977231625" target="_blank">💎 Comprar bot</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -86,9 +86,10 @@ footer a{color:#b78cff;text-decoration:none}
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
+<!-- ==== SCRIPT FIREBASE E LÓGICA ==== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -114,7 +115,7 @@ document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.
 
 let todosGrupos = [];
 
-// ================== CARREGAR GRUPOS JSON + FIREBASE + LOCAL ================== //
+// ================== CARREGAR GRUPOS ================== //
 async function carregarGrupos(){
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   let jsonGrupos = [];
@@ -126,7 +127,6 @@ async function carregarGrupos(){
     console.error('Erro ao carregar grupos.json', e);
   }
 
-  // Carregar do Firebase
   const gruposRef = ref(db, 'grupos');
   onValue(gruposRef, snap => {
     const dados = snap.val() ? Object.values(snap.val()) : [];
@@ -172,7 +172,7 @@ function renderizarGrupos(lista) {
       atualizarVisitas();
     });
 
-    // Botões de editar/excluir
+    // Editar/Excluir
     if (g.dono === usuario) {
       const box = document.createElement('div');
       box.style.position = 'absolute';
@@ -200,7 +200,7 @@ function renderizarGrupos(lista) {
   });
 }
 
-// ================== EDITAR E EXCLUIR ================== //
+// ================== EDIÇÃO E EXCLUSÃO ================== //
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
@@ -287,7 +287,7 @@ document.body.appendChild(modal);
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
 enviarBtn.onclick = () => modal.style.display = 'flex';
 
-// ================== SALVAR GRUPO NOVO ================== //
+// ================== SALVAR NOVO GRUPO ================== //
 document.getElementById('salvarGrupo').onclick = async () => {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
