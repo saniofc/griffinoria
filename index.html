@@ -157,6 +157,34 @@
   }
   .botao:hover{transform:scale(1.04);}
 
+  #form-grupo{
+    display:none;
+    flex-direction:column;
+    gap:12px;
+    width:90%;
+    max-width:360px;
+    background:rgba(0,0,0,0.7);
+    padding:20px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.2);
+  }
+  #form-grupo input, #form-grupo select{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    font-size:15px;
+  }
+  #form-grupo button{
+    background:#b78cff;
+    color:#fff;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+  }
+  #form-grupo button:hover{background:#9e6eff;}
+
   footer{
     position:fixed;
     bottom:0;
@@ -198,8 +226,21 @@
   <h2>Informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛒 Loja da Miih</a>
   <a href="https://wa.me//5521977231625" target="_blank">📅 Alugar bot</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🚀 Divulgar meu grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🛒 Comprar bot</a>
+  <a href="#" id="meusGruposBtn">👥 Meus Grupos</a>
+  <a href="#" id="novoGrupoBtn">➕ Enviar Meu Grupo</a>
+</div>
+
+<div id="form-grupo">
+  <input type="text" id="nomeGrupo" placeholder="Nome do grupo">
+  <input type="text" id="linkGrupo" placeholder="Link do grupo">
+  <input type="text" id="fotoGrupo" placeholder="URL da foto (opcional)">
+  <select id="categoriaGrupo">
+    <option value="amizade">Amizade</option>
+    <option value="zoeira">Zoeira</option>
+    <option value="namoro">Namoro</option>
+  </select>
+  <button id="salvarGrupo">Salvar Grupo</button>
+  <button id="cancelarForm">Cancelar</button>
 </div>
 
 <div id="lista-grupos"></div>
@@ -235,14 +276,12 @@ document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.
 
 let todosGrupos = [];
 
-// Carrega grupos do JSON
 async function carregarGrupos(){
   try{
     const res = await fetch('grupos.json');
     if(!res.ok) throw new Error('Erro ao acessar grupos.json');
     todosGrupos = await res.json();
   }catch(err){
-    console.error(err);
     todosGrupos = [
       {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
       {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
@@ -251,7 +290,6 @@ async function carregarGrupos(){
   renderizarGrupos(todosGrupos);
 }
 
-// Renderiza grupos com Firebase
 function renderizarGrupos(lista){
   const container = document.getElementById('lista-grupos');
   container.innerHTML = '';
@@ -261,7 +299,7 @@ function renderizarGrupos(lista){
     a.href = g.link||'#';
     a.target='_blank';
     a.innerHTML = `
-      <img class="foto" src="${g.foto}" alt="foto do grupo">
+      <img class="foto" src="${g.foto||'https://files.catbox.moe/6r4qwl.png'}" alt="foto do grupo">
       <div class="info">
         <span class="nome">${g.nome}</span>
         <div class="categoria">${g.categoria||''}</div>
@@ -274,7 +312,7 @@ function renderizarGrupos(lista){
     });
     a.addEventListener('click', e=>{
       e.preventDefault();
-      runTransaction(cliqueRef, current => (current||0)+1).then(()=>{
+      runTransaction(cliqueRef, c => (c||0)+1).then(()=>{
         window.open(g.link,'_blank');
         atualizarVisitas();
       });
@@ -283,7 +321,6 @@ function renderizarGrupos(lista){
   });
 }
 
-// Categorias
 document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -294,21 +331,54 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
   });
 });
 
-// ================= Contador global de visitas =================
+// =================== VISITAS ===================
 const contador = document.getElementById('contador');
 const visitasRef = ref(db, 'visitas');
+onValue(visitasRef, s=>contador.textContent = `Visitas: ${s.val()||0}`);
+runTransaction(visitasRef, c => (c||0)+1);
+function atualizarVisitas(){ runTransaction(visitasRef, c => (c||0)+1); }
 
-// Inicializa visitas
-onValue(visitasRef, snapshot=>{
-  contador.textContent = `Visitas: ${snapshot.val()||0}`;
+// =================== MEUS GRUPOS ===================
+const meusGruposBtn = document.getElementById('meusGruposBtn');
+const novoGrupoBtn = document.getElementById('novoGrupoBtn');
+const form = document.getElementById('form-grupo');
+const lista = document.getElementById('lista-grupos');
+
+novoGrupoBtn.addEventListener('click', ()=>{
+  form.style.display = 'flex';
+  lista.style.display = 'none';
+  menu.classList.remove('open');
 });
 
-// Aumenta visitas a cada acesso
-runTransaction(visitasRef, current => (current||0)+1);
+document.getElementById('cancelarForm').addEventListener('click', ()=>{
+  form.style.display = 'none';
+  lista.style.display = 'flex';
+});
 
-function atualizarVisitas(){
-  runTransaction(visitasRef, current => (current||0)+1);
-}
+document.getElementById('salvarGrupo').addEventListener('click', ()=>{
+  const nome = document.getElementById('nomeGrupo').value.trim();
+  const link = document.getElementById('linkGrupo').value.trim();
+  const foto = document.getElementById('fotoGrupo').value.trim();
+  const categoria = document.getElementById('categoriaGrupo').value;
+
+  if(!nome || !link) return alert('Preencha nome e link!');
+
+  const meus = JSON.parse(localStorage.getItem('meusGrupos')||'[]');
+  meus.push({nome, link, foto, categoria, vip:false});
+  localStorage.setItem('meusGrupos', JSON.stringify(meus));
+  alert('✅ Grupo salvo com sucesso!');
+  form.reset();
+  form.style.display = 'none';
+  lista.style.display = 'flex';
+  renderizarGrupos(meus);
+});
+
+meusGruposBtn.addEventListener('click', ()=>{
+  const meus = JSON.parse(localStorage.getItem('meusGrupos')||'[]');
+  if(meus.length===0) alert('Você ainda não adicionou grupos!');
+  else renderizarGrupos(meus);
+  menu.classList.remove('open');
+});
 
 carregarGrupos();
 </script>
