@@ -182,7 +182,7 @@
 <header>
   <h1>Grupos whatsapp</h1>
   <p>amaldiçoado seja tu q não entra no grupo🪄</p>
-  <p id="contador">Visitas: 18000</p>
+  <p id="contador">Visitas: 0</p>
 
   <div id="categorias">
     <button class="cat-btn active" data-cat="Todos">Todos</button>
@@ -212,7 +212,6 @@
 </footer>
 
 <script type="module">
-// ================= Firebase =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
@@ -229,7 +228,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ================= Menu =================
+// Menu
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
@@ -243,7 +242,7 @@ async function carregarGrupos(){
     if(!res.ok) throw new Error('Erro ao acessar grupos.json');
     todosGrupos = await res.json();
   }catch(err){
-    console.error('Erro ao carregar grupos.json',err);
+    console.error(err);
     todosGrupos = [
       {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
       {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
@@ -277,13 +276,14 @@ function renderizarGrupos(lista){
       e.preventDefault();
       runTransaction(cliqueRef, current => (current||0)+1).then(()=>{
         window.open(g.link,'_blank');
+        atualizarVisitas();
       });
     });
     container.appendChild(a);
   });
 }
 
-// Filtragem de categorias
+// Categorias
 document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -293,23 +293,22 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
     else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
   });
 });
+
+// ================= Contador global de visitas =================
 const contador = document.getElementById('contador');
-const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
-const visitasBase = 18000;
-function random(seed,max){const x=Math.sin(seed)*10000;return Math.floor((x-Math.floor(x))*max)+1}
-function calcularVisitas(){
-  const agora = Date.now();
-  const minutos = Math.floor((agora-dataInicial)/60000);
-  let total = visitasBase;
-  for(let i=1;i<=minutos;i++){
-    total += random(i,17);
-    if(i%4===0) total += random(i+10000,8);
-  }
-  return total;
+const visitasRef = ref(db, 'visitas');
+
+// Inicializa visitas
+onValue(visitasRef, snapshot=>{
+  contador.textContent = `Visitas: ${snapshot.val()||0}`;
+});
+
+// Aumenta visitas a cada acesso
+runTransaction(visitasRef, current => (current||0)+1);
+
+function atualizarVisitas(){
+  runTransaction(visitasRef, current => (current||0)+1);
 }
-function atualizarContador(){contador.textContent=`Visitas: ${calcularVisitas()}`;}
-atualizarContador();
-setInterval(atualizarContador,60000);
 
 carregarGrupos();
 </script>
