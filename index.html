@@ -211,109 +211,31 @@
   © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
-<script>
+<!-- Firebase & Script -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+  projectId: "SEU_PROJETO",
+  storageBucket: "SEU_PROJETO.appspot.com",
+  messagingSenderId: "SEU_ID",
+  appId: "SEU_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
 let todosGrupos = [];
-let cliquesGrupos = {}; // armazenará os cliques
 
-// Carrega grupos do JSON de forma confiável
 async function carregarGrupos(){
-  try{
+  try {
     const res = await fetch('grupos.json');
-    if(!res.ok) throw new Error('Erro ao acessar grupos.json');
-    const grupos = await res.json();
-    if(!Array.isArray(grupos)) throw new Error('JSON inválido, esperado um array');
-    todosGrupos = grupos;
-
-    // Inicializa contadores de cliques
-    todosGrupos.forEach(g=>{
-      const key = `cliques_${g.nome}`;
-      if(!localStorage.getItem(key)) localStorage.setItem(key, 0);
-      cliquesGrupos[g.nome] = parseInt(localStorage.getItem(key));
-    });
-
-    renderizarGrupos(todosGrupos);
-  }catch(err){
-    console.error('Erro ao carregar grupos.json',err);
-    // fallback: exibir grupo de teste
-    todosGrupos = [
-      {nome:"Grifinoria💛🔥🚩",link:"#",foto:"https://files.catbox.moe/s9wvod.jpg",vip:true,categoria:"amizade"},
-      {nome:"Nyvhallis • Chatt | ⚡︎",link:"#",foto:"https://files.catbox.moe/eexplk.jpg",vip:false,categoria:"amizade"}
-    ];
-
-    todosGrupos.forEach(g=>{
-      const key = `cliques_${g.nome}`;
-      if(!localStorage.getItem(key)) localStorage.setItem(key, 0);
-      cliquesGrupos[g.nome] = parseInt(localStorage.getItem(key));
-    });
-
-    renderizarGrupos(todosGrupos);
-  }
-}
-
-// Renderiza a lista de grupos com contador de cliques
-function renderizarGrupos(lista){
-  const container = document.getElementById('lista-grupos');
-  container.innerHTML = '';
-  lista.forEach(g=>{
-    const a = document.createElement('a');
-    a.className = 'grupo' + (g.vip?' vip':'');
-    a.href = g.link||'#';
-    a.target='_blank';
-    a.innerHTML = `
-      <img class="foto" src="${g.foto}" alt="foto do grupo">
-      <div class="info">
-        <span class="nome">${g.nome}</span>
-        <div class="categoria">${g.categoria || ''}</div>
-        <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">
-          Cliques: ${cliquesGrupos[g.nome]}
-        </div>
-      </div>
-    `;
-    // Adiciona evento de clique que aumenta o contador
-    a.addEventListener('click',()=>{
-      cliquesGrupos[g.nome]++;
-      localStorage.setItem(`cliques_${g.nome}`, cliquesGrupos[g.nome]);
-      a.querySelector('.cliques').textContent = `Cliques: ${cliquesGrupos[g.nome]}`;
-    });
-    container.appendChild(a);
-  });
-}
-
-carregarGrupos();
-
-// Filtragem de categorias (ignora maiúsculas/minúsculas e espaços)
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat.toLowerCase();
-    if(cat === 'todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g=>g.categoria && g.categoria.toLowerCase()===cat));
-  });
-});
-
-const contador = document.getElementById('contador');
-const dataInicial = new Date('2025-01-01T00:00:00Z').getTime();
-const visitasBase = 18000;
-function random(seed,max){const x=Math.sin(seed)*10000;return Math.floor((x-Math.floor(x))*max)+1}
-function calcularVisitas(){
-  const agora = Date.now();
-  const minutos = Math.floor((agora-dataInicial)/60000);
-  let total = visitasBase;
-  for(let i=1;i<=minutos;i++){
-    total += random(i,17);
-    if(i%4===0) total += random(i+10000,8);
-  }
-  return total;
-}
-function atualizarContador(){contador.textContent=`Visitas: ${calcularVisitas()}`;}
-atualizarContador();
-setInterval(atualizarContador,60000);
-</script>
-
-</body>
-</html>
+    todosGrupos = await
