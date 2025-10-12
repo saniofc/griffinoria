@@ -70,15 +70,15 @@ footer a{color:#b78cff;text-decoration:none}
   </div>
 </header>
 
-<div class="menu-icon" id="menuBtn">?</div>
+<div class="menu-icon" id="menuBtn">📝</div>
 <div class="menu" id="sideMenu">
-  <button class="close-btn" id="closeBtn">?</button>
-  <h2>Informa??es</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">?? Loja da Miih</a>
-  <a href="https://wa.me//5521977231625" target="_blank">? Alugar bot</a>
-  <a href="#" id="meusGrupos">? Meus Grupos</a>
-  <a href="#" id="enviarGrupo">? Enviar Meu Grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">? Comprar bot</a>
+  <button class="close-btn" id="closeBtn">❌</button>
+  <h2>Informações</h2>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
+  <a href="https://wa.me//5521977231625" target="_blank">🤖 Alugar bot</a>
+  <a href="#" id="meusGrupos">📋 Meus Grupos</a>
+  <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
+  <a href="https://wa.me//5521977231625" target="_blank">💎 Comprar bot</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -193,12 +193,12 @@ function renderizarGrupos(lista) {
       box.style.gap = '6px';
 
       const edit = document.createElement('button');
-      edit.textContent = '✏️';
+      edit.textContent = '??';
       edit.style.cursor = 'pointer';
       edit.onclick = () => abrirEdicao(g);
 
       const del = document.createElement('button');
-      del.textContent = '🗑️';
+      del.textContent = '??';
       del.style.cursor = 'pointer';
       del.onclick = () => excluirGrupo(g);
 
@@ -280,7 +280,7 @@ const modal = document.createElement('div');
 modal.className = 'modal';
 modal.innerHTML = `
 <div class="modal-content">
-  <span class="close-modal">✕</span>
+  <span class="close-modal">?</span>
   <h3>Enviar Meu Grupo</h3>
 
   <input type="text" id="grupoNome" placeholder="Nome do grupo">
