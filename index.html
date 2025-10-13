@@ -359,12 +359,14 @@ function excluirGrupo(grupo){
 // ================== VISITAS ================== //
 const contador = document.getElementById('contador');
 const visitasRef = ref(db, 'visitas');
+
+// Incrementa a visita ao carregar a página
+runTransaction(visitasRef, v => (v || 0) + 1);
+
+// Atualiza o contador em tempo real
 onValue(visitasRef, snap => {
   contador.textContent = `Visitas: ${snap.val() || 0}`;
 });
-function atualizarVisitas() {
-  runTransaction(visitasRef, v => (v || 0) + 1);
-}
 
 // ================== FILTRO ================== //
 document.querySelectorAll('.cat-btn').forEach(btn => {
