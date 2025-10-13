@@ -85,28 +85,9 @@ footer a{color:#b78cff;text-decoration:none}
 <div id="lista-grupos"></div>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
 
-<!-- Modal do VIP -->
-<style>
-  /* Efeito de entrada (fade + zoom) */
-  @keyframes fadeZoom {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  #vipModal .vip-content {
-    animation: fadeZoom 0.25s ease;
-  }
-</style>
-
-<div id="vipModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:999;">
-  <div class="vip-content" style="background:#111; padding:25px; border-radius:15px; text-align:center; width:80%; max-width:350px; color:#fff; border:1px solid gold;">
+<!-- Modal VIP -->
+<div id="vipModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:999;">
+  <div class="vip-content" style="background:#111;padding:25px;border-radius:15px;text-align:center;width:80%;max-width:350px;color:#fff;border:1px solid gold;animation:fadeZoom 0.25s ease;">  
     <h3>🌟 Benefícios do VIP 🌟</h3>
     <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
     <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
@@ -151,6 +132,7 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsrYjO2yVTemKqwmJRzNjh5sfaMalPqhE",
@@ -165,7 +147,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
+const storage = getStorage(app);
 // MENU
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
@@ -202,6 +184,7 @@ async function carregarGrupos() {
     renderizarGrupos(todosGrupos);
   });
 }
+
 // ================== RENDERIZAR GRUPOS ================== //
 function renderizarGrupos(lista) {
   const container = document.getElementById('lista-grupos');
@@ -384,8 +367,9 @@ modal.innerHTML = `
     <span class="close-modal">❌</span>
     <h3>Enviar Meu Grupo</h3>
     <input type="text" id="grupoNome" placeholder="Nome do grupo">
+    <img id="previewFoto" style="width:80px;height:80px;border-radius:50%;margin-top:10px;display:none;">
     <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)">
-    <input type="text" id="grupoFoto" placeholder="URL da foto (opcional)">
+    <input type="file" id="grupoFotoUpload" accept="image/*">
     <select id="grupoCategoria">
       <option value="">Selecione a categoria</option>
       <option value="Amizade">Amizade</option>
@@ -412,7 +396,17 @@ enviarBtn.onclick = () => {
 document.getElementById('salvarGrupo').onclick = async () => {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
-  const foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
+  const fotoInput = document.getElementById('grupoFotoUpload');
+let fotoURL = 'https://files.catbox.moe/ls07y5.jpg'; // padrão
+
+// Se o usuário escolheu uma imagem
+if (fotoInput.files && fotoInput.files[0]) {
+  const arquivo = fotoInput.files[0];
+  const caminho = `fotos/${crypto.randomUUID()}_${arquivo.name}`;
+  const fotoRef = sRef(storage, caminho);
+  await uploadBytes(fotoRef, arquivo);
+  fotoURL = await getDownloadURL(fotoRef);
+}
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
@@ -428,7 +422,7 @@ document.getElementById('salvarGrupo').onclick = async () => {
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
-  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
+const novoGrupo = { nome, link, foto: fotoURL, categoria, dono: usuario, vip: isVip };
 
   // Evitar duplica??o
   const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
