@@ -79,68 +79,10 @@ footer a{color:#b78cff;text-decoration:none}
   <a href="#" id="meusGrupos">📋Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
   <a href="https://wa.me//5521977231625" target="_blank">💎Comprar bot</a>
-  <a href="#" id="comprarVipBtn">💰Comprar VIP</a>
 </div>
 
 <div id="lista-grupos"></div>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
-
-<!-- Modal do VIP -->
-<style>
-  /* Efeito de entrada (fade + zoom) */
-  @keyframes fadeZoom {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  #vipModal .vip-content {
-    animation: fadeZoom 0.25s ease;
-  }
-</style>
-
-<div id="vipModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:999;">
-  <div class="vip-content" style="background:#111; padding:25px; border-radius:15px; text-align:center; width:80%; max-width:350px; color:#fff; border:1px solid gold;">
-    <h3>🌟 Benefícios do VIP 🌟</h3>
-    <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
-    <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
-    <a href="https://wa.me/5521977231625?text=Quero%20comprar%20o%20VIP%20para%20meus%20grupos!"
-       target="_blank"
-       style="display:inline-block; background:gold; color:black; padding:10px 20px; border-radius:8px;
-       text-decoration:none; font-weight:bold;">💎 Pagar VIP</a>
-    <br><br>
-    <button id="fecharVip"
-            style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
-      Fechar
-    </button>
-  </div>
-</div>
-
-<script>
-  const comprarVipBtn = document.getElementById("comprarVipBtn");
-  const vipModal = document.getElementById("vipModal");
-  const fecharVip = document.getElementById("fecharVip");
-
-  comprarVipBtn.addEventListener("click", () => {
-    vipModal.style.display = "flex";
-  });
-
-  fecharVip.addEventListener("click", () => {
-    vipModal.style.display = "none";
-  });
-
-  window.addEventListener("click", (e) => {
-    if (e.target === vipModal) {
-      vipModal.style.display = "none";
-    }
-  });
-</script>
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
