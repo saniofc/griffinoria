@@ -73,44 +73,18 @@ footer a{color:#b78cff;text-decoration:none}
 <div class="menu-icon" id="menuBtn">📝</div>
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
-  <h2>Informações</h2>
-
-  <!-- Links com textos diferentes -->
+  <h2>informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖 Alugar bot</a>
+  <!-- Links com textos diferentes -->
+  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖Alugar bot</a>
   <a href="#" id="meusGrupos">📋 Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">💎 Comprar bot</a>
-  <a href="#" id="comprarVipBtn">⭐ Comprar VIP</a>
-
-  <!-- Botão ADMIN oculto -->
-  <a href="#" id="adminBtn" style="display:none;">🛠️ Aprovar grupos</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">🤖comprar bot</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">⭐Comprar VIP</a>
 </div>
 
 <div id="lista-grupos"></div>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
-
-<script>
-// ====== Ativar modo ADMIN ======
-document.addEventListener('keydown', (e) => {
-  // Ctrl + A ativa modo admin
-  if (e.ctrlKey && e.key.toLowerCase() === 'a') {
-    const senha = prompt("Digite a senha de admin:");
-    if (senha === "elias007A@") {
-      document.getElementById('adminBtn').style.display = 'block';
-      alert("🔓 Modo administrador ativado!");
-    } else {
-      alert("Senha incorreta!");
-    }
-  }
-});
-
-// ====== Botão admin ======
-document.getElementById('adminBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  carregarPendentes(); // função que mostra os grupos pendentes
-});
-</script>
 
 <!-- Modal do VIP -->
 <style>
@@ -237,71 +211,6 @@ async function carregarGrupos() {
 
     todosGrupos = Array.from(mapa.values());
     renderizarGrupos(todosGrupos);
-  });
-}
-
-// ================== SISTEMA DE APROVAÇÃO ================== //
-async function carregarPendentes() {
-  const senha = prompt("Digite a senha de admin para ver pendentes:");
-  if (senha !== "88888888") return alert("Senha incorreta!");
-
-  const pendRef = ref(db, 'pendentes');
-  onValue(pendRef, snap => {
-    const pendentes = snap.val() ? Object.values(snap.val()) : [];
-    if (pendentes.length === 0) return alert("Nenhum grupo pendente no momento!");
-
-    const container = document.getElementById('lista-grupos');
-    container.innerHTML = '<h3 style="color:gold;text-align:center;">📋 Grupos Pendentes</h3>';
-
-    pendentes.forEach(g => {
-      const box = document.createElement('div');
-      box.style.background = '#111';
-      box.style.padding = '15px';
-      box.style.margin = '10px';
-      box.style.borderRadius = '10px';
-      box.style.border = '1px solid gold';
-      box.innerHTML = `
-        <p><strong>${g.nome}</strong> - ${g.categoria || 'Sem categoria'}</p>
-        <a href="${g.link}" target="_blank" style="color:lime;">Abrir grupo</a><br>
-        <img src="${g.foto}" width="60" height="60" style="border-radius:50%;margin:5px 0;">
-      `;
-
-      // Botão aprovar
-      const aprovar = document.createElement('button');
-      aprovar.textContent = '✅ Aprovar';
-      aprovar.style.background = '#2ecc71';
-      aprovar.style.border = 'none';
-      aprovar.style.color = '#fff';
-      aprovar.style.padding = '5px 10px';
-      aprovar.style.borderRadius = '5px';
-      aprovar.style.cursor = 'pointer';
-      aprovar.onclick = async () => {
-        await set(ref(db, 'grupos/' + g.nome), { ...g, aprovado: true });
-        await remove(ref(db, 'pendentes/' + g.nome));
-        alert('Grupo aprovado e publicado!');
-        carregarPendentes();
-      };
-
-      // Botão recusar
-      const recusar = document.createElement('button');
-      recusar.textContent = '❌ Recusar';
-      recusar.style.background = '#e74c3c';
-      recusar.style.border = 'none';
-      recusar.style.color = '#fff';
-      recusar.style.padding = '5px 10px';
-      recusar.style.borderRadius = '5px';
-      recusar.style.marginLeft = '10px';
-      recusar.style.cursor = 'pointer';
-      recusar.onclick = async () => {
-        await remove(ref(db, 'pendentes/' + g.nome));
-        alert('Grupo recusado e removido!');
-        carregarPendentes();
-      };
-
-      box.appendChild(aprovar);
-      box.appendChild(recusar);
-      container.appendChild(box);
-    });
   });
 }
 
@@ -570,28 +479,39 @@ document.getElementById('salvarGrupo').onclick = async () => {
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
+  // Valida??o
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
     alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
 
-  const isVip = vipCodigo === "88888888"; // código VIP real
+  // Código VIP
+  const isVip = vipCodigo === "&#$"; // ? altere aqui o código VIP se quiser
+
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
-  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip, aprovado: false };
+  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
 
-  // Verifica se já existe um grupo com o mesmo nome
+  // Evitar duplica??o
   const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
   if (jaExiste) {
-    alert('Já existe um grupo com esse nome.');
+    alert('Já existe um grupo com esse nome. Escolha outro.');
     return;
   }
 
-  // Envia para a fila de aprovação
-  await set(ref(db, 'pendentes/' + nome), novoGrupo);
-  alert('✅ Seu grupo foi enviado para aprovação! Aguarde ser liberado.');
+  // Adicionar ao Firebase
+  await set(ref(db, 'grupos/' + nome), novoGrupo);
 
+const msg = document.getElementById('mensagemEnvio');
+msg.style.display = 'block';
+setTimeout(() => msg.style.display = 'none', 3000); // some depois de 3s
+
+  // Atualizar localmente
+let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+enviados.push(novoGrupo);
+localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
+carregarGrupos(); // recarrega do Firebase + localStorage  
   modal.style.display = 'none';
 };
 
