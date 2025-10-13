@@ -127,12 +127,9 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
   const vipModal = document.getElementById("vipModal");
   const fecharVip = document.getElementById("fecharVip");
 
-comprarVipBtn.addEventListener("click", () => {
-    // Fecha o menu lateral se estiver aberto
-    menu.classList.remove('open');
-    // Abre o modal VIP
+  comprarVipBtn.addEventListener("click", () => {
     vipModal.style.display = "flex";
-});
+  });
 
   fecharVip.addEventListener("click", () => {
     vipModal.style.display = "none";
@@ -255,6 +252,7 @@ function renderizarGrupos(lista) {
     btn.addEventListener('click', e => {
       e.preventDefault();
       runTransaction(cliqueRef, c => (c || 0) + 1).then(() => window.open(g.link, '_blank'));
+      atualizarVisitas();
     });
 
     wrapper.appendChild(btn);
@@ -310,7 +308,7 @@ function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
   document.getElementById('grupoLink').value = grupo.link;
-  previewFoto.src = grupo.foto;
+  document.getElementById('grupoFoto').value = grupo.foto;
   document.getElementById('grupoCategoria').value = grupo.categoria;
   document.getElementById('grupoVipCodigo').value = grupo.vip ? "MIHVIP2025" : "";
   
@@ -321,7 +319,7 @@ function abrirEdicao(grupo){
 async function salvarEdicao(grupo, nomeOriginal){
   grupo.nome = document.getElementById('grupoNome').value.trim();
   grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
+  grupo.foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "MIHVIP2025";
 
@@ -363,6 +361,7 @@ onValue(visitasRef, snap => {
 function atualizarVisitas() {
   runTransaction(visitasRef, v => (v || 0) + 1);
 }
+atualizarVisitas();
 
 // ================== FILTRO ================== //
 document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -376,122 +375,80 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 // ================== MODAL ================== //
-// Seleciona os botões
 const enviarBtn = document.getElementById('enviarGrupo');
 const meusBtn = document.getElementById('meusGrupos');
 
-// Cria o modal dinamicamente
 const modal = document.createElement('div');
 modal.className = 'modal';
-modal.style.display = 'none';
-modal.style.position = 'fixed';
-modal.style.top = '0';
-modal.style.left = '0';
-modal.style.width = '100%';
-modal.style.height = '100%';
-modal.style.background = 'rgba(0,0,0,0.8)';
-modal.style.justifyContent = 'center';
-modal.style.alignItems = 'center';
-modal.style.zIndex = '5000';
-
-// Conteúdo do modal
 modal.innerHTML = `
-  <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
-    <span class="close-modal" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
+  <div class="modal-content">
+    <span class="close-modal">❌</span>
     <h3>Enviar Meu Grupo</h3>
-
-    <input type="text" id="grupoNome" placeholder="Nome do grupo" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-
-    <input type="file" id="grupoFotoUpload" accept="image/*" style="width:90%; margin:8px 0; color:#ccc;">
-    <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-top:5px; border:2px solid #fff;" alt="Prévia da foto">
-
-    <select id="grupoCategoria" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+    <input type="text" id="grupoNome" placeholder="Nome do grupo">
+    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)">
+    <input type="text" id="grupoFoto" placeholder="URL da foto (opcional)">
+    <select id="grupoCategoria">
       <option value="">Selecione a categoria</option>
       <option value="Amizade">Amizade</option>
       <option value="Zoeira">Zoeira</option>
       <option value="Namoro">Namoro</option>
     </select>
-
-    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-
-    <button id="salvarGrupo" style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#b78cff; color:#fff; cursor:pointer;">Salvar Grupo</button>
-  </div>
-`;
-
-<p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
-
-// Adiciona o modal ao body
+    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
+    <button id="salvarGrupo">Salvar Grupo</button>
+  </div>`;
 document.body.appendChild(modal);
 
-// Pré-visualização da imagem
-const fotoInput = modal.querySelector("#grupoFotoUpload");
-const previewFoto = modal.querySelector("#previewFoto");
-fotoInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => (previewFoto.src = ev.target.result);
-    reader.readAsDataURL(file);
-  }
-});
-
-// Fechar modal
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-
-// Abrir modal ao clicar em "Enviar Meu Grupo"
 enviarBtn.onclick = () => {
   modal.style.display = 'flex';
+  // limpa campos ao abrir
   document.getElementById('grupoNome').value = '';
   document.getElementById('grupoLink').value = '';
+  document.getElementById('grupoFoto').value = '';
   document.getElementById('grupoCategoria').value = '';
   document.getElementById('grupoVipCodigo').value = '';
-  previewFoto.src = 'https://files.catbox.moe/ls07y5.jpg';
 };
 
 // ================== SALVAR NOVO GRUPO ================== //
-const mensagemEnvio = document.getElementById('mensagemEnvio');
-
 document.getElementById('salvarGrupo').onclick = async () => {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
-  const foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
+  const foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
+  // Valida??o
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
     alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
 
-  const isVip = vipCodigo === "MIHVIP2025";
+  // Código VIP
+  const isVip = vipCodigo === "MIHVIP2025"; // ? altere aqui o código VIP se quiser
+
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
   const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
+
+  // Evitar duplica??o
   const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
   if (jaExiste) {
     alert('Já existe um grupo com esse nome. Escolha outro.');
     return;
   }
 
+  // Adicionar ao Firebase
   await set(ref(db, 'grupos/' + nome), novoGrupo);
 
+  // Atualizar localmente
   todosGrupos.push(novoGrupo);
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   enviados.push(novoGrupo);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
   renderizarGrupos(todosGrupos);
-
-  // Mostrar mensagem de sucesso
-  mensagemEnvio.style.display = 'block';
-
-  // Fechar modal depois de 1,5 segundos
-  setTimeout(() => {
-    mensagemEnvio.style.display = 'none';
-    modal.style.display = 'none';
-  }, 1500);
+  modal.style.display = 'none';
 };
 
 // ================== MEUS GRUPOS ================== //
