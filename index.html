@@ -391,27 +391,46 @@ modal.style.justifyContent = 'center';
 modal.style.alignItems = 'center';
 modal.style.zIndex = '5000';
 
-// Conteúdo do modal
 modal.innerHTML = `
   <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
     <span class="close-modal" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
     <h3>Enviar Meu Grupo</h3>
+
     <input type="text" id="grupoNome" placeholder="Nome do grupo" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
     <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="text" id="grupoFoto" placeholder="URL da foto (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+
+    <input type="file" id="grupoFotoUpload" accept="image/*" style="width:90%; margin:8px 0; color:#ccc;">
+    <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-top:5px; border:2px solid #fff;" alt="Prévia da foto">
+
     <select id="grupoCategoria" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
       <option value="">Selecione a categoria</option>
       <option value="Amizade">Amizade</option>
       <option value="Zoeira">Zoeira</option>
       <option value="Namoro">Namoro</option>
     </select>
+
     <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+
     <button id="salvarGrupo" style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#b78cff; color:#fff; cursor:pointer;">Salvar Grupo</button>
+
+    <p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
   </div>
 `;
 
 // Adiciona o modal ao body
 document.body.appendChild(modal);
+
+// Pré-visualização da imagem
+const fotoInput = modal.querySelector("#grupoFotoUpload");
+const previewFoto = modal.querySelector("#previewFoto");
+fotoInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => (previewFoto.src = ev.target.result);
+    reader.readAsDataURL(file);
+  }
+});
 
 // Fechar modal
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
@@ -419,12 +438,11 @@ modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none'
 // Abrir modal ao clicar em "Enviar Meu Grupo"
 enviarBtn.onclick = () => {
   modal.style.display = 'flex';
-  // Limpa os campos
   document.getElementById('grupoNome').value = '';
   document.getElementById('grupoLink').value = '';
-  document.getElementById('grupoFoto').value = '';
   document.getElementById('grupoCategoria').value = '';
   document.getElementById('grupoVipCodigo').value = '';
+  previewFoto.src = 'https://files.catbox.moe/ls07y5.jpg';
 };
 
 // ================== SALVAR NOVO GRUPO ================== //
