@@ -76,11 +76,11 @@ footer a{color:#b78cff;text-decoration:none}
   <h2>informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
   <!-- Links com textos diferentes -->
-  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖 Quero alugar bot</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖Alugar bot</a>
   <a href="#" id="meusGrupos">📋 Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">💎 Quero comprar bot</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">💰 Quero acesso VIP</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">🤖comprar bot</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">⭐Comprar VIP</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -321,7 +321,7 @@ function abrirEdicao(grupo){
   document.getElementById('grupoLink').value = grupo.link;
   previewFoto.src = grupo.foto;
   document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "MIHVIP2025" : "";
+  document.getElementById('grupoVipCodigo').value = grupo.vip ? "&#$" : "";
   
   const nomeOriginal = grupo.nome; // salva o nome original
   document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
@@ -332,7 +332,7 @@ async function salvarEdicao(grupo, nomeOriginal){
   grupo.link = document.getElementById('grupoLink').value.trim();
   grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "MIHVIP2025";
+  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "&#$";
 
   // Se o nome mudou, remove o antigo
   if (nomeOriginal !== grupo.nome) {
@@ -472,7 +472,7 @@ document.getElementById('salvarGrupo').onclick = async () => {
   }
 
   // Código VIP
-  const isVip = vipCodigo === "MIHVIP2025"; // ? altere aqui o código VIP se quiser
+  const isVip = vipCodigo === "&#$"; // ? altere aqui o código VIP se quiser
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
