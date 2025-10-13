@@ -126,15 +126,20 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
   const comprarVipBtn = document.getElementById("comprarVipBtn");
   const vipModal = document.getElementById("vipModal");
   const fecharVip = document.getElementById("fecharVip");
+  const sideMenu = document.getElementById("sideMenu"); // menu lateral
 
+  // Abrir modal VIP e fechar menu lateral
   comprarVipBtn.addEventListener("click", () => {
     vipModal.style.display = "flex";
+    sideMenu.classList.remove("open"); // fecha o menu lateral se estiver aberto
   });
 
+  // Fechar modal VIP ao clicar no botão
   fecharVip.addEventListener("click", () => {
     vipModal.style.display = "none";
   });
 
+  // Fechar modal VIP ao clicar fora do conteúdo
   window.addEventListener("click", (e) => {
     if (e.target === vipModal) {
       vipModal.style.display = "none";
