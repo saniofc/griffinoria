@@ -285,27 +285,46 @@ function renderizarGrupos(lista) {
   });
 }
 
-// ================== EDI??O E EXCLUS?O ================== //
-function abrirEdicao(grupo){
+// ================== EDIÇÃO E EXCLUSÃO ================== //
+function abrirEdicao(grupo) {
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
   document.getElementById('grupoLink').value = grupo.link;
-  document.getElementById('grupoFoto').value = grupo.foto;
+  previewFoto.src = grupo.foto;
+  previewFoto.style.display = 'block';
   document.getElementById('grupoCategoria').value = grupo.categoria;
   document.getElementById('grupoVipCodigo').value = grupo.vip ? "MIHVIP2025" : "";
-  
+
   const nomeOriginal = grupo.nome; // salva o nome original
   document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
 }
 
-async function salvarEdicao(grupo, nomeOriginal){
+async function salvarEdicao(grupo, nomeOriginal) {
+  const fotoInput = document.getElementById('grupoFotoUpload');
+  let novaFotoURL = grupo.foto; // mantém a antiga se não trocar
+
+  // Se o usuário selecionou uma nova imagem
+  if (fotoInput.files && fotoInput.files[0]) {
+    try {
+      const arquivo = fotoInput.files[0];
+      const caminho = `fotos/${crypto.randomUUID()}_${arquivo.name}`;
+      const fotoRef = sRef(storage, caminho);
+      await uploadBytes(fotoRef, arquivo);
+      novaFotoURL = await getDownloadURL(fotoRef);
+    } catch (erro) {
+      console.error("Erro ao enviar nova imagem:", erro);
+      alert("Não foi possível enviar a nova imagem. Tente novamente.");
+      return;
+    }
+  }
+
   grupo.nome = document.getElementById('grupoNome').value.trim();
   grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
+  grupo.foto = novaFotoURL || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "MIHVIP2025";
 
-  // Se o nome mudou, remove o antigo
+  // Se o nome mudou, remove o registro antigo
   if (nomeOriginal !== grupo.nome) {
     await remove(ref(db, 'grupos/' + nomeOriginal));
   }
@@ -313,16 +332,16 @@ async function salvarEdicao(grupo, nomeOriginal){
   // Atualiza no Firebase
   await set(ref(db, 'grupos/' + grupo.nome), grupo);
 
-  // Atualiza localStorage
+  // Atualiza no localStorage
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
   modal.style.display = 'none';
-  carregarGrupos(); // recarrega todos grupos corretamente
+  carregarGrupos(); // recarrega todos grupos
 }
 
-function excluirGrupo(grupo){
+function excluirGrupo(grupo) {
   if (!confirm('Deseja realmente excluir este grupo?')) return;
   remove(ref(db, 'grupos/' + grupo.nome));
   todosGrupos = todosGrupos.filter(g => g.nome !== grupo.nome);
@@ -381,16 +400,35 @@ modal.innerHTML = `
   </div>`;
 document.body.appendChild(modal);
 
+// Fechar modal
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+
+// Abrir modal de enviar grupo
 enviarBtn.onclick = () => {
   modal.style.display = 'flex';
   // limpa campos ao abrir
   document.getElementById('grupoNome').value = '';
   document.getElementById('grupoLink').value = '';
-  document.getElementById('grupoFoto').value = '';
+  document.getElementById('grupoFotoUpload').value = ''; // corrigido
   document.getElementById('grupoCategoria').value = '';
   document.getElementById('grupoVipCodigo').value = '';
+  document.getElementById('previewFoto').style.display = 'none'; // esconde preview
+  document.getElementById('previewFoto').src = '';
 };
+
+// Atualizar preview da imagem ao selecionar arquivo
+const fotoUpload = document.getElementById('grupoFotoUpload');
+const previewFoto = document.getElementById('previewFoto');
+fotoUpload.addEventListener('change', () => {
+  const file = fotoUpload.files[0];
+  if (file) {
+    previewFoto.src = URL.createObjectURL(file);
+    previewFoto.style.display = 'block';
+  } else {
+    previewFoto.src = '';
+    previewFoto.style.display = 'none';
+  }
+});
 
 // ================== SALVAR NOVO GRUPO ================== //
 document.getElementById('salvarGrupo').onclick = async () => {
