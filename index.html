@@ -127,9 +127,12 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
   const vipModal = document.getElementById("vipModal");
   const fecharVip = document.getElementById("fecharVip");
 
-  comprarVipBtn.addEventListener("click", () => {
+comprarVipBtn.addEventListener("click", () => {
+    // Fecha o menu lateral se estiver aberto
+    menu.classList.remove('open');
+    // Abre o modal VIP
     vipModal.style.display = "flex";
-  });
+});
 
   fecharVip.addEventListener("click", () => {
     vipModal.style.display = "none";
