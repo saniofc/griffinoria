@@ -397,34 +397,45 @@ document.getElementById('salvarGrupo').onclick = async () => {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
   const fotoInput = document.getElementById('grupoFotoUpload');
-let fotoURL = 'https://files.catbox.moe/ls07y5.jpg'; // padrão
+  let fotoURL = 'https://files.catbox.moe/ls07y5.jpg'; // imagem padrão
 
-// Se o usuário escolheu uma imagem
-if (fotoInput.files && fotoInput.files[0]) {
-  const arquivo = fotoInput.files[0];
-  const caminho = `fotos/${crypto.randomUUID()}_${arquivo.name}`;
-  const fotoRef = sRef(storage, caminho);
-  await uploadBytes(fotoRef, arquivo);
-  fotoURL = await getDownloadURL(fotoRef);
-}
+  // Se o usuário escolheu uma imagem
+  if (fotoInput.files && fotoInput.files[0]) {
+    try {
+      const arquivo = fotoInput.files[0];
+      const caminho = `fotos/${crypto.randomUUID()}_${arquivo.name}`;
+      const fotoRef = sRef(storage, caminho);
+
+      // Envia a imagem para o Firebase Storage
+      await uploadBytes(fotoRef, arquivo);
+
+      // Recupera a URL de download
+      fotoURL = await getDownloadURL(fotoRef);
+    } catch (erro) {
+      console.error("Erro ao enviar a imagem:", erro);
+      alert("Não foi possível enviar a imagem. Tente novamente.");
+      return; // interrompe o envio se falhar
+    }
+  }
+
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
-  // Valida??o
+  // Validação básica
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
     alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
 
   // Código VIP
-  const isVip = vipCodigo === "MIHVIP2025"; // ? altere aqui o código VIP se quiser
+  const isVip = vipCodigo === "MIHVIP2025";
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
-const novoGrupo = { nome, link, foto: fotoURL, categoria, dono: usuario, vip: isVip };
+  const novoGrupo = { nome, link, foto: fotoURL, categoria, dono: usuario, vip: isVip };
 
-  // Evitar duplica??o
+  // Evitar duplicação
   const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
   if (jaExiste) {
     alert('Já existe um grupo com esse nome. Escolha outro.');
