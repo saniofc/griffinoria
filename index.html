@@ -202,7 +202,6 @@ async function carregarGrupos() {
     renderizarGrupos(todosGrupos);
   });
 }
-
 // ================== RENDERIZAR GRUPOS ================== //
 function renderizarGrupos(lista) {
   const container = document.getElementById('lista-grupos');
@@ -215,12 +214,12 @@ function renderizarGrupos(lista) {
 
   const usuario = localStorage.getItem('usuarioID');
 
-// Ordena: VIP primeiro
-lista.sort((a, b) => {
-  if (a.vip && !b.vip) return -1;
-  if (!a.vip && b.vip) return 1;
-  return 0;
-});
+  // Ordena: VIP primeiro
+  lista.sort((a, b) => {
+    if (a.vip && !b.vip) return -1;
+    if (!a.vip && b.vip) return 1;
+    return 0;
+  });
 
   lista.forEach(g => {
     // Criar um wrapper para o grupo + botões
@@ -262,16 +261,36 @@ lista.sort((a, b) => {
       const box = document.createElement('div');
       box.style.display = 'flex';
       box.style.gap = '6px';
-      box.style.marginTop = '8px'; // espaço entre o botão do grupo e os botões
+      box.style.marginTop = '8px';
 
+      // Botão EDITAR
       const edit = document.createElement('button');
-      edit.textContent = '✏️';
+      edit.textContent = 'Editar';
+      edit.style.background = '#2ecc71';
+      edit.style.color = '#fff';
+      edit.style.border = 'none';
+      edit.style.padding = '5px 10px';
+      edit.style.borderRadius = '5px';
       edit.style.cursor = 'pointer';
+      edit.style.fontSize = '13px';
+      edit.style.transition = '0.2s';
+      edit.onmouseover = () => edit.style.background = '#27ae60';
+      edit.onmouseout = () => edit.style.background = '#2ecc71';
       edit.onclick = () => abrirEdicao(g);
 
+      // Botão EXCLUIR
       const del = document.createElement('button');
-      del.textContent = '🗑️';
+      del.textContent = 'Excluir';
+      del.style.background = '#e74c3c';
+      del.style.color = '#fff';
+      del.style.border = 'none';
+      del.style.padding = '5px 10px';
+      del.style.borderRadius = '5px';
       del.style.cursor = 'pointer';
+      del.style.fontSize = '13px';
+      del.style.transition = '0.2s';
+      del.onmouseover = () => del.style.background = '#c0392b';
+      del.onmouseout = () => del.style.background = '#e74c3c';
       del.onclick = () => excluirGrupo(g);
 
       box.appendChild(edit);
