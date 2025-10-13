@@ -54,135 +54,103 @@ footer a{color:#b78cff;text-decoration:none}
 </style>
 </head>
 <body>
-  <!-- Background em vídeo -->
-  <video id="video-bg" autoplay muted loop playsinline>
-    <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
-  </video>
+<video id="video-bg" autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
+</video>
 
-  <!-- Header -->
-  <header>
-    <h1>Grupos WhatsApp</h1>
-    <p></p>
-    <p id="contador">Visitas: 0</p>
-    <div id="categorias">
-      <button class="cat-btn active" data-cat="Todos">Todos</button>
-      <button class="cat-btn" data-cat="amizade">Amizade</button>
-      <button class="cat-btn" data-cat="zoeira">Zoeira</button>
-      <button class="cat-btn" data-cat="namoro">Namoro</button>
-    </div>
-  </header>
-
-  <!-- Menu lateral -->
-  <div class="menu-icon" id="menuBtn">📝</div>
-  <div class="menu" id="sideMenu">
-    <button class="close-btn" id="closeBtn">❌</button>
-    <h2>Informações</h2>
-    <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️Loja da Miih</a>
-    <a href="https://wa.me//5521977231625" target="_blank">🤖Alugar bot</a>
-    <a href="#" id="meusGrupos">📋Meus Grupos</a>
-    <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
-    <a href="https://wa.me//5521977231625" target="_blank">💎Comprar bot</a>
-    <a href="#" id="comprarVipBtn">💰Comprar VIP</a>
+<header>
+  <h1>Grupos WhatsApp</h1>
+  <p></p>
+  <p id="contador">Visitas: 0</p>
+  <div id="categorias">
+    <button class="cat-btn active" data-cat="Todos">Todos</button>
+    <button class="cat-btn" data-cat="amizade">Amizade</button>
+    <button class="cat-btn" data-cat="zoeira">Zoeira</button>
+    <button class="cat-btn" data-cat="namoro">Namoro</button>
   </div>
+</header>
 
-  <!-- Lista de grupos -->
-  <div id="lista-grupos"></div>
-  <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+<div class="menu-icon" id="menuBtn">📝</div>
+<div class="menu" id="sideMenu">
+  <button class="close-btn" id="closeBtn">❌</button>
+  <h2>informações</h2>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️Loja da Miih</a>
+  <a href="https://wa.me//5521977231625" target="_blank">🤖Alugar bot</a>
+  <a href="#" id="meusGrupos">📋Meus Grupos</a>
+  <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
+  <a href="https://wa.me//5521977231625" target="_blank">💎Comprar bot</a>
+  <a href="#" id="comprarVipBtn">💰Comprar VIP</a>
+</div>
 
-  <!-- Modal VIP -->
-  <div id="vipModal" class="modal" style="display:none;">
-    <div class="vip-content">
-      <h3>🌟 Benefícios do VIP 🌟</h3>
-      <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
-      <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
-      <a href="https://wa.me/5521977231625?text=Quero%20comprar%20o%20VIP%20para%20meus%20grupos!"
-         target="_blank"
-         style="display:inline-block; background:gold; color:black; padding:10px 20px; border-radius:8px;
-         text-decoration:none; font-weight:bold;">💎 Pagar VIP</a>
-      <br><br>
-      <button id="fecharVip" class="botaoFechar">Fechar</button>
-    </div>
+<div id="lista-grupos"></div>
+<a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+
+<!-- Modal do VIP -->
+<style>
+  /* Efeito de entrada (fade + zoom) */
+  @keyframes fadeZoom {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  #vipModal .vip-content {
+    animation: fadeZoom 0.25s ease;
+  }
+</style>
+
+<div id="vipModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:999;">
+  <div class="vip-content" style="background:#111; padding:25px; border-radius:15px; text-align:center; width:80%; max-width:350px; color:#fff; border:1px solid gold;">
+    <h3>🌟 Benefícios do VIP 🌟</h3>
+    <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
+    <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
+    <a href="https://wa.me/5521977231625?text=Quero%20comprar%20o%20VIP%20para%20meus%20grupos!"
+       target="_blank"
+       style="display:inline-block; background:gold; color:black; padding:10px 20px; border-radius:8px;
+       text-decoration:none; font-weight:bold;">💎 Pagar VIP</a>
+    <br><br>
+    <button id="fecharVip"
+            style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
+      Fechar
+    </button>
   </div>
+</div>
 
-  <!-- Modal de envio/edição de grupo -->
-  <div id="modalGrupo" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close-modal" id="fecharModal">&times;</span>
-      <h3>Enviar / Editar Grupo</h3>
-      <input type="text" id="grupoNome" placeholder="Nome do grupo">
-      <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)">
-      <input type="file" id="grupoFotoUpload">
-      <img id="previewFoto" src="" alt="preview" style="display:none;width:80px;height:80px;margin:10px;border-radius:10px;">
-      <select id="grupoCategoria">
-        <option value="amizade">Amizade</option>
-        <option value="zoeira">Zoeira</option>
-        <option value="namoro">Namoro</option>
-      </select>
-      <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
-      <button id="salvarGrupo">Salvar Grupo</button>
-    </div>
-  </div>
+<script>
+  const comprarVipBtn = document.getElementById("comprarVipBtn");
+  const vipModal = document.getElementById("vipModal");
+  const fecharVip = document.getElementById("fecharVip");
 
-  <!-- Scripts -->
-  <script>
-    // VIP modal
-    const comprarVipBtn = document.getElementById("comprarVipBtn");
-    const vipModal = document.getElementById("vipModal");
-    const fecharVip = document.getElementById("fecharVip");
+  comprarVipBtn.addEventListener("click", () => {
+    vipModal.style.display = "flex";
+  });
 
-    comprarVipBtn.addEventListener("click", () => vipModal.style.display = "flex");
-    fecharVip.addEventListener("click", () => vipModal.style.display = "none");
-    window.addEventListener("click", e => { if(e.target === vipModal) vipModal.style.display = "none"; });
+  fecharVip.addEventListener("click", () => {
+    vipModal.style.display = "none";
+  });
 
-    // Modal de envio/edição
-    const modal = document.getElementById("modalGrupo");
-    const fecharModal = document.getElementById("fecharModal");
-    const previewFoto = document.getElementById("previewFoto");
-    const meusBtn = document.getElementById("meusGrupos");
-    const enviarBtn = document.getElementById("enviarGrupo");
-    const grupoFotoUpload = document.getElementById("grupoFotoUpload");
+  window.addEventListener("click", (e) => {
+    if (e.target === vipModal) {
+      vipModal.style.display = "none";
+    }
+  });
+</script>
 
-    enviarBtn.onclick = () => {
-      modal.style.display = 'flex';
-      document.getElementById('grupoNome').value = '';
-      document.getElementById('grupoLink').value = '';
-      previewFoto.src = '';
-      previewFoto.style.display = 'none';
-      document.getElementById('grupoCategoria').value = 'amizade';
-      document.getElementById('grupoVipCodigo').value = '';
-    };
-
-    meusBtn.onclick = () => {
-      modal.style.display = 'none';
-      alert("Aqui você vai listar apenas seus grupos (implementar JS).");
-    };
-
-    fecharModal.onclick = () => modal.style.display = 'none';
-    window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
-
-    grupoFotoUpload.onchange = e => {
-      const file = e.target.files[0];
-      if(file){
-        previewFoto.src = URL.createObjectURL(file);
-        previewFoto.style.display = 'block';
-      }
-    };
-  </script>
-  
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
   ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
-  
-</body>
-
-
 
 <!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsrYjO2yVTemKqwmJRzNjh5sfaMalPqhE",
@@ -197,7 +165,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const storage = getStorage(app);
+
 // MENU
 const menu = document.getElementById('sideMenu');
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
@@ -335,60 +303,27 @@ function renderizarGrupos(lista) {
   });
 }
 
-// Função auxiliar para enviar imagem ao Firebase Storage
-async function enviarImagem(arquivo) {
-  // Substitui caracteres inválidos no nome do arquivo
-  const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const caminho = `fotos/${crypto.randomUUID()}_${nomeSeguro}`;
-  const fotoRef = sRef(storage, caminho);
-
-  // Envia a imagem
-  await uploadBytes(fotoRef, arquivo);
-  // Retorna URL pública
-  return await getDownloadURL(fotoRef);
-}
-
-// ================== EDIÇÃO E EXCLUSÃO ================== //
-function abrirEdicao(grupo) {
+// ================== EDI??O E EXCLUS?O ================== //
+function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
   document.getElementById('grupoLink').value = grupo.link;
-  previewFoto.src = grupo.foto;
-  previewFoto.style.display = 'block';
+  document.getElementById('grupoFoto').value = grupo.foto;
   document.getElementById('grupoCategoria').value = grupo.categoria;
   document.getElementById('grupoVipCodigo').value = grupo.vip ? "MIHVIP2025" : "";
-
+  
   const nomeOriginal = grupo.nome; // salva o nome original
   document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
 }
 
-async function salvarEdicao(grupo, nomeOriginal) {
-  const fotoInput = document.getElementById('grupoFotoUpload');
-  let novaFotoURL = grupo.foto; // mantém a antiga se não trocar
-
-  // Se o usuário selecionou uma nova imagem
-  if (fotoInput.files && fotoInput.files[0]) {
-    try {
-      novaFotoURL = await enviarImagem(fotoInput.files[0]);
-    } catch (erro) {
-      console.error("Erro ao enviar nova imagem:", erro);
-      alert("Não foi possível enviar a nova imagem. Tente novamente.");
-      return;
-    }
-  }
-
+async function salvarEdicao(grupo, nomeOriginal){
   grupo.nome = document.getElementById('grupoNome').value.trim();
   grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = novaFotoURL || 'https://files.catbox.moe/ls07y5.jpg';
+  grupo.foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "MIHVIP2025";
 
-  if (!grupo.nome || !grupo.link.startsWith('https://chat.whatsapp.com/')) {
-    alert('Preencha corretamente o nome e o link do grupo!');
-    return;
-  }
-
-  // Se o nome mudou, remove o registro antigo
+  // Se o nome mudou, remove o antigo
   if (nomeOriginal !== grupo.nome) {
     await remove(ref(db, 'grupos/' + nomeOriginal));
   }
@@ -396,16 +331,16 @@ async function salvarEdicao(grupo, nomeOriginal) {
   // Atualiza no Firebase
   await set(ref(db, 'grupos/' + grupo.nome), grupo);
 
-  // Atualiza no localStorage
+  // Atualiza localStorage
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
   modal.style.display = 'none';
-  carregarGrupos(); // recarrega todos grupos
+  carregarGrupos(); // recarrega todos grupos corretamente
 }
 
-function excluirGrupo(grupo) {
+function excluirGrupo(grupo){
   if (!confirm('Deseja realmente excluir este grupo?')) return;
   remove(ref(db, 'grupos/' + grupo.nome));
   todosGrupos = todosGrupos.filter(g => g.nome !== grupo.nome);
@@ -417,41 +352,86 @@ function excluirGrupo(grupo) {
   renderizarGrupos(todosGrupos);
 }
 
+// ================== VISITAS ================== //
+const contador = document.getElementById('contador');
+const visitasRef = ref(db, 'visitas');
+onValue(visitasRef, snap => {
+  contador.textContent = `Visitas: ${snap.val() || 0}`;
+});
+function atualizarVisitas() {
+  runTransaction(visitasRef, v => (v || 0) + 1);
+}
+atualizarVisitas();
+
+// ================== FILTRO ================== //
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat.toLowerCase();
+    if (cat === 'todos') renderizarGrupos(todosGrupos);
+    else renderizarGrupos(todosGrupos.filter(g => g.categoria?.toLowerCase() === cat));
+  });
+});
+
+// ================== MODAL ================== //
+const enviarBtn = document.getElementById('enviarGrupo');
+const meusBtn = document.getElementById('meusGrupos');
+
+const modal = document.createElement('div');
+modal.className = 'modal';
+modal.innerHTML = `
+  <div class="modal-content">
+    <span class="close-modal">❌</span>
+    <h3>Enviar Meu Grupo</h3>
+    <input type="text" id="grupoNome" placeholder="Nome do grupo">
+    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)">
+    <input type="text" id="grupoFoto" placeholder="URL da foto (opcional)">
+    <select id="grupoCategoria">
+      <option value="">Selecione a categoria</option>
+      <option value="Amizade">Amizade</option>
+      <option value="Zoeira">Zoeira</option>
+      <option value="Namoro">Namoro</option>
+    </select>
+    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)">
+    <button id="salvarGrupo">Salvar Grupo</button>
+  </div>`;
+document.body.appendChild(modal);
+
+modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+enviarBtn.onclick = () => {
+  modal.style.display = 'flex';
+  // limpa campos ao abrir
+  document.getElementById('grupoNome').value = '';
+  document.getElementById('grupoLink').value = '';
+  document.getElementById('grupoFoto').value = '';
+  document.getElementById('grupoCategoria').value = '';
+  document.getElementById('grupoVipCodigo').value = '';
+};
+
 // ================== SALVAR NOVO GRUPO ================== //
 document.getElementById('salvarGrupo').onclick = async () => {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
-  const fotoInput = document.getElementById('grupoFotoUpload');
-  let fotoURL = 'https://files.catbox.moe/ls07y5.jpg'; // imagem padrão
-
-  // Se o usuário escolheu uma imagem
-  if (fotoInput.files && fotoInput.files[0]) {
-    try {
-      fotoURL = await enviarImagem(fotoInput.files[0]);
-    } catch (erro) {
-      console.error("Erro ao enviar a imagem:", erro);
-      alert("Não foi possível enviar a imagem. Tente novamente.");
-      return; // interrompe o envio se falhar
-    }
-  }
-
+  const foto = document.getElementById('grupoFoto').value.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
-  // Validação básica
+  // Valida??o
   if (!nome || !link.startsWith('https://chat.whatsapp.com/')) {
     alert('Preencha corretamente o nome e o link do grupo!');
     return;
   }
 
-  const isVip = vipCodigo === "MIHVIP2025";
+  // Código VIP
+  const isVip = vipCodigo === "MIHVIP2025"; // ? altere aqui o código VIP se quiser
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
-  const novoGrupo = { nome, link, foto: fotoURL, categoria, dono: usuario, vip: isVip };
+  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
 
-  // Evitar duplicação
+  // Evitar duplica??o
   const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
   if (jaExiste) {
     alert('Já existe um grupo com esse nome. Escolha outro.');
