@@ -1,4 +1,4 @@
-hhh<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
@@ -75,10 +75,10 @@ footer a{color:#b78cff;text-decoration:none}
   <button class="close-btn" id="closeBtn">❌</button>
   <h2>informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️Loja da Miih</a>
-  <a href="https://wa.me//5521977231625" target="_blank">🤖Alugar bot</a>
+  <a href="https://wa.me/5521977231625" target="_blank">🤖Alugar bot</a>
   <a href="#" id="meusGrupos">📋Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
-  <a href="https://wa.me//5521977231625" target="_blank">💎Comprar bot</a>
+  <a href="https://wa.me/5521977231625" target="_blank">💎Comprar bot</a>
   <a href="#" id="comprarVipBtn">💰Comprar VIP</a>
 </div>
 
@@ -445,6 +445,7 @@ modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none'
 // Abrir modal ao clicar em "Enviar Meu Grupo"
 enviarBtn.onclick = () => {
   modal.style.display = 'flex';
+  sideMenu.classList.remove('open'); // fecha o menu
   document.getElementById('grupoNome').value = '';
   document.getElementById('grupoLink').value = '';
   document.getElementById('grupoCategoria').value = '';
@@ -484,13 +485,16 @@ document.getElementById('salvarGrupo').onclick = async () => {
   // Adicionar ao Firebase
   await set(ref(db, 'grupos/' + nome), novoGrupo);
 
-  // Atualizar localmente
-  todosGrupos.push(novoGrupo);
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados.push(novoGrupo);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
+const msg = document.getElementById('mensagemEnvio');
+msg.style.display = 'block';
+setTimeout(() => msg.style.display = 'none', 3000); // some depois de 3s
 
-  renderizarGrupos(todosGrupos);
+  // Atualizar localmente
+let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
+enviados.push(novoGrupo);
+localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
+modal.style.display = 'none';
+carregarGrupos(); // recarrega do Firebase + localStorage  
   modal.style.display = 'none';
 };
 
