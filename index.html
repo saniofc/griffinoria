@@ -74,12 +74,13 @@ footer a{color:#b78cff;text-decoration:none}
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
   <h2>informações</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️Loja da Miih</a>
-  <a href="https://wa.me/5521977231625" target="_blank">🤖Alugar bot</a>
-  <a href="#" id="meusGrupos">📋Meus Grupos</a>
-  <a href="#" id="enviarGrupo">📨Enviar Meu Grupo</a>
-  <a href="https://wa.me/5521977231625" target="_blank">💎Comprar bot</a>
-  <a href="#" id="comprarVipBtn">💰Comprar VIP</a>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
+  <!-- Links com textos diferentes -->
+  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖 Quero alugar bot</a>
+  <a href="#" id="meusGrupos">📋 Meus Grupos</a>
+  <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">💎 Quero comprar bot</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">💰 Quero acesso VIP</a>
 </div>
 
 <div id="lista-grupos"></div>
@@ -87,16 +88,9 @@ footer a{color:#b78cff;text-decoration:none}
 
 <!-- Modal do VIP -->
 <style>
-  /* Efeito de entrada (fade + zoom) */
   @keyframes fadeZoom {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   #vipModal .vip-content {
@@ -110,8 +104,7 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
     <h3>🌟 Benefícios do VIP 🌟</h3>
     <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
     <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
-    <a href="https://wa.me/5521977231625?text=Quero%20comprar%20o%20VIP%20para%20meus%20grupos!"
-       target="_blank"
+    <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank"
        style="display:inline-block; background:gold; color:black; padding:10px 20px; border-radius:8px;
        text-decoration:none; font-weight:bold;">💎 Pagar VIP</a>
     <br><br>
