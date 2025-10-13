@@ -123,28 +123,42 @@ background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:
 </div>
 
 <script>
-  const comprarVipBtn = document.getElementById("comprarVipBtn");
-  const vipModal = document.getElementById("vipModal");
-  const fecharVip = document.getElementById("fecharVip");
-  const sideMenu = document.getElementById("sideMenu"); // menu lateral
+// VIP
+const comprarVipBtn = document.getElementById('comprarVipBtn');
+const vipModal = document.getElementById('vipModal');
+const sideMenu = document.getElementById('sideMenu');
+comprarVipBtn.addEventListener("click", (e) => {
+  e.preventDefault(); // <-- ESSENCIAL
+  vipModal.style.display = "flex";
+  sideMenu.classList.remove("open");
+});
+document.getElementById('fecharVip').onclick = () => {
+  vipModal.style.display = 'none';
+};
+// Enviar grupo
+const enviarBtn = document.getElementById('enviarGrupo');
+const meusBtn = document.getElementById('meusGrupos');
 
-  // Abrir modal VIP e fechar menu lateral
-  comprarVipBtn.addEventListener("click", () => {
-    vipModal.style.display = "flex";
-    sideMenu.classList.remove("open"); // fecha o menu lateral se estiver aberto
-  });
+enviarBtn.addEventListener('click', (e) => {
+  e.preventDefault(); // <-- ESSENCIAL
+  modal.style.display = 'flex';
+  sideMenu.classList.remove('open');
+  document.getElementById('grupoNome').value = '';
+  document.getElementById('grupoLink').value = '';
+  document.getElementById('grupoCategoria').value = '';
+  document.getElementById('grupoVipCodigo').value = '';
+  previewFoto.src = 'https://files.catbox.moe/ls07y5.jpg';
+});
 
-  // Fechar modal VIP ao clicar no botão
-  fecharVip.addEventListener("click", () => {
-    vipModal.style.display = "none";
-  });
-
-  // Fechar modal VIP ao clicar fora do conteúdo
-  window.addEventListener("click", (e) => {
-    if (e.target === vipModal) {
-      vipModal.style.display = "none";
-    }
-  });
+// Meus grupos
+meusBtn.addEventListener('click', (e) => {
+  e.preventDefault(); // <-- ESSENCIAL
+  const usuario = localStorage.getItem('usuarioID');
+  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
+  const meus = todosGrupos.filter(g => g.dono === usuario);
+  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
+  else renderizarGrupos(meus);
+});
 </script>
 
 <footer>
@@ -381,9 +395,6 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 
 // ================== MODAL ================== //
 // Seleciona os botões
-const enviarBtn = document.getElementById('enviarGrupo');
-const meusBtn = document.getElementById('meusGrupos');
-
 // Cria o modal dinamicamente
 const modal = document.createElement('div');
 modal.className = 'modal';
@@ -429,7 +440,7 @@ document.body.appendChild(modal);
 
 // Pré-visualização da imagem
 const fotoInput = modal.querySelector("#grupoFotoUpload");
-const previewFoto = modal.querySelector("#previewFoto");
+const previewFoto = document.getElementById("previewFoto"); // ou modal.querySelector("#previewFoto")
 fotoInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -493,7 +504,6 @@ setTimeout(() => msg.style.display = 'none', 3000); // some depois de 3s
 let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
 enviados.push(novoGrupo);
 localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-modal.style.display = 'none';
 carregarGrupos(); // recarrega do Firebase + localStorage  
   modal.style.display = 'none';
 };
