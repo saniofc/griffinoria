@@ -73,19 +73,44 @@ footer a{color:#b78cff;text-decoration:none}
 <div class="menu-icon" id="menuBtn">📝</div>
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
-  <h2>informações</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
+  <h2>Informações</h2>
+
   <!-- Links com textos diferentes -->
-  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖Alugar bot</a>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
+  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖 Alugar bot</a>
   <a href="#" id="meusGrupos">📋 Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
   <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">💎 Comprar bot</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">⭐Comprar VIP</a>
-  <a href="#" onclick="carregarPendentes()">🛠️ Aprovar grupos</a>
+  <a href="#" id="comprarVipBtn">⭐ Comprar VIP</a>
+
+  <!-- Botão ADMIN oculto -->
+  <a href="#" id="adminBtn" style="display:none;">🛠️ Aprovar grupos</a>
 </div>
 
 <div id="lista-grupos"></div>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+
+<script>
+// ====== Ativar modo ADMIN ======
+document.addEventListener('keydown', (e) => {
+  // Ctrl + A ativa modo admin
+  if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+    const senha = prompt("Digite a senha de admin:");
+    if (senha === "elias007A@") {
+      document.getElementById('adminBtn').style.display = 'block';
+      alert("🔓 Modo administrador ativado!");
+    } else {
+      alert("Senha incorreta!");
+    }
+  }
+});
+
+// ====== Botão admin ======
+document.getElementById('adminBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  carregarPendentes(); // função que mostra os grupos pendentes
+});
+</script>
 
 <!-- Modal do VIP -->
 <style>
