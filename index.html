@@ -128,7 +128,6 @@ comprarVipBtn.addEventListener("click", (e) => {
 document.getElementById('fecharVip').onclick = () => {
   vipModal.style.display = 'none';
 };
-// Enviar grupo
 const enviarBtn = document.getElementById('enviarGrupo');
 const meusBtn = document.getElementById('meusGrupos');
 
@@ -422,7 +421,22 @@ modal.innerHTML = `
 
     <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
 
-    <button id="salvarGrupo" style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#b78cff; color:#fff; cursor:pointer;">Enviar grupo</button>
+    <button id="salvarGrupo"
+  style="
+    padding:10px 20px;
+    margin-top:10px;
+    border:none;
+    border-radius:15px;
+    background:#2ecc71;
+    color:#fff;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.2s;
+  "
+  onmouseover="this.style.background='#27ae60'"
+  onmouseout="this.style.background='#2ecc71'">
+  Enviar grupo
+</button>
 
     <p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
   </div>
