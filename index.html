@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Grupos WhatsApp</title>
-<meta property="og:title" content="Grupos whatsapp⭐">
+<meta property="og:title" content="Grupos whatsapp?">
 <meta property="og:description" content="Convite para conversar em grupo">
 <meta property="og:image" content="https://files.catbox.moe/ls07y5.jpg">
 <meta property="og:url" content="https://saniofc.github.io/griffinoria/">
@@ -77,7 +77,7 @@ footer a{color:#b78cff;text-decoration:none}
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
   <!-- Links com textos diferentes -->
   <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖Alugar bot</a>
-  <a href="#" id="meusGrupos">📋 Meus Grupos</a>
+  <a href="#" id="meusGrupos">🚀 Meus Grupos</a>
   <a href="#" id="enviarGrupo">📨 Enviar Meu Grupo</a>
   <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">🤖comprar bot</a>
   <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank" id="comprarVipBtn">⭐Comprar VIP</a>
@@ -101,12 +101,12 @@ footer a{color:#b78cff;text-decoration:none}
 <div id="vipModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
 background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:999;">
   <div class="vip-content" style="background:#111; padding:25px; border-radius:15px; text-align:center; width:80%; max-width:350px; color:#fff; border:1px solid gold;">
-    <h3>🌟 Benefícios do VIP 🌟</h3>
+    <h3>⭐ Benefícios do VIP ⭐</h3>
     <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
-    <p><strong>Valores:</strong><br>💵 R$5 = 24 horas<br>💵 R$10 = 48 horas</p>
+    <p><strong>Valores:</strong><br>🚀 R$5 = 24 horas<br>🚀 R$10 = 48 horas</p>
     <a href="https://wa.me/5521977231625?text=Quero%20acesso%20VIP" target="_blank"
        style="display:inline-block; background:gold; color:black; padding:10px 20px; border-radius:8px;
-       text-decoration:none; font-weight:bold;">💎 Pagar VIP</a>
+       text-decoration:none; font-weight:bold;">⭐ Pagar VIP</a>
     <br><br>
     <button id="fecharVip"
             style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
@@ -155,7 +155,7 @@ meusBtn.addEventListener('click', (e) => {
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
 <!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
@@ -191,7 +191,7 @@ async function carregarGrupos() {
     const res = await fetch('grupos.json');
     jsonGrupos = await res.json();
   } catch (e) {
-    console.warn('?? Nenhum grupos.json encontrado ou erro ao carregar:', e);
+    console.warn('✖️ Nenhum grupos.json encontrado ou erro ao carregar:', e);
   }
 
   const gruposRef = ref(db, 'grupos');
@@ -234,14 +234,14 @@ function renderizarGrupos(lista) {
   });
 
   lista.forEach(g => {
-    // Criar um wrapper para o grupo + botões
+    // Criar um wrapper para o grupo + bot?es
     const wrapper = document.createElement('div');
     wrapper.style.display = 'flex';
     wrapper.style.flexDirection = 'column';
     wrapper.style.alignItems = 'center';
     wrapper.style.width = '100%';
 
-    // Botão do grupo
+    // Bot?o do grupo
     const btn = document.createElement('a');
     btn.className = 'grupo' + (g.vip ? ' vip' : '');
     btn.href = g.link;
@@ -267,14 +267,14 @@ function renderizarGrupos(lista) {
 
     wrapper.appendChild(btn);
 
-    // Botões Editar/Excluir abaixo
+    // Bot?es Editar/Excluir abaixo
     if (g.dono === usuario) {
       const box = document.createElement('div');
       box.style.display = 'flex';
       box.style.gap = '6px';
       box.style.marginTop = '8px';
 
-      // Botão EDITAR
+      // Bot?o EDITAR
       const edit = document.createElement('button');
       edit.textContent = 'Editar';
       edit.style.background = '#2ecc71';
@@ -289,7 +289,7 @@ function renderizarGrupos(lista) {
       edit.onmouseout = () => edit.style.background = '#2ecc71';
       edit.onclick = () => abrirEdicao(g);
 
-      // Botão EXCLUIR
+      // Bot?o EXCLUIR
       const del = document.createElement('button');
       del.textContent = 'Excluir';
       del.style.background = '#e74c3c';
@@ -320,7 +320,7 @@ function abrirEdicao(grupo){
   document.getElementById('grupoLink').value = grupo.link;
   previewFoto.src = grupo.foto;
   document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "&#$" : "";
+  document.getElementById('grupoVipCodigo').value = grupo.vip ? "" : "";
   
   const nomeOriginal = grupo.nome; // salva o nome original
   document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
@@ -331,7 +331,7 @@ async function salvarEdicao(grupo, nomeOriginal){
   grupo.link = document.getElementById('grupoLink').value.trim();
   grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "&#$";
+  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "";
 
   // Se o nome mudou, remove o antigo
   if (nomeOriginal !== grupo.nome) {
@@ -386,7 +386,7 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 // ================== MODAL ================== //
-// Seleciona os botões
+// Seleciona os bot?es
 // Cria o modal dinamicamente
 const modal = document.createElement('div');
 modal.className = 'modal';
@@ -445,7 +445,7 @@ modal.innerHTML = `
 // Adiciona o modal ao body
 document.body.appendChild(modal);
 
-// Pré-visualização da imagem
+// Pré-visualiza??o da imagem
 const fotoInput = modal.querySelector("#grupoFotoUpload");
 const previewFoto = document.getElementById("previewFoto"); // ou modal.querySelector("#previewFoto")
 fotoInput.addEventListener("change", (e) => {
@@ -486,19 +486,19 @@ document.getElementById('salvarGrupo').onclick = async () => {
   }
 
   // Código VIP
-  const isVip = vipCodigo === "&#$"; // ? altere aqui o código VIP se quiser
+  const isVip = vipCodigo === ""; // ? altere aqui o código VIP se quiser
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
 
   const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
 
-  // Evitar duplica??o
-  const jaExiste = todosGrupos.some(g => g.nome.toLowerCase() === nome.toLowerCase());
-  if (jaExiste) {
-    alert('Já existe um grupo com esse nome. Escolha outro.');
+  // Evitar duplicação
+const jaExiste = todosGrupos.some(g => g.link === link);
+if (jaExiste) {
+    alert('Já existe um grupo com esse link. Escolha outro.');
     return;
-  }
+}
 
   // Adicionar ao Firebase
   await set(ref(db, 'grupos/' + nome), novoGrupo);
@@ -518,9 +518,9 @@ carregarGrupos(); // recarrega do Firebase + localStorage
 // ================== MEUS GRUPOS ================== //
 meusBtn.onclick = () => {
   const usuario = localStorage.getItem('usuarioID');
-  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
+  if (!usuario) return alert('Você ainda n?o enviou nenhum grupo.');
   const meus = todosGrupos.filter(g => g.dono === usuario);
-  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
+  if (meus.length === 0) alert('Você ainda n?o enviou nenhum grupo.');
   else renderizarGrupos(meus);
 };
 
