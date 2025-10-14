@@ -320,7 +320,7 @@ function abrirEdicao(grupo){
   document.getElementById('grupoLink').value = grupo.link;
   previewFoto.src = grupo.foto;
   document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "" : "";
+  document.getElementById('grupoVipCodigo').value = grupo.vip ? "­" : "";
   
   const nomeOriginal = grupo.nome; // salva o nome original
   document.getElementById('salvarGrupo').onclick = () => salvarEdicao(grupo, nomeOriginal);
@@ -331,7 +331,7 @@ async function salvarEdicao(grupo, nomeOriginal){
   grupo.link = document.getElementById('grupoLink').value.trim();
   grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
   grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "";
+  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "­";
 
   // Se o nome mudou, remove o antigo
   if (nomeOriginal !== grupo.nome) {
@@ -486,7 +486,7 @@ document.getElementById('salvarGrupo').onclick = async () => {
   }
 
   // Código VIP
-  const isVip = vipCodigo === ""; // ? altere aqui o código VIP se quiser
+  const isVip = vipCodigo === "­"; // ? altere aqui o código VIP se quiser
 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
