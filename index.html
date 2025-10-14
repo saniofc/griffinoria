@@ -85,12 +85,6 @@ footer a{color:#b78cff;text-decoration:none}
 
 <div id="lista-grupos"></div>
 
-<!-- Botão como anúncio -->
-<a id="anuncioBtn" class="botao" href="https://linkfly.to/grifinoria" target="_blank"
-   style="position:fixed; bottom:20px; right:20px; z-index:9999; display:none;">
-   Trabalhe em caca com ...
-</a>
-
 <script>
   // Pega o botão
   const anuncio = document.getElementById('anuncioBtn');
@@ -539,5 +533,57 @@ meusBtn.onclick = () => {
 // ================== INICIAR ================== //
 carregarGrupos();
 </script>
+
+<!-- Anúncio flutuante -->
+<div id="anuncioFlutuante" style="
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  max-width: 90%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+">
+  <div style="position: relative; width: 100%;">
+    <a href="https://linkfly.to/grifinoria" target="_blank">
+      <img src="https://files.catbox.moe/sbn62q.jpeg" alt="Anúncio" style="width:100%; border-radius:15px; display:block;">
+    </a>
+    <span id="fecharAnuncio" style="
+      position: absolute;
+      top: 5px;
+      right: 8px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+    ">×</span>
+  </div>
+</div>
+
+<script>
+  const anuncio = document.getElementById('anuncioFlutuante');
+  const fecharAnuncio = document.getElementById('fecharAnuncio');
+
+  // Mostrar o anúncio após 2 segundos
+  setTimeout(() => {
+    anuncio.style.display = 'flex';
+  }, 2000);
+
+  // Fechar quando clicar no X
+  fecharAnuncio.addEventListener('click', () => {
+    anuncio.style.display = 'none';
+  });
+</script>
+
 </body>
 </html>
