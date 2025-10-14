@@ -170,7 +170,7 @@ meusBtn.addEventListener('click', (e) => {
 
 <footer>
   Blog · Termos de Uso · Política de Privacidade · FAQ<br>
-  ? COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
+  © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
 
 <!-- ==== SCRIPT FIREBASE E L?GICA ==== -->
@@ -532,18 +532,16 @@ meusBtn.onclick = () => {
 
 // ================== INICIAR ================== //
 carregarGrupos();
-</script>
-
 <!-- Anúncio flutuante centralizado -->
 <div id="anuncioFlutuante" style="
   position: fixed;
-  top: 70%; /* quanto maior, mais pra baixo */
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
   max-width: 90%;
   z-index: 9999;
-  display: none; /* começa escondido */
+  display: none;
   justify-content: center;
   align-items: center;
   opacity: 0;
@@ -577,26 +575,28 @@ carregarGrupos();
 </div>
 
 <script>
-  const anuncio = document.getElementById("anuncioFlutuante");
-  const fechar = document.getElementById("fecharAnuncio");
+  window.addEventListener("load", () => {
+    const anuncio = document.getElementById("anuncioFlutuante");
+    const fechar = document.getElementById("fecharAnuncio");
 
-  // Mostra o anúncio com efeito
-  setTimeout(() => {
-    anuncio.style.display = "flex";
-    setTimeout(() => anuncio.style.opacity = "1", 50);
-  }, 1500); // aparece após 1,5s
+    // Mostra o anúncio com efeito
+    setTimeout(() => {
+      anuncio.style.display = "flex";
+      setTimeout(() => anuncio.style.opacity = "1", 50);
+    }, 1500); // aparece 1,5s depois do carregamento completo
 
-  // Fecha ao clicar no X
-  fechar.addEventListener("click", () => {
-    anuncio.style.opacity = "0";
-    setTimeout(() => anuncio.style.display = "none", 600);
+    // Fecha ao clicar no X
+    fechar.addEventListener("click", () => {
+      anuncio.style.opacity = "0";
+      setTimeout(() => anuncio.style.display = "none", 600);
+    });
+
+    // Some automaticamente após 10s
+    setTimeout(() => {
+      anuncio.style.opacity = "0";
+      setTimeout(() => anuncio.style.display = "none", 600);
+    }, 10000);
   });
-
-  // Some automaticamente após 10s
-  setTimeout(() => {
-    anuncio.style.opacity = "0";
-    setTimeout(() => anuncio.style.display = "none", 600);
-  }, 10000);
 </script>
 </body>
 </html>
