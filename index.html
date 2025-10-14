@@ -84,7 +84,28 @@ footer a{color:#b78cff;text-decoration:none}
 </div>
 
 <div id="lista-grupos"></div>
-<a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Outros Grupos</a>
+
+<!-- Botão como anúncio -->
+<a id="anuncioBtn" class="botao" href="https://linkfly.to/grifinoria" target="_blank"
+   style="position:fixed; bottom:20px; right:20px; z-index:9999; display:none;">
+   Trabalhe em caca com ...
+</a>
+
+<script>
+  // Pega o botão
+  const anuncio = document.getElementById('anuncioBtn');
+
+  // Mostra o botão após 2 segundos
+  setTimeout(() => {
+    anuncio.style.display = 'inline-block';
+
+    // Depois de 7 segundos some
+    setTimeout(() => {
+      anuncio.style.display = 'none';
+    }, 7000);
+
+  }, 2000);
+</script>
 
 <!-- Modal do VIP -->
 <style>
