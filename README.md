@@ -1,2 +1,0 @@
-# griffinoria
-seu proprio domínio?
