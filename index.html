@@ -186,28 +186,19 @@ let todosGrupos = [];
 
 // ================== CARREGAR GRUPOS ================== //
 async function carregarGrupos() {
-  let jsonGrupos = [];
-  try {
-    const res = await fetch('grupos.json');
-    jsonGrupos = await res.json();
-  } catch (e) {
-    console.warn('?? Nenhum grupos.json encontrado ou erro ao carregar:', e);
-  }
-
   const gruposRef = ref(db, 'grupos');
   onValue(gruposRef, snap => {
     const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
     const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
 
-    // Combinar todos removendo duplicatas (mesmo nome = mesmo grupo)
+    // Combinar dados do Firebase + localStorage
     const mapa = new Map();
-
-    [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
-  if (g?.nome) {
-    g.vip = !!g.vip; // garante que seja true ou false
-    mapa.set(g.nome.toLowerCase(), g);
-  }
-});
+    [...dadosFirebase, ...enviadosLocais].forEach(g => {
+      if (g?.nome) {
+        g.vip = !!g.vip;
+        mapa.set(g.nome.toLowerCase(), g);
+      }
+    });
 
     todosGrupos = Array.from(mapa.values());
     renderizarGrupos(todosGrupos);
