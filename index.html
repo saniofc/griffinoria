@@ -53,6 +53,30 @@ header p{margin-top:4px;text-shadow:1px 1px 3px #000}
 .botao{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;border-radius:30px;padding:12px 28px;margin-top:20px;text-decoration:none;font-size:18px;transition:transform .18s,box-shadow .18s;display:inline-block}
 .botao:hover{transform:scale(1.04)}
 
+/* Estilo para o Anúncio do TikTok */
+.anuncio-tiktok {
+    display: block;
+    width: 100%;
+    max-width: 380px; /* Alinha com a largura máxima da lista de grupos */
+    margin-top: 20px;
+    border-radius: 20px; /* Cantos arredondados */
+    overflow: hidden; /* Garante que a imagem respeite o border-radius */
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 3px solid #b78cff; /* Borda para destaque */
+}
+
+.anuncio-tiktok:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(183, 140, 255, 0.6);
+}
+
+.tiktok-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 /* Footer */
 footer{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:#ccc;text-align:center;padding:14px 10px;font-size:14px;line-height:1.6;z-index:2000}
 footer a{color:#b78cff;text-decoration:none}
@@ -106,6 +130,10 @@ footer a{color:#b78cff;text-decoration:none}
 </div>
 
 <div id="lista-grupos"></div>
+
+<a href="https://vm.tiktok.com/ZMHc1d71yfvEh-4JoZX/" target="_blank" class="anuncio-tiktok" id="anuncioTiktok">
+  <img src="https://files.catbox.moe/tiktok_placeholder.jpg" alt="Assista a vídeos no TikTok para receber recompensas" class="tiktok-img">
+</a>
 <a class="botao" href="https://linkfly.to/grifinoria" target="_blank">Renda extra em casa🧑🏻‍💻💰</a>
 
 <div id="modalTermos" class="modal">
@@ -205,7 +233,7 @@ const previewFoto = modal.querySelector("#previewFoto");
 const fotoInput = modal.querySelector("#grupoFotoUpload");
 const salvarGrupoBtn = modal.querySelector('#salvarGrupo');
 
-// Pr谷-visualiza??o da imagem
+// Pré-visualização da imagem
 fotoInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -538,6 +566,18 @@ document.getElementById('privacidadeLink').onclick = (e) => {
 };
 
 closeModalTermos.onclick = () => modalTermos.style.display = "none";
+
+// ================== ANÚNCIO TIKTOK (Novo script para rastrear cliques) ================== //
+const anuncioTiktok = document.getElementById('anuncioTiktok');
+
+if (anuncioTiktok) {
+  anuncioTiktok.addEventListener('click', () => {
+    // Rastreia o clique no Firebase (usando um nome único)
+    const cliqueTiktokRef = ref(db, 'cliques/clique_tiktok');
+    runTransaction(cliqueTiktokRef, c => (c || 0) + 1);
+  });
+}
+// ======================================================================================= //
 
 // ================== INICIAR ================== //
 carregarGrupos();
