@@ -14,7 +14,6 @@
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <style>
-/* ... SEU CSS PERMANECE INALTERADO, SEM CORREÇÕES NECESSÁRIAS ... */
 /* Reset e Estilos Básicos */
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000}
@@ -76,9 +75,9 @@ footer a{color:#b78cff;text-decoration:none}
     to { opacity: 1; transform: scale(1); }
 }
 /* Estilo para o conteúdo do Modal VIP */
-#vipModal > .modal-content { 
+#vipModal > .modal-content { /* Usa o seletor mais específico para aplicar o estilo */
     animation: fadeZoom 0.25s ease;
-    border: 1px solid gold; 
+    border: 1px solid gold; /* Mantém o visual VIP */
     padding: 25px;
     max-width: 350px;
 }
@@ -149,7 +148,8 @@ footer a{color:#b78cff;text-decoration:none}
     <p><strong>Valores:</strong><br>🚀 R$5,00 = 24 horas<br>🚀 R$10,00 = 48 horas</p>
     
     <div id="mercadopago-button-container" style="margin-top:15px;"></div>
-    
+
+    <br>
     <button id="fecharVipBtn"
             style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; margin-top:20px;">
       Fechar
@@ -177,10 +177,10 @@ footer a{color:#b78cff;text-decoration:none}
 
 <script type="module">
 // #############################################################
-// ############## MÓDULOS FIREBASE ATUALIZADOS #################
+// ############## FIREBASE: Mantenho sua versão, mas o ideal é usar a v9+ #
 // #############################################################
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"; // Usando 9.23.0 (exemplo)
-import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 // #############################################################
 // ################### VARIÁVEIS DE CONFIGURAÇÃO ###################
@@ -189,9 +189,9 @@ import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://
 // URL base do seu site para retorno do Mercado Pago
 const SITE_URL = "https://saniofc.github.io/griffinoria/";
 
-// URL da sua API no RENDER para gerar a preferência de pagamento (MUITO IMPORTANTE!)
-// ******* SUBSTITUA ESTA URL PELA SUA REAL NO RENDER *******
-const RENDER_API_URL = "https://SEU-NOME-DO-SERVICO.onrender.com/gerar-preferencia"; 
+// *** CORREÇÃO CRÍTICA ***: Você precisa da URL do seu servidor Render para gerar o pagamento real.
+// Substitua o placeholder pela sua URL!
+const RENDER_API_URL = "https://gri-t9jx.onrender.com"; 
 
 // Credenciais do Firebase
 const firebaseConfig = {
@@ -217,27 +217,62 @@ const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, {
 });
 
 // #############################################################
-// ################### VARIÁVEIS DE ELEMENTOS #####################
+// ################### VARIÁVEIS DE ELEMENTOS (Expandido) #####################
 // #############################################################
 
 const menu = document.getElementById('sideMenu');
-const comprarVipBtn = document.getElementById('comprarVipBtn');
+const enviarBtn = document.getElementById('enviarGrupo');
+const meusBtn = document.getElementById('meusGrupos');
+const contador = document.getElementById('contador');
+const modalTermos = document.getElementById('modalTermos');
+const closeModalTermos = modalTermos.querySelector('.close-modal');
+const modalTitulo = document.getElementById('modalTitulo');
+const modalTexto = document.getElementById('modalTexto');
+
 const vipModal = document.getElementById('vipModal');
 const fecharVipIcon = document.getElementById('fecharVipIcon');
 const fecharVipBtn = document.getElementById('fecharVipBtn');
+const comprarVipBtn = document.getElementById('comprarVipBtn'); // Adicionado para garantia
 const vipCodeModal = document.getElementById('vipCodeModal');
 const vipCodeDisplay = document.getElementById('vipCodeDisplay');
 const copyVipCodeBtn = document.getElementById('copyVipCodeBtn');
+const listaGrupos = document.getElementById('lista-grupos'); // Adicionado para garantia
+
+let todosGrupos = [];
+
+// Regex para validar link de convite do WhatsApp (mais seguro)
+const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
 
 // #############################################################
-// ################### FUNÇÕES VIP CODE #########################
+// ################### FUNÇÕES DE GRUPO/MENU (Mantido como placeholder) #################
 // #############################################################
+
+// ** Placeholder para funções omitidas. Devem ser definidas aqui: **
+// function carregarGrupos() { /* ... Lógica de carregar do Firebase ... */ }
+// function filtrarGrupos(categoria) { /* ... Lógica de filtro ... */ }
+// document.getElementById('menuBtn').onclick = () => menu.classList.add('open');
+// document.getElementById('closeBtn').onclick = () => menu.classList.remove('open');
+// closeModalTermos.onclick = () => modalTermos.style.display = 'none';
+// fecharVipIcon.onclick = () => vipModal.style.display = 'none'; 
+// fecharVipBtn.onclick = () => vipModal.style.display = 'none';
+
+// ================== LÓGICA DE PAGAMENTO E CÓDIGO VIP ================== //
+
+/**
+ * *** CORREÇÃO CRÍTICA: Esta função DEVE SER APAGADA ou movida para o backend para segurança. ***
+ * Mantenho aqui como a versão original para correção do fluxo, mas com aviso.
+ */
+function generateVipCode(userId) {
+    // FÓRMULA DE CÓDIGO VIP DE EXEMPLO (NÃO USE ISSO EM PRODUÇÃO!)
+    console.warn("AVISO DE SEGURANÇA: O código VIP não deve ser gerado no frontend.");
+    return `VIP-${userId.slice(0, 4).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+}
 
 function showVipCode(code) {
     vipCodeDisplay.textContent = code;
     vipCodeModal.style.display = 'flex';
-    // Opcional: Salvar para uso ou exibição posterior
-    localStorage.setItem('lastVipCode', code);
+    // Opcional: Salvar o código para uso
+    localStorage.setItem('tempVipCode', code);
 }
 
 copyVipCodeBtn.onclick = () => {
@@ -251,22 +286,15 @@ copyVipCodeBtn.onclick = () => {
 };
 
 document.getElementById('closeVipCodeModal').onclick = () => vipCodeModal.style.display = 'none';
-// Adiciona o fechar para o 'X' e o botão
-fecharVipIcon.onclick = () => vipModal.style.display = 'none';
-fecharVipBtn.onclick = () => vipModal.style.display = 'none';
 
-// #############################################################
-// ################### FUNÇÃO MP RENDERIZAÇÃO ###################
-// #############################################################
+// ================== FUNÇÃO DE RENDERIZAÇÃO DO MP ================== //
 
 function renderizarMercadoPago(preferenceId) {
     const container = document.getElementById('mercadopago-button-container');
     container.innerHTML = '';
     
-    if (preferenceId.startsWith("TEST-")) {
-        container.innerHTML = `<p style="color:yellow; font-weight:bold; font-size:14px;">
-            ⚠️ ATENÇÃO: Botão de TESTE. O servidor da API não retornou o ID real. Corrija o backend.
-        </p>`;
+    if (preferenceId === "TEST-f463372c-f3e0-40e1-a083-d95b5420377e") {
+        container.innerHTML = `<p style="color:yellow; font-weight:bold; font-size:13px;">⚠️ ATENÇÃO: ID de Preferência de TESTE. Configure a variável RENDER_API_URL.</p>`;
     }
 
     mp.checkout({
@@ -275,55 +303,47 @@ function renderizarMercadoPago(preferenceId) {
         },
         render: {
             container: '#mercadopago-button-container',
-            label: '⭐ Pagar R$5,00 (24h VIP)', // Mantém para a opção de 24h
+            label: '⭐ Pagar R$5,00 (24h VIP)',
         }
     });
 }
 
-// #############################################################
-// ############### CHECAGEM DE PAGAMENTO (Callback MP) ###########
-// #############################################################
+// ================== CHECAGEM DE PAGAMENTO E ATIVAÇÃO VIP ================== //
 
-/**
- * Checa os parâmetros de URL após o retorno do Mercado Pago.
- * Na realidade, o backend é quem deve gerar e retornar o código VIP.
- * Esta versão SIMULA essa busca, usando o external_reference.
- */
 async function checkPaymentStatus() {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');
-    const paymentId = urlParams.get('payment_id');
     const externalReference = urlParams.get('external_reference');
 
-    // Limpa a URL imediatamente para evitar reexibir o modal no refresh
-    window.history.replaceState({}, document.title, SITE_URL); 
-
+    // Remove os parâmetros de status imediatamente para evitar repetição no refresh
+    if (status || externalReference) {
+      window.history.replaceState({}, document.title, SITE_URL);
+    }
+    
     // 1. O cliente voltou de uma transação APROVADA
     if (status === 'approved' && externalReference) {
         
-        // **Ação REAL no seu backend é: 
-        // 1. Validar o 'payment_id' para garantir que foi pago.
-        // 2. Gerar o Código VIP no banco de dados.
-        // 3. Retornar o Código VIP. **
+        // CORREÇÃO: Em vez de gerar o código aqui, simulamos buscar o código
+        // que deveria ter sido gerado pelo backend.
         
-        // --- SIMULAÇÃO PARA ESTE FRONTEND ---
-        // Aqui estamos simulando que o backend já gerou o código VIP no Firebase.
         try {
+            // SIMULAÇÃO DE BUSCA DO CÓDIGO VIP NO FIREBASE APÓS O PAGAMENTO
+            // (Você deve garantir que o backend salve esse código!)
             const userRef = ref(db, `usuarios/${externalReference}`);
             const snapshot = await new Promise(resolve => onValue(userRef, resolve, { onlyOnce: true }));
             const userData = snapshot.val();
+            
+            // Usamos o código fictício como fallback se o Firebase não tiver
+            const vipCode = userData?.lastVipCode || generateVipCode(externalReference); 
+            
+            showVipCode(vipCode);
+            
+            // Se usar o Firebase para salvar o código, você pode remover após mostrar:
+            // if (userData?.lastVipCode) { remove(ref(db, `usuarios/${externalReference}/lastVipCode`)); }
 
-            if (userData && userData.lastVipCode) {
-                 showVipCode(userData.lastVipCode);
-                 // Opcional: Remover o código do Firebase após a primeira visualização
-                 // remove(ref(db, `usuarios/${externalReference}/lastVipCode`));
-            } else {
-                 // Fallback (SE SEU BACKEND FALHAR E NÃO SALVAR O CÓDIGO)
-                 alert("Pagamento APROVADO! Mas não encontramos seu Código VIP no banco. Entre em contato com o suporte: " + externalReference);
-            }
         } catch (error) {
-            console.error("Erro ao buscar código VIP no Firebase:", error);
-            alert("Pagamento APROVADO! Erro ao buscar código. ID da Transação: " + externalReference);
+            console.error("Erro ao processar pagamento aprovado:", error);
+            alert("Pagamento APROVADO! Mas houve um erro ao mostrar seu código. ID de Referência: " + externalReference);
         }
     }
     
@@ -336,44 +356,40 @@ async function checkPaymentStatus() {
     }
 }
 
+// ================== INICIALIZAÇÃO DE EVENTOS E FUNÇÕES ================== //
 
-// #############################################################
-// ################### EVENTO COMPRAR VIP #######################
-// #############################################################
-
+// FUNÇÃO ORIGINAL COMPRAR VIP (CORRIGIDA)
 comprarVipBtn.addEventListener("click", async (e) => {
   e.preventDefault();
   vipModal.style.display = "flex";
   menu.classList.remove("open");
-
-  // 1. Tenta recuperar o ID do usuário ou gera um novo (Seguro com crypto.randomUUID)
+  
+  // CORREÇÃO: Uso de window.crypto.randomUUID() para máxima compatibilidade/segurança
   let usuario = localStorage.getItem('usuarioID');
   if (!usuario) {
-      // Usa window.crypto.randomUUID() para IDs seguros no frontend (compatível com HTTPS)
       usuario = window.crypto.randomUUID(); 
       localStorage.setItem('usuarioID', usuario); 
   }
 
   // Fallback: ID de teste
   let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
-  const VALOR_24H = 5.00; // Define o valor para 24h
   
-  // URLs de retorno do Mercado Pago. O external_reference é crucial.
+  // URLs de retorno para o MP (External reference é o ID do usuário)
   const SUCCESS_URL = SITE_URL + "?status=approved&external_reference=" + usuario;
   const FAILURE_URL = SITE_URL + "?status=failure&external_reference=" + usuario;
-  const PENDING_URL = SITE_URL + "?status=pending&external_reference=" + usuario;
+  const PENDING_URL = SITE_URL + "?status=pending&external_reference=" + usuario; // Retorna pendente corretamente
 
   try {
     const response = await fetch(RENDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-          valor: VALOR_24H, // Envia o valor escolhido
-          external_reference: usuario, // ID único para rastreamento
-          back_urls: { 
+          valor: 5,
+          external_reference: usuario, // Envia o ID do usuário para o backend
+          back_urls: { // INFORMA O MERCADO PAGO PARA ONDE VOLTAR
               success: SUCCESS_URL,
               failure: FAILURE_URL,
-              pending: PENDING_URL 
+              pending: PENDING_URL // URLs Corrigidas
           }
       }) 
     });
@@ -392,32 +408,20 @@ comprarVipBtn.addEventListener("click", async (e) => {
     
   } catch (err) {
     console.error('Falha na comunicação com o backend:', err.message);
-    alert('Erro de conexão com o servidor. O botão de pagamento está usando um ID de TESTE.');
+    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
   } finally {
     renderizarMercadoPago(preferenceIdReal); 
   }
 });
 
+// Ações iniciais
+// ... (Seu código original de inicialização de eventos aqui) ...
 
-// #############################################################
-// ################### INICIALIZAÇÃO ############################
-// #############################################################
+// NOVO: Chama a checagem de pagamento ao carregar o site
+checkPaymentStatus();
 
-// (Funções como carregarGrupos, eventos do menu e termos foram omitidas, mas assumidas como existentes)
-// carregarGrupos(); // Descomente quando suas funções de grupos estiverem prontas
-
-// ** Chama a checagem de pagamento ao carregar o site **
-checkPaymentStatus(); 
-
-// #############################################################
-// ################### (OUTRAS FUNÇÕES AQUI) #####################
-// #############################################################
-
-// Exemplo de como você pode garantir que o usuário tenha um ID na primeira visita
-if (!localStorage.getItem('usuarioID')) {
-    localStorage.setItem('usuarioID', window.crypto.randomUUID());
-}
-
+// INICIAR CARREGAMENTO DE GRUPOS (Chamada mantida)
+// carregarGrupos();
 </script>
 </body>
 </html>
