@@ -1,16 +1,12 @@
 {
   "name": "griffinoria",
   "version": "1.0.0",
-  "description": "Site de grupos WhatsApp com Firebase e Mercado Pago",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "cors": "^2.8.5",
-    "body-parser": "^1.20.2",
-    "mercadopago": "^1.5.19",
-    "firebase-admin": "^12.5.0"
+    "mercadopago": "^2.0.3"
   }
 }
