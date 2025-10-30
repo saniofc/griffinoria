@@ -11,8 +11,6 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 
-<script src="https://sdk.mercadopago.com/js/v2"></script>
-
 <style>
 /* Reset e Estilos Básicos */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -80,12 +78,52 @@ footer a{color:#b78cff;text-decoration:none}
     border: 1px solid gold;
     padding: 25px;
     max-width: 350px;
+    /* Ajuste para caber o QR Code */
+    max-width: 90%; 
+    width: 380px; 
 }
-/* Novo Estilo para o Modal de Aviso VIP/Geral */
+/* Novo Estilo para o Modal de Aviso VIP/Geral - Mantido caso queira usar para outros avisos */
 #modalAvisoVip > .modal-content {
     border: 3px solid gold;
     background: #0d0d0d;
 }
+
+/* Estilo específico para o botão de Copiar e Enviar Comprovante */
+.pix-copy-btn {
+    background: #00bfff; /* Cor do Pix */
+    color: #fff;
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.pix-copy-btn:hover {
+    background: #0099cc;
+}
+
+.whatsapp-btn {
+    background: #25d366; /* Cor do WhatsApp */
+    color: #fff;
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background 0.2s;
+}
+.whatsapp-btn:hover {
+    background: #1eaa54;
+}
+
 </style>
 </head>
 <body>
@@ -131,20 +169,41 @@ footer a{color:#b78cff;text-decoration:none}
 <div id="vipModal" class="modal">
   <div class="modal-content" id="vip-content-container">
     <span class="close-modal" id="fecharVipIcon">❌</span>
-    <h3>⭐ Beneficios do VIP ⭐</h3>
-    <p>Grupos VIPs serão mais visíveis e terão mais visitas!</p>
-    <p><strong>Valores:</strong><br>🚀 R$5,00 = 24 horas<br>🚀 R$10,00 = 48 horas</p>
+    <h3>⭐ Ativar VIP (Pagamento Pix) ⭐</h3>
     
-    <div id="mercadopago-button-container" style="margin-top:15px;"></div>
+    <p style="margin-bottom: 10px;">Grupos VIPs serão mais visíveis e terão mais visitas!</p>
+    
+    <div style="margin: 15px 0;">
+        <img id="qrcode-img" 
+             src="https://files.catbox.moe/kvyq5d.jpg" 
+             alt="QR Code Pix" 
+             style="width: 90%; max-width: 300px; border: 2px solid gold; border-radius: 10px;">
+    </div>
 
-    <br>
+    <input type="text" id="pix-code-field" 
+           value="00020126580014BR.GOV.BCB.PIX013689a5c070-cdd1-443b-997d-0cbbcf80e2de52040000530398654045.005802BR5918Elias da Conceicao6009SAO PAULO62140510lRM9nLzEht6304AA83" 
+           style="position: absolute; left: -9999px;">
+           
+    <button id="copy-pix-btn" class="pix-copy-btn">
+        📋 Copiar Código Pix
+    </button>
+    
+    <p style="margin-top: 15px; font-size: 14px; color: #ccc;">
+        Após pagar, envie o comprovante:
+    </p>
+
+    <a href="https://wa.me/5521977231625?text=Ol%C3%A1%2C%20acabei%20de%20fazer%20o%20Pix%20para%20o%20VIP.%20Segue%20o%20comprovante!" 
+       target="_blank" 
+       class="whatsapp-btn">
+       Enviar Comprovante (WhatsApp) 📱
+    </a>
+
     <button id="fecharVipBtn"
-            style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
+            style="background:#e74c3c; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; margin-top: 20px;">
       Fechar
     </button>
   </div>
 </div>
-
 <div id="modalAvisoVip" class="modal">
   <div class="modal-content">
     <span class="close-modal" id="fecharAvisoVip">❌</span>
@@ -187,11 +246,7 @@ footer a{color:#b78cff;text-decoration:none}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-// URL base do seu site para retorno do Mercado Pago
-const SITE_URL = "https://saniofc.github.io/griffinoria/";
-
-// *** Seu link real do Render ***
-const RENDER_API_URL = "https://gri-t9jx.onrender.com/gerar-preferencia"; 
+// REMOVIDAS AS VARIÁVEIS DO MERCADO PAGO E RENDER
 
 // Credenciais do Firebase (MANTIDAS)
 const firebaseConfig = {
@@ -208,13 +263,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// CHAVE PÚBLICA DO MERCADO PAGO (MANTIDA)
-const MERCADOPAGO_PUBLIC_KEY = "APP_USR-747669d7-f43b-40c3-8b5f-3a496e478245";
-
-// Inicializa Mercado Pago
-const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, {
-    locale: 'pt-BR'
-});
+// REMOVIDA A INICIALIZAÇÃO DO MERCADO PAGO
+// const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' });
 
 // Variáveis de Elementos (MANTIDAS)
 const menu = document.getElementById('sideMenu');
@@ -236,25 +286,26 @@ const avisoVipMensagem = document.getElementById('avisoVipMensagem');
 const avisoVipCodigo = document.getElementById('avisoVipCodigo');
 document.getElementById('fecharAvisoVip').onclick = () => modalAvisoVip.style.display = 'none';
 
+// NOVO: Elementos Pix
+const pixCodeField = document.getElementById('pix-code-field');
+const copyPixBtn = document.getElementById('copy-pix-btn');
+
 
 let todosGrupos = [];
 
 // Regex para validar link de convite do WhatsApp (MANTIDO)
 const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
 
-// ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO (CORRIGIDO) ================== //
+// ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO (MANTIDO) ================== //
 
-// Seleção corrigida! Pega o modal pelo ID único.
 const modal = document.getElementById('modalEnvioGrupo'); 
 const previewFoto = document.getElementById("previewFoto");
 const fotoInput = document.getElementById("grupoFotoUpload");
 const salvarGrupoBtn = document.getElementById('salvarGrupo');
 
-// Eventos de hover (MANTIDOS)
 salvarGrupoBtn.addEventListener('mouseover', () => salvarGrupoBtn.style.background = '#27ae60');
 salvarGrupoBtn.addEventListener('mouseout', () => salvarGrupoBtn.style.background = '#2ecc71');
 
-// Evento de preview da foto (MANTIDO)
 fotoInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -263,8 +314,6 @@ fotoInput.addEventListener("change", (e) => {
     reader.readAsDataURL(file);
   }
 });
-
-// O evento de fechar foi movido para o onclick do HTML no span do modal!
 
 // ================== SALVAR NOVO GRUPO (MANTIDO) ================== //
 async function salvarNovoGrupo() {
@@ -328,7 +377,7 @@ async function salvarNovoGrupo() {
 salvarGrupoBtn.onclick = salvarNovoGrupo;
 
 // ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR E RENDERIZAR GRUPOS (MANTIDAS) ================== //
-// Manutenção das funções CRUD para garantir o carregamento da lista
+
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
@@ -502,83 +551,34 @@ function renderizarGrupos(lista) {
     container.appendChild(wrapper);
   });
 }
-function renderizarMercadoPago(preferenceId) {
-    const container = document.getElementById('mercadopago-button-container');
-    container.innerHTML = '';
-    
-    if (preferenceId === "TEST-f463372c-f3e0-40e1-a083-d95b5420377e") {
-        container.innerHTML = `<p style="color:yellow; font-weight:bold;">⚠️ Substitua este ID de teste por um ID de Preferência real gerado no seu servidor Render para o pagamento funcionar!</p>`;
+
+// REMOVIDA A FUNÇÃO renderizarMercadoPago
+
+
+// ================== NOVO: FUNÇÃO DE COPIAR PIX ================== //
+copyPixBtn.onclick = async () => {
+    try {
+        await navigator.clipboard.writeText(pixCodeField.value);
+        copyPixBtn.textContent = '✅ Código Copiado!';
+    } catch (err) {
+        console.error('Falha ao copiar:', err);
+        copyPixBtn.textContent = '❌ Erro ao Copiar!';
     }
-
-    mp.checkout({
-        preference: {
-            id: preferenceId 
-        },
-        render: {
-            container: '#mercadopago-button-container',
-            label: '⭐ Pagar R$5,00 (24h VIP)',
-        }
-    });
-}
+    setTimeout(() => {
+        copyPixBtn.textContent = '📋 Copiar Código Pix';
+    }, 3000);
+};
 
 
-// ================== INICIALIZAÇÃO DE EVENTOS (MANTIDA) ================== //
+// ================== INICIALIZAÇÃO DE EVENTOS (ATUALIZADA) ================== //
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
 
-comprarVipBtn.addEventListener("click", async (e) => {
+// O evento agora só abre o modal de Pix
+comprarVipBtn.addEventListener("click", (e) => {
   e.preventDefault();
   vipModal.style.display = "flex";
   menu.classList.remove("open");
-  
-  // 1. Obtém ou gera o ID do usuário (external_reference)
-  let usuario = localStorage.getItem('usuarioID');
-  if (!usuario) {
-      usuario = window.crypto.randomUUID(); 
-      localStorage.setItem('usuarioID', usuario); 
-  }
-
-  let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
-  
-  // URLs de retorno para o MP - Passamos o ID do usuário
-  const SUCCESS_URL = SITE_URL + "?status=approved&external_reference=" + usuario;
-  const FAILURE_URL = SITE_URL + "?status=failure&external_reference=" + usuario;
-  const PENDING_URL = SITE_URL + "?status=pending&external_reference=" + usuario;
-
-  try {
-    // 2. Chama seu backend no Render
-    const response = await fetch(RENDER_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-          valor: 5,
-          external_reference: usuario, // Envia o ID do usuário para o backend
-          back_urls: { 
-              success: SUCCESS_URL,
-              failure: FAILURE_URL,
-              pending: PENDING_URL 
-          }
-      }) 
-    });
-    
-    if (!response.ok) {
-        throw new Error(`Servidor Render respondeu com erro: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    if (data.preferenceId) {
-      preferenceIdReal = data.preferenceId; 
-    } else {
-      console.warn('Backend retornou sucesso, mas sem preferenceId. Usando ID de teste.');
-    }
-    
-  } catch (err) {
-    console.error('Falha na comunicação com o backend:', err.message);
-    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
-  } finally {
-    renderizarMercadoPago(preferenceIdReal); 
-  }
 });
 
 // Outros Eventos (MANTIDOS)
@@ -669,48 +669,10 @@ document.getElementById('privacidadeLink').onclick = (e) => {
 
 closeModalTermos.onclick = () => modalTermos.style.display = "none";
 
-// ================== NOVO: CHECAR RETORNO DO MERCADO PAGO (MANTIDO) ================== //
-
-function checkVipReturn() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get('status');
-    const externalReference = urlParams.get('external_reference');
-
-    if (status === 'approved' && externalReference) {
-        // Gera um código VIP TEMPORÁRIO para o usuário inserir
-        const temporaryVipCode = '∜'; // Usando o mesmo símbolo
-        
-        avisoVipTitulo.textContent = "✅ Pagamento Aprovado!";
-        avisoVipMensagem.innerHTML = `
-            Seu pagamento foi aprovado com sucesso!
-            <br>Use o código abaixo para ativar o VIP ao enviar um grupo.
-            <br>
-            <strong style="color:red;">AVISO:</strong> Este código é temporário e apenas para o frontend. A ativação definitiva do VIP depende do seu servidor **Render** (via webhook).
-        `;
-        avisoVipCodigo.textContent = temporaryVipCode;
-        modalAvisoVip.style.display = 'flex';
-        
-        // Remove os parâmetros da URL para evitar que o aviso apareça novamente no refresh
-        history.replaceState(null, '', location.pathname);
-
-    } else if (status && externalReference) {
-        avisoVipTitulo.textContent = "❌ Status do Pagamento";
-        avisoVipMensagem.innerHTML = `
-            Seu pagamento retornou com o status: **${status.toUpperCase()}**. 
-            <br>
-            Se houver dúvidas, entre em contato com o suporte do Mercado Pago.
-        `;
-        avisoVipCodigo.textContent = "";
-        modalAvisoVip.style.display = 'flex';
-        
-        // Remove os parâmetros da URL
-        history.replaceState(null, '', location.pathname);
-    }
-}
+// REMOVIDA A FUNÇÃO checkVipReturn
 
 // ================== INICIAR ================== //
 carregarGrupos();
-checkVipReturn(); // Executa a checagem ao carregar a página
 </script>
 </body>
 </html>
