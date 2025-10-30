@@ -287,11 +287,6 @@ async function salvarNovoGrupo() {
     alert('A categoria do grupo é obrigatória. Por favor, escolha uma.');
     return;
   }
-
-  // Aviso sobre foto temporária (MANTIDO)
-  if(fotoInput.files.length > 0) {
-      alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
-  }
   
   // Validação: Link repetido (CONFORME SOLICITADO)
   const linkExiste = todosGrupos.some(g => g.link === link);
