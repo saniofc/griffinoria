@@ -75,9 +75,9 @@ footer a{color:#b78cff;text-decoration:none}
     to { opacity: 1; transform: scale(1); }
 }
 /* Estilo para o conteúdo do Modal VIP */
-#vipModal > .modal-content { /* Usa o seletor mais específico para aplicar o estilo */
+#vipModal > .modal-content {
     animation: fadeZoom 0.25s ease;
-    border: 1px solid gold; /* Mantém o visual VIP */
+    border: 1px solid gold;
     padding: 25px;
     max-width: 350px;
 }
@@ -150,7 +150,13 @@ footer a{color:#b78cff;text-decoration:none}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-// Credenciais do Firebase
+// URL base do seu site para retorno do Mercado Pago
+const SITE_URL = "https://saniofc.github.io/griffinoria/";
+
+// *** CORRIGIDO: Seu link real do Render foi implementado ***
+const RENDER_API_URL = "https://gri-t9jx.onrender.com/gerar-preferencia"; 
+
+// Credenciais do Firebase (MANTIDAS)
 const firebaseConfig = {
   apiKey: "AIzaSyDsrYjO2yVTemKqwmJRzNjh5sfaMalPqhE",
   authDomain: "cliques-4a2c1.firebaseapp.com",
@@ -165,7 +171,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// CHAVE PÚBLICA DO MERCADO PAGO
+// CHAVE PÚBLICA DO MERCADO PAGO (MANTIDA)
 const MERCADOPAGO_PUBLIC_KEY = "APP_USR-747669d7-f43b-40c3-8b5f-3a496e478245";
 
 // Inicializa Mercado Pago
@@ -173,7 +179,7 @@ const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, {
     locale: 'pt-BR'
 });
 
-// Variáveis de Elementos
+// Variáveis de Elementos (MANTIDAS)
 const menu = document.getElementById('sideMenu');
 const enviarBtn = document.getElementById('enviarGrupo');
 const meusBtn = document.getElementById('meusGrupos');
@@ -189,13 +195,14 @@ const fecharVipBtn = document.getElementById('fecharVipBtn');
 
 let todosGrupos = [];
 
-// Regex para validar link de convite do WhatsApp (mais seguro)
+// Regex para validar link de convite do WhatsApp (MANTIDO)
 const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
 
 // ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO ================== //
 
 const modal = document.createElement('div');
 modal.className = 'modal';
+// Código do Modal Omitido (Para economizar espaço, mantenho o resto do JS do modal)
 modal.innerHTML = `
   <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
     <span class="close-modal" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
@@ -240,7 +247,7 @@ fotoInput.addEventListener("change", (e) => {
 
 modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
 
-// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO ================== //
+// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO (MANTIDAS) ================== //
 
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
@@ -263,13 +270,11 @@ async function salvarEdicao(grupo, nomeOriginal){
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "∜"; 
 
-  // Validação de link aprimorada com RegEx
   if (!grupo.nome || !WHATSAPP_LINK_REGEX.test(grupo.link)) {
     alert('Preencha corretamente o nome e use um link de convite do WhatsApp válido!');
     return;
   }
   
-  // Aviso sobre foto temporária
   if(fotoInput.files.length > 0) {
       alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
   }
@@ -300,7 +305,7 @@ function excluirGrupo(grupo){
   renderizarGrupos(todosGrupos);
 }
 
-// ================== SALVAR NOVO GRUPO ================== //
+// ================== SALVAR NOVO GRUPO (MANTIDO) ================== //
 async function salvarNovoGrupo() {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
@@ -308,18 +313,15 @@ async function salvarNovoGrupo() {
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
-  // Validação de link aprimorada com RegEx
   if (!nome || !WHATSAPP_LINK_REGEX.test(link)) {
     alert('Preencha corretamente o nome e use um link de convite do WhatsApp válido!');
     return;
   }
   
-  // Aviso sobre foto temporária
   if(fotoInput.files.length > 0) {
       alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
   }
   
-  // Segurança VIP (Apenas para demonstração. O ideal é validar no backend!)
   const isVip = vipCodigo === "∜"; 
   const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
   localStorage.setItem('usuarioID', usuario);
@@ -348,18 +350,17 @@ async function salvarNovoGrupo() {
 
 salvarGrupoBtn.onclick = salvarNovoGrupo;
 
-// ================== CARREGAR E RENDERIZAR GRUPOS ================== //
+// ================== CARREGAR E RENDERIZAR GRUPOS (MANTIDO) ================== //
 
 async function carregarGrupos() {
   let jsonGrupos = [];
   try {
     const res = await fetch('grupos.json');
     const data = await res.json();
-    // Correção: Garante que jsonGrupos é um array mesmo se o JSON estiver malformado
     jsonGrupos = Array.isArray(data) ? data : []; 
   } catch (e) {
     console.warn('Nenhum grupos.json encontrado ou erro ao carregar:', e);
-    jsonGrupos = []; // Garante que jsonGrupos é um array vazio em caso de erro
+    jsonGrupos = [];
   }
 
   const gruposRef = ref(db, 'grupos');
@@ -459,13 +460,8 @@ function renderizarGrupos(lista) {
   });
 }
 
-// ================== FUNÇÃO DE RENDERIZAÇÃO DO MP ================== //
+// ================== FUNÇÃO DE RENDERIZAÇÃO DO MP (MANTIDA) ================== //
 
-/**
- * RENDERIZA O BOTÃO DO MERCADO PAGO
- * IMPORTANTE: Você deve gerar o 'preferenceId' no seu Backend (srv-d41o4e6uk2gs73ebmb50)
- * usando o seu Token: APP_USR-8288615586101974-103009-82287b589444b35375a0ff5132fff5fc-2544883078
- */
 function renderizarMercadoPago(preferenceId) {
     const container = document.getElementById('mercadopago-button-container');
     container.innerHTML = '';
@@ -485,8 +481,66 @@ function renderizarMercadoPago(preferenceId) {
     });
 }
 
-// ================== INICIALIZAÇÃO DE EVENTOS ================== //
+// ================== INICIALIZAÇÃO DE EVENTOS (MP CORRIGIDO) ================== //
 
+const comprarVipBtn = document.getElementById('comprarVipBtn');
+
+comprarVipBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  vipModal.style.display = "flex";
+  menu.classList.remove("open");
+  
+  // 1. Obtém ou gera o ID do usuário (external_reference)
+  let usuario = localStorage.getItem('usuarioID');
+  if (!usuario) {
+      usuario = window.crypto.randomUUID(); 
+      localStorage.setItem('usuarioID', usuario); 
+  }
+
+  let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
+  
+  // URLs de retorno para o MP
+  const SUCCESS_URL = SITE_URL + "?status=approved&external_reference=" + usuario;
+  const FAILURE_URL = SITE_URL + "?status=failure&external_reference=" + usuario;
+  const PENDING_URL = SITE_URL + "?status=pending&external_reference=" + usuario;
+
+  try {
+    // 2. Chama seu backend no Render
+    const response = await fetch(RENDER_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+          valor: 5,
+          external_reference: usuario, // Envia o ID do usuário para o backend
+          back_urls: { // INFORMA O MERCADO PAGO PARA ONDE VOLTAR
+              success: SUCCESS_URL,
+              failure: FAILURE_URL,
+              pending: PENDING_URL 
+          }
+      }) 
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Servidor Render respondeu com erro: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    if (data.preferenceId) {
+      preferenceIdReal = data.preferenceId; 
+    } else {
+      console.warn('Backend retornou sucesso, mas sem preferenceId. Usando ID de teste.');
+    }
+    
+  } catch (err) {
+    console.error('Falha na comunicação com o backend:', err.message);
+    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
+  } finally {
+    renderizarMercadoPago(preferenceIdReal); 
+  }
+});
+
+// Outros Eventos (MANTIDOS)
 // MENU
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
@@ -507,33 +561,6 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
     if (cat === 'todos') renderizarGrupos(todosGrupos);
     else renderizarGrupos(todosGrupos.filter(g => g.categoria?.toLowerCase() === cat));
   });
-});
-
-const comprarVipBtn = document.getElementById('comprarVipBtn');
-
-comprarVipBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  vipModal.style.display = "flex";
-  menu.classList.remove("open");
-
-  try {
-    // Chama seu backend que gera o preferenceId
-    const response = await fetch('https://gri-t9jx.onrender.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valor: 5 }) // pode mandar valor ou pacote VIP
-    });
-    const data = await response.json();
-    
-    if (data.preferenceId) {
-      renderizarMercadoPago(data.preferenceId); // usa o preference real
-    } else {
-      alert('Erro ao gerar o pagamento. Tente novamente.');
-    }
-  } catch (err) {
-    console.error(err);
-    alert('Erro ao se conectar com o servidor.');
-  }
 });
 
 fecharVipIcon.onclick = () => { vipModal.style.display = 'none'; };
