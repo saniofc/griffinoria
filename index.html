@@ -509,34 +509,36 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
+const vipModal = document.getElementById('vipModal'); // Certifique-se que existe no HTML
+const menu = document.getElementById('menu'); // Certifique-se que existe no HTML
+const fecharVipIcon = document.getElementById('fecharVipIcon');
+const fecharVipBtn = document.getElementById('fecharVipBtn');
 
-comprarVipBtn.addEventListener("click", async (e) => {
+comprarVipBtn?.addEventListener("click", async (e) => {
   e.preventDefault();
-  vipModal.style.display = "flex";
-  menu.classList.remove("open");
+  
+  if (vipModal) vipModal.style.display = "flex";
+  if (menu) menu.classList.remove("open");
 
-  // 1. Define o ID de teste como fallback
+  // Fallback: ID de teste
   let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
   
-  // 2. 🚀 URL DO SEU SERVIDOR RENDER CORRIGIDA
+  // URL do servidor Render
   const RENDER_API_URL = 'https://gri-t9jx.onrender.com/gerar-preferencia'; 
 
   try {
-    // 3. Tenta chamar o servidor Render
     const response = await fetch(RENDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valor: 5 }) // Envia o valor do pacote
+      body: JSON.stringify({ valor: 5, titulo: "VIP 24h" })
     });
     
-    // Verifica o status HTTP da resposta
     if (!response.ok) {
-        throw new Error(`Servidor respondeu com erro: ${response.status}`);
+      throw new Error(`Servidor respondeu com erro: ${response.status}`);
     }
 
     const data = await response.json();
-    
-    // 4. Se o backend retornar o preferenceId, usa ele
+
     if (data.preferenceId) {
       preferenceIdReal = data.preferenceId; 
     } else {
@@ -544,18 +546,20 @@ comprarVipBtn.addEventListener("click", async (e) => {
     }
     
   } catch (err) {
-    // 5. Se houver erro de rede ou de API
     console.error('Falha na comunicação com o backend:', err.message);
-    // Exibe a mensagem de erro que você estava recebendo, mas continua usando o ID de teste
-    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
+    alert('Erro ao se conectar com o servidor. Usando ID de teste para exibir o botão de pagamento.');
   } finally {
-    // 6. Renderiza o botão com o ID real (se obtido) ou o ID de teste (fallback)
-    renderizarMercadoPago(preferenceIdReal); 
+    if (typeof renderizarMercadoPago === 'function') {
+      renderizarMercadoPago(preferenceIdReal); 
+    } else {
+      console.error('Função renderizarMercadoPago não encontrada!');
+    }
   }
 });
 
-fecharVipIcon.onclick = () => { vipModal.style.display = 'none'; };
-fecharVipBtn.onclick = () => { vipModal.style.display = 'none'; };
+// Fechar modal
+fecharVipIcon?.addEventListener('click', () => { if(vipModal) vipModal.style.display = 'none'; });
+fecharVipBtn?.addEventListener('click', () => { if(vipModal) vipModal.style.display = 'none'; });
 
 
 // ABRIR MODAL ENVIAR GRUPO
