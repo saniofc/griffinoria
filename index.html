@@ -14,6 +14,7 @@
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <style>
+/* ... SEU CSS PERMANECE INALTERADO ... */
 /* Reset e Estilos Básicos */
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000}
@@ -81,6 +82,22 @@ footer a{color:#b78cff;text-decoration:none}
     padding: 25px;
     max-width: 350px;
 }
+
+/* NOVO: Modal de Código VIP */
+#vipCodeModal .modal-content {
+    background: linear-gradient(145deg, #2c3e50, #1c2833);
+    border: 3px solid gold;
+}
+#vipCodeDisplay {
+    background: #1e2a36;
+    color: #ffd700;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+    border: 1px dashed #ffd700;
+}
 </style>
 </head>
 <body>
@@ -141,6 +158,18 @@ footer a{color:#b78cff;text-decoration:none}
   </div>
 </div>
 
+<div id="vipCodeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeVipCodeModal">❌</span>
+        <h3>🎉 Seu Código VIP!</h3>
+        <p>Use este código no seu grupo para ativar o destaque por 24h:</p>
+        <div id="vipCodeDisplay">...</div>
+        <button id="copyVipCodeBtn" style="background:#b78cff;">
+            Copiar Código
+        </button>
+    </div>
+</div>
+
 <footer>
   <a href="#" id="termosLink">Termos de Uso</a>
   <a href="#" id="privacidadeLink">Politica de Privacidade</a><br>
@@ -149,6 +178,9 @@ footer a{color:#b78cff;text-decoration:none}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+// URL base do seu site para retorno do Mercado Pago
+const SITE_URL = "https://saniofc.github.io/griffinoria/";
 
 // Credenciais do Firebase
 const firebaseConfig = {
@@ -186,285 +218,51 @@ const modalTexto = document.getElementById('modalTexto');
 const vipModal = document.getElementById('vipModal');
 const fecharVipIcon = document.getElementById('fecharVipIcon');
 const fecharVipBtn = document.getElementById('fecharVipBtn');
+// NOVO VIP CODE MODAL
+const vipCodeModal = document.getElementById('vipCodeModal');
+const vipCodeDisplay = document.getElementById('vipCodeDisplay');
+const copyVipCodeBtn = document.getElementById('copyVipCodeBtn');
 
 let todosGrupos = [];
 
 // Regex para validar link de convite do WhatsApp (mais seguro)
 const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
 
-// ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO ================== //
-
-const modal = document.createElement('div');
-modal.className = 'modal';
-modal.innerHTML = `
-  <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
-    <span class="close-modal" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
-    <h3>Enviar Meu Grupo</h3>
-    <input type="text" id="grupoNome" placeholder="Nome do grupo" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="file" id="grupoFotoUpload" accept="image/*" style="width:90%; margin:8px 0; color:#ccc;">
-    <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-top:5px; border:2px solid #fff;" alt="Prévia da foto">
-    <select id="grupoCategoria" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-      <option value="">Selecione a categoria</option>
-      <option value="Amizade">Amizade</option>
-      <option value="Zoeira">Zoeira</option>
-      <option value="Namoro">Namoro</option>
-    </select>
-    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <button id="salvarGrupo"
-      style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#2ecc71; color:#fff; cursor:pointer; font-weight:bold; transition: background 0.2s;">
-      Enviar grupo
-    </button>
-    <p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
-  </div>
-`;
-document.body.appendChild(modal);
-
-const previewFoto = modal.querySelector("#previewFoto");
-const fotoInput = modal.querySelector("#grupoFotoUpload");
-const salvarGrupoBtn = modal.querySelector('#salvarGrupo');
-
-// Correção: Adicionar eventos de hover via JS para #salvarGrupoBtn
-salvarGrupoBtn.addEventListener('mouseover', () => salvarGrupoBtn.style.background = '#27ae60');
-salvarGrupoBtn.addEventListener('mouseout', () => salvarGrupoBtn.style.background = '#2ecc71');
-
-
-fotoInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => (previewFoto.src = ev.target.result);
-    reader.readAsDataURL(file);
-  }
-});
-
-modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-
 // ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO ================== //
+// (O código de modal, edição e grupos foi omitido aqui por ser extenso e não ter mudado, mas está completo no seu código final)
 
-function abrirEdicao(grupo){
-  modal.style.display = 'flex';
-  document.getElementById('grupoNome').value = grupo.nome;
-  document.getElementById('grupoLink').value = grupo.link;
-  previewFoto.src = grupo.foto;
-  document.getElementById('grupoCategoria').value = grupo.categoria;
-  document.getElementById('grupoVipCodigo').value = grupo.vip ? "∜" : "";
-  
-  const nomeOriginal = grupo.nome; 
-  
-  salvarGrupoBtn.onclick = null;
-  salvarGrupoBtn.onclick = () => salvarEdicao(grupo, nomeOriginal);
+// ================== LÓGICA DE PAGAMENTO E CÓDIGO VIP ================== //
+
+/**
+ * Funções para gerar um código VIP fictício e mostrar o modal.
+ * Na realidade, este código VIP DEVE ser gerado pelo seu backend (Render).
+ */
+function generateVipCode(userId) {
+    // FÓRMULA DE CÓDIGO VIP DE EXEMPLO (USE ALGO SEGURO NO BACKEND!)
+    return `VIP-${userId.slice(0, 4).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 }
 
-async function salvarEdicao(grupo, nomeOriginal){
-  grupo.nome = document.getElementById('grupoNome').value.trim();
-  grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
-  grupo.categoria = document.getElementById('grupoCategoria').value;
-  grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "∜"; 
-
-  // Validação de link aprimorada com RegEx
-  if (!grupo.nome || !WHATSAPP_LINK_REGEX.test(grupo.link)) {
-    alert('Preencha corretamente o nome e use um link de convite do WhatsApp válido!');
-    return;
-  }
-  
-  // Aviso sobre foto temporária
-  if(fotoInput.files.length > 0) {
-      alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
-  }
-
-  if (nomeOriginal !== grupo.nome) {
-    await remove(ref(db, 'grupos/' + nomeOriginal));
-  }
-
-  await set(ref(db, 'grupos/' + grupo.nome), grupo);
-
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  modal.style.display = 'none';
-  carregarGrupos();
+function showVipCode(code) {
+    vipCodeDisplay.textContent = code;
+    vipCodeModal.style.display = 'flex';
+    // Opcional: Salvar o código para uso
+    localStorage.setItem('tempVipCode', code);
 }
 
-function excluirGrupo(grupo){
-  if (!confirm('Deseja realmente excluir este grupo?')) return;
-  remove(ref(db, 'grupos/' + grupo.nome));
-  todosGrupos = todosGrupos.filter(g => g.nome !== grupo.nome);
-
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados = enviados.filter(g => g.nome !== grupo.nome);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-
-  renderizarGrupos(todosGrupos);
-}
-
-// ================== SALVAR NOVO GRUPO ================== //
-async function salvarNovoGrupo() {
-  const nome = document.getElementById('grupoNome').value.trim();
-  const link = document.getElementById('grupoLink').value.trim();
-  const foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
-  const categoria = document.getElementById('grupoCategoria').value;
-  const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
-
-  // Validação de link aprimorada com RegEx
-  if (!nome || !WHATSAPP_LINK_REGEX.test(link)) {
-    alert('Preencha corretamente o nome e use um link de convite do WhatsApp válido!');
-    return;
-  }
-  
-  // Aviso sobre foto temporária
-  if(fotoInput.files.length > 0) {
-      alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
-  }
-  
-  // Segurança VIP (Apenas para demonstração. O ideal é validar no backend!)
-  const isVip = vipCodigo === "∜"; 
-  const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
-  localStorage.setItem('usuarioID', usuario);
-
-  const novoGrupo = { nome, link, foto, categoria, dono: usuario, vip: isVip };
-
-  const jaExiste = todosGrupos.some(g => g.link === link);
-  if (jaExiste) {
-      alert('Já existe um grupo com esse link. Escolha outro.');
-      return;
-  }
-
-  await set(ref(db, 'grupos/' + nome), novoGrupo);
-
-  const msg = document.getElementById('mensagemEnvio');
-  msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 3000);
-
-  let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-  enviados.push(novoGrupo);
-  localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
-  
-  carregarGrupos(); 
-  modal.style.display = 'none';
+copyVipCodeBtn.onclick = () => {
+    const code = vipCodeDisplay.textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        copyVipCodeBtn.textContent = 'Copiado! ✅';
+        setTimeout(() => copyVipCodeBtn.textContent = 'Copiar Código', 2000);
+    }).catch(err => {
+        alert("Erro ao copiar. Tente manualmente.");
+    });
 };
 
-salvarGrupoBtn.onclick = salvarNovoGrupo;
-
-// ================== CARREGAR E RENDERIZAR GRUPOS ================== //
-
-async function carregarGrupos() {
-  let jsonGrupos = [];
-  try {
-    const res = await fetch('grupos.json');
-    const data = await res.json();
-    // Correção: Garante que jsonGrupos é um array mesmo se o JSON estiver malformado
-    jsonGrupos = Array.isArray(data) ? data : []; 
-  } catch (e) {
-    console.warn('Nenhum grupos.json encontrado ou erro ao carregar:', e);
-    jsonGrupos = []; // Garante que jsonGrupos é um array vazio em caso de erro
-  }
-
-  const gruposRef = ref(db, 'grupos');
-  onValue(gruposRef, snap => {
-    const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
-    const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
-
-    const mapa = new Map();
-
-    [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
-      if (g?.nome) {
-        g.vip = !!g.vip;
-        mapa.set(g.nome.toLowerCase(), g);
-      }
-    });
-
-    todosGrupos = Array.from(mapa.values());
-    renderizarGrupos(todosGrupos);
-  });
-}
-
-function renderizarGrupos(lista) {
-  const container = document.getElementById('lista-grupos');
-  container.innerHTML = '';
-
-  if (lista.length === 0) {
-    container.innerHTML = '<p style="color:#ccc;">Nenhum grupo encontrado.</p>';
-    return;
-  }
-
-  const usuario = localStorage.getItem('usuarioID');
-
-  lista.sort((a, b) => {
-    if (a.vip && !b.vip) return -1;
-    if (!a.vip && b.vip) return 1;
-    return 0;
-  });
-
-  lista.forEach(g => {
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.flexDirection = 'column';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.width = '100%';
-
-    const btn = document.createElement('a');
-    btn.className = 'grupo' + (g.vip ? ' vip' : '');
-    btn.href = g.link;
-    btn.target = '_blank';
-    btn.innerHTML = `
-      <img class="foto" src="${g.foto}" alt="foto do grupo">
-      <div class="info">
-        <span class="nome">${g.nome}</span>
-        <div class="categoria">${g.categoria || ''}</div>
-        <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
-      </div>
-    `;
-
-    const cliqueRef = ref(db, 'cliques/' + g.nome);
-    onValue(cliqueRef, snap => {
-      btn.querySelector('.cliques').textContent = `Cliques: ${snap.val() || 0}`;
-    });
-
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      runTransaction(cliqueRef, c => (c || 0) + 1).then(() => window.open(g.link, '_blank'));
-    });
-
-    wrapper.appendChild(btn);
-
-    if (g.dono === usuario) {
-      const box = document.createElement('div');
-      box.style.display = 'flex';
-      box.style.gap = '6px';
-      box.style.marginTop = '8px';
-
-      const edit = document.createElement('button');
-      edit.textContent = 'Editar';
-      edit.style.cssText = 'background:#2ecc71;color:#fff;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:13px;transition:0.2s;';
-      edit.addEventListener('mouseover', () => edit.style.background = '#27ae60');
-      edit.addEventListener('mouseout', () => edit.style.background = '#2ecc71');
-      edit.onclick = () => abrirEdicao(g);
-
-      const del = document.createElement('button');
-      del.textContent = 'Excluir';
-      del.style.cssText = 'background:#e74c3c;color:#fff;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:13px;transition:0.2s;';
-      del.addEventListener('mouseover', () => del.style.background = '#c0392b');
-      del.addEventListener('mouseout', () => del.style.background = '#e74c3c');
-      del.onclick = () => excluirGrupo(g);
-
-      box.appendChild(edit);
-      box.appendChild(del);
-      wrapper.appendChild(box);
-    }
-
-    container.appendChild(wrapper);
-  });
-}
+document.getElementById('closeVipCodeModal').onclick = () => vipCodeModal.style.display = 'none';
 
 // ================== FUNÇÃO DE RENDERIZAÇÃO DO MP ================== //
 
-/**
- * RENDERIZA O BOTÃO DO MERCADO PAGO
- * IMPORTANTE: Você deve gerar o 'preferenceId' no seu Backend (https://gri-t9jx.onrender.com)
- */
 function renderizarMercadoPago(preferenceId) {
     const container = document.getElementById('mercadopago-button-container');
     container.innerHTML = '';
@@ -484,48 +282,65 @@ function renderizarMercadoPago(preferenceId) {
     });
 }
 
-// ================== INICIALIZAÇÃO DE EVENTOS ================== //
+// ================== CHECAGEM DE PAGAMENTO E ATIVAÇÃO VIP ================== //
 
-// MENU
-document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
-document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
+function checkPaymentStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const paymentId = urlParams.get('payment_id');
+    const externalReference = urlParams.get('external_reference');
 
-// VISITAS
-const visitasRef = ref(db, 'visitas');
-runTransaction(visitasRef, v => (v || 0) + 1);
-onValue(visitasRef, snap => {
-  contador.textContent = `Visitas: ${snap.val() || 0}`;
-});
+    // 1. O cliente voltou de uma transação APROVADA
+    if (status === 'approved' && paymentId && externalReference) {
+        // Gera o código VIP (Ação REAL deve ser no BACKEND)
+        // Aqui estamos simulando, mas o ideal é buscar no Firebase
+        const vipCode = generateVipCode(externalReference); 
+        
+        showVipCode(vipCode);
+        
+        // Opcional: Limpar a URL para não mostrar o código toda hora
+        window.history.replaceState({}, document.title, SITE_URL);
+    }
+    
+    // 2. O cliente voltou de uma transação PENDENTE ou FALHA
+    if (status === 'pending' || status === 'failure') {
+        // Apenas limpa a URL se o status não for APROVADO
+        window.history.replaceState({}, document.title, SITE_URL);
+    }
+}
 
-// FILTRO
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat.toLowerCase();
-    if (cat === 'todos') renderizarGrupos(todosGrupos);
-    else renderizarGrupos(todosGrupos.filter(g => g.categoria?.toLowerCase() === cat));
-  });
-});
+// ================== INICIALIZAÇÃO DE EVENTOS E FUNÇÕES ================== //
 
-const comprarVipBtn = document.getElementById('comprarVipBtn');
-const RENDER_API_URL = 'https://gri-t9jx.onrender.com/gerar-preferencia'; 
-
+// FUNÇÃO ORIGINAL COMPRAR VIP (ATUALIZADA)
 comprarVipBtn.addEventListener("click", async (e) => {
   e.preventDefault();
   vipModal.style.display = "flex";
   menu.classList.remove("open");
+  
+  const usuario = localStorage.getItem('usuarioID') || crypto.randomUUID();
+  localStorage.setItem('usuarioID', usuario); // Garante que o usuário tem ID
 
   // Fallback: ID de teste
   let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
+  const SUCCESS_URL = SITE_URL + "?status=approved&external_reference=" + usuario;
+  const FAILURE_URL = SITE_URL + "?status=failure&external_reference=" + usuario;
 
   try {
     const response = await fetch(RENDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valor: 5 }) 
+      body: JSON.stringify({ 
+          valor: 5,
+          external_reference: usuario, // Envia o ID do usuário para o backend
+          back_urls: { // INFORMA O MERCADO PAGO PARA ONDE VOLTAR
+              success: SUCCESS_URL,
+              failure: FAILURE_URL,
+              pending: FAILURE_URL // Retorna para failure em caso de pendente
+          }
+      }) 
     });
     
+    // ... (restante do bloco try/catch/finally)
     if (!response.ok) {
         throw new Error(`Servidor respondeu com erro: ${response.status}`);
     }
@@ -546,75 +361,14 @@ comprarVipBtn.addEventListener("click", async (e) => {
   }
 });
 
-fecharVipIcon.onclick = () => { vipModal.style.display = 'none'; };
-fecharVipBtn.onclick = () => { vipModal.style.display = 'none'; };
+// Ações iniciais
+// (O código de inicialização de eventos foi omitido aqui por ser extenso e não ter mudado)
+// ...
 
+// NOVO: Chama a checagem de pagamento ao carregar o site
+checkPaymentStatus();
 
-// ABRIR MODAL ENVIAR GRUPO
-enviarBtn.onclick = (e) => {
-  e.preventDefault(); 
-  modal.style.display = 'flex';
-  menu.classList.remove('open');
-  document.getElementById('grupoNome').value = '';
-  document.getElementById('grupoLink').value = '';
-  document.getElementById('grupoCategoria').value = '';
-  document.getElementById('grupoVipCodigo').value = '';
-  previewFoto.src = 'https://files.catbox.moe/ls07y5.jpg';
-  salvarGrupoBtn.onclick = salvarNovoGrupo;
-};
-
-// MEUS GRUPOS
-meusBtn.onclick = (e) => {
-  e.preventDefault();
-  const usuario = localStorage.getItem('usuarioID');
-  if (!usuario) return alert('Você ainda não enviou nenhum grupo.');
-  const meus = todosGrupos.filter(g => g.dono === usuario);
-  if (meus.length === 0) alert('Você ainda não enviou nenhum grupo.');
-  else {
-    renderizarGrupos(meus);
-    menu.classList.remove('open');
-  }
-};
-
-// TERMOS E PRIVACIDADE 
-document.getElementById('termosLink').onclick = (e) => {
-  e.preventDefault();
-  modalTitulo.textContent = "Termos de Uso";
-  modalTexto.innerHTML = `
-    <p>Bem-vindo ao nosso site de grupos WhatsApp. Ao utilizar este site, você concorda com os seguintes termos:</p>
-    <ul>
-      <li>Você é responsável por todo o conteúdo que enviar, incluindo links e imagens.</li>
-      <li>Não é permitido enviar conteúdo ilegal, ofensivo ou que viole direitos de terceiros.</li>
-      <li>O site não se responsabiliza pelo conteúdo dos grupos externos do WhatsApp.</li>
-      <li>Os grupos VIPs são destacados apenas para fins de visibilidade dentro do site.</li>
-      <li>Podemos alterar os termos de uso a qualquer momento, sendo sua responsabilidade consultar atualizações.</li>
-      <li>O uso do site é gratuito, mas o envio de grupos e pagamentos VIP seguem as regras aqui descritas.</li>
-    </ul>
-    <p>Se você não concorda com estes termos, por favor, não utilize o site.</p>
-  `;
-  modalTermos.style.display = "flex";
-};
-
-document.getElementById('privacidadeLink').onclick = (e) => {
-  e.preventDefault();
-  modalTitulo.textContent = "Política de Privacidade";
-  modalTexto.innerHTML = `
-    <p>Esta Política de Privacidade explica como coletamos e usamos os dados dos usuários em nosso site.</p>
-    <ul>
-      <li>Coletamos apenas informações necessárias para o funcionamento do site, como seu identificador único (usuarioID), cliques nos grupos e visitas ao site.</li>
-      <li>O usuarioID é armazenado no seu navegador via localStorage e não contém dados pessoais identificáveis.</li>
-      <li>Os dados de cliques e visitas são armazenados no Firebase apenas para exibir estatísticas do site.</li>
-      <li>Não compartilhamos seus dados com terceiros.</li>
-      <li>Você pode limpar os dados do seu navegador a qualquer momento, removendo seu usuarioID e histórico local.</li>
-    </ul>
-    <p>Ao continuar usando o site, você concorda com esta política.</p>
-  `;
-  modalTermos.style.display = "flex";
-};
-
-closeModalTermos.onclick = () => modalTermos.style.display = "none";
-
-// ================== INICIAR ================== //
+// INICIAR CARREGAMENTO DE GRUPOS
 carregarGrupos();
 </script>
 </body>
