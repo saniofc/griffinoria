@@ -1,33 +1,31 @@
-// server.js (ESM)
-import express from "express";
-import cors from "cors";
-import fetch from "node-fetch"; // se usar Node >=18 pode usar global fetch, mas deixei node-fetch pra compatibilidade
-import process from "process";
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
-const SITE_URL = process.env.SITE_URL || "https://gri-t9jx.onrender.com"; // ajuste
-
-if (!MP_ACCESS_TOKEN) {
-  console.error("MP_ACCESS_TOKEN não definido. Defina a variável de ambiente no Render.");
-  process.exit(1);
-}
-
-// Rota de teste
-app.get("/", (req, res) => res.send("Servidor MercadoPago ativo"));
+// server.js - Rota /gerar-preferencia CORRIGIDA
 
 // POST /gerar-preferencia
-// body: { valor: 5, titulo: "VIP 24h", quantity: 1 }
+// body: { 
+//   valor: 5, 
+//   titulo: "VIP 24h", 
+//   quantity: 1, 
+//   external_reference: "USER_ID", // Novo: ID do usuário
+//   back_urls: { success: "...", failure: "..." } // Novo: URLs de retorno
+// }
 app.post("/gerar-preferencia", async (req, res) => {
   try {
-    const { valor = 5, titulo = "Produto VIP", quantity = 1 } = req.body;
+    const { 
+      valor = 5, 
+      titulo = "Produto VIP", 
+      quantity = 1, 
+      external_reference, // 👈 Pega o ID do usuário
+      back_urls // 👈 Pega as URLs de retorno do frontend
+    } = req.body;
 
     // Validações básicas
     if (typeof valor !== "number" || valor <= 0) {
       return res.status(400).json({ error: "valor inválido" });
+    }
+    
+    // Validação de segurança: É crucial que o back_urls seja fornecido pelo frontend agora
+    if (!back_urls || !back_urls.success) {
+         return res.status(400).json({ error: "URLs de retorno ausentes." });
     }
 
     const payload = {
@@ -39,13 +37,12 @@ app.post("/gerar-preferencia", async (req, res) => {
           currency_id: "BRL",
         },
       ],
-      back_urls: {
-        success: `${SITE_URL}/?status=success`,
-        failure: `${SITE_URL}/?status=failure`,
-        pending: `${SITE_URL}/?status=pending`,
-      },
+      // 1. Usa as URLs enviadas pelo frontend (que contém o ID do cliente)
+      back_urls: back_urls, 
       auto_return: "approved",
-      // notification_url: `${SITE_URL}/webhook/mp` // opcional
+      // 2. Envia o ID do cliente para o Mercado Pago rastrear
+      external_reference: external_reference || 'sem-referencia', 
+      // notification_url: `${SITE_URL}/webhook/mp` // opcional: Descomente para Webhooks
     };
 
     const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
@@ -70,6 +67,3 @@ app.post("/gerar-preferencia", async (req, res) => {
     return res.status(500).json({ error: "erro_interno", detail: String(err) });
   }
 });
-
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`✅ Servidor rodando na porta ${PORT}`));
