@@ -518,7 +518,7 @@ comprarVipBtn.addEventListener("click", async (e) => {
 
   try {
     // Chama seu backend que gera o preferenceId
-    const response = await fetch('https://srv-d41o4e6uk2gs73ebmb50/gerar-preferencia', {
+    const response = await fetch('https://gri-t9jx.onrender.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ valor: 5 }) // pode mandar valor ou pacote VIP
