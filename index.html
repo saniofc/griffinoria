@@ -154,6 +154,29 @@ footer a{color:#b78cff;text-decoration:none}
   </div>
 </div>
 
+<div id="modalEnvioGrupo" class="modal">
+  <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
+    <span class="close-modal" onclick="document.getElementById('modalEnvioGrupo').style.display = 'none';" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
+    <h3>Enviar Meu Grupo</h3>
+    <input type="text" id="grupoNome" placeholder="Nome do grupo" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+    <input type="file" id="grupoFotoUpload" accept="image/*" style="width:90%; margin:8px 0; color:#ccc;">
+    <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-top:5px; border:2px solid #fff;" alt="Prévia da foto">
+    <select id="grupoCategoria" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+      <option value="">Selecione a categoria</option>
+      <option value="Amizade">Amizade</option>
+      <option value="Zoeira">Zoeira</option>
+      <option value="Namoro">Namoro</option>
+    </select>
+    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
+    <button id="salvarGrupo"
+      style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#2ecc71; color:#fff; cursor:pointer; font-weight:bold; transition: background 0.2s;">
+      Enviar grupo
+    </button>
+    <p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
+  </div>
+</div>
+
 <footer>
   <a href="#" id="termosLink">Termos de Uso</a>
   <a href="#" id="privacidadeLink">Politica de Privacidade</a><br>
@@ -219,13 +242,13 @@ let todosGrupos = [];
 // Regex para validar link de convite do WhatsApp (MANTIDO)
 const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
 
-// ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO ================== //
-// (A criação do modal já está no HTML)
+// ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO (CORRIGIDO) ================== //
 
-const modal = document.querySelector('.modal:not(#modalTermos):not(#vipModal):not(#modalAvisoVip)');
-const previewFoto = modal.querySelector("#previewFoto");
-const fotoInput = modal.querySelector("#grupoFotoUpload");
-const salvarGrupoBtn = modal.querySelector('#salvarGrupo');
+// Seleção corrigida! Pega o modal pelo ID único.
+const modal = document.getElementById('modalEnvioGrupo'); 
+const previewFoto = document.getElementById("previewFoto");
+const fotoInput = document.getElementById("grupoFotoUpload");
+const salvarGrupoBtn = document.getElementById('salvarGrupo');
 
 // Eventos de hover (MANTIDOS)
 salvarGrupoBtn.addEventListener('mouseover', () => salvarGrupoBtn.style.background = '#27ae60');
@@ -241,9 +264,9 @@ fotoInput.addEventListener("change", (e) => {
   }
 });
 
-modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+// O evento de fechar foi movido para o onclick do HTML no span do modal!
 
-// ================== SALVAR NOVO GRUPO (CORRIGIDO) ================== //
+// ================== SALVAR NOVO GRUPO (MANTIDO) ================== //
 async function salvarNovoGrupo() {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
@@ -310,7 +333,7 @@ async function salvarNovoGrupo() {
 salvarGrupoBtn.onclick = salvarNovoGrupo;
 
 // ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR E RENDERIZAR GRUPOS (MANTIDAS) ================== //
-// (Funções abrirEdicao, salvarEdicao, excluirGrupo, carregarGrupos, renderizarGrupos e renderizarMercadoPago estão mantidas, não alterando a funcionalidade principal de CRUD/Visualização)
+// Manutenção das funções CRUD para garantir o carregamento da lista
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
   document.getElementById('grupoNome').value = grupo.nome;
@@ -504,7 +527,7 @@ function renderizarMercadoPago(preferenceId) {
 }
 
 
-// ================== INICIALIZAÇÃO DE EVENTOS (MP CORRIGIDO) ================== //
+// ================== INICIALIZAÇÃO DE EVENTOS (MANTIDA) ================== //
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
 
@@ -651,7 +674,7 @@ document.getElementById('privacidadeLink').onclick = (e) => {
 
 closeModalTermos.onclick = () => modalTermos.style.display = "none";
 
-// ================== NOVO: CHECAR RETORNO DO MERCADO PAGO ================== //
+// ================== NOVO: CHECAR RETORNO DO MERCADO PAGO (MANTIDO) ================== //
 
 function checkVipReturn() {
     const urlParams = new URLSearchParams(window.location.search);
