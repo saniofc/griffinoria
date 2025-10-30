@@ -4,26 +4,25 @@ import express from "express";
 import cors from "cors";
 import fetch from "node-fetch"; 
 import process from "process";
+// Importar o dotenv é uma boa prática se você for testar localmente.
+// O Render lida com process.env automaticamente, mas a linha abaixo não atrapalha:
+// import dotenv from 'dotenv'; dotenv.config(); 
 
 // --- Configuração Inicial ---
-// 1. Inicializa o APP Express (CORREÇÃO DO ReferenceError)
 const app = express(); 
 
 // Variáveis de ambiente
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
-// Use a URL do Render como base para Webhooks
+// CORREÇÃO: Usamos o link do seu Render para o Webhook
 const RENDER_URL = "https://gri-t9jx.onrender.com"; 
 
 if (!MP_ACCESS_TOKEN) {
-  console.error("❌ MP_ACCESS_TOKEN não definido. O servidor não pode funcionar.");
-  // Em um ambiente de produção, você pode querer sair do processo:
-  // process.exit(1); 
+  console.error("❌ MP_ACCESS_TOKEN não definido. O servidor não pode gerar pagamentos.");
 }
 
 // Middlewares
 app.use(cors());
-// O Mercado Pago envia notificações (webhooks) como texto,
-// então precisamos de um parser que trate tanto JSON quanto texto.
+// Permite que o servidor entenda o JSON e o texto dos webhooks
 app.use(express.json());
 app.use(express.text({ type: 'application/x-www-form-urlencoded' }));
 
@@ -34,15 +33,20 @@ app.use(express.text({ type: 'application/x-www-form-urlencoded' }));
 app.get("/", (req, res) => res.send("✅ Servidor MercadoPago e Express ativo."));
 
 // 1. Rota para Geração de Preferência de Pagamento
+// CORREÇÃO: O endpoint correto é /gerar-preferencia, conforme chamado no frontend
 app.post("/gerar-preferencia", async (req, res) => {
   try {
     const { 
       valor = 5, 
       titulo = "Produto VIP", 
       quantity = 1, 
-      external_reference, // ID do usuário (vindo do localStorage no frontend)
-      back_urls // URLs de retorno para o GitHub Pages (saniofc.github.io)
+      external_reference, // ID do usuário
+      back_urls // URLs de retorno
     } = req.body;
+
+    if (!MP_ACCESS_TOKEN) {
+         return res.status(503).json({ error: "Serviço indisponível. Token do Mercado Pago não configurado." });
+    }
 
     // Validação de dados essenciais
     if (typeof valor !== "number" || valor <= 0 || !back_urls || !back_urls.success) {
@@ -58,13 +62,11 @@ app.post("/gerar-preferencia", async (req, res) => {
           currency_id: "BRL",
         },
       ],
-      // CORREÇÃO CRUCIAL: Usa as URLs do frontend para o redirecionamento
       back_urls: back_urls, 
       auto_return: "approved",
-      // Envia o ID do cliente para o Mercado Pago rastrear
       external_reference: external_reference || 'sem-referencia', 
       
-      // Rota de notificação (Webhook) para ativação segura e futura do VIP
+      // Rota de notificação (Webhook)
       notification_url: `${RENDER_URL}/webhook/mp`, 
     };
 
@@ -84,6 +86,7 @@ app.post("/gerar-preferencia", async (req, res) => {
       return res.status(response.status).json({ error: data });
     }
 
+    // Retorna o ID da preferência para o frontend renderizar o botão
     return res.json({ preferenceId: data.id, init_point: data.init_point, sandbox_init_point: data.sandbox_init_point });
   } catch (err) {
     console.error("❌ Erro ao criar pagamento:", err);
@@ -91,9 +94,11 @@ app.post("/gerar-preferencia", async (req, res) => {
   }
 });
 
-// 2. Rota para Receber Notificações de Webhook do Mercado Pago (Futura Ativação VIP)
+// 2. Rota para Receber Notificações de Webhook do Mercado Pago
 app.post("/webhook/mp", (req, res) => {
-    // ESTA ROTA É A CHAVE PARA O SEU SITE DAR O CÓDIGO VIP DE FORMA SEGURA.
+    // IMPORTANTE: Aqui você deve implementar a lógica para:
+    // 1. Buscar o status real do pagamento usando o resourceId.
+    // 2. Se APROVADO, SALVAR o Código VIP ou a ativação no Firebase.
     
     console.log("Notificação recebida do Mercado Pago:", req.query, req.body);
 
@@ -101,18 +106,10 @@ app.post("/webhook/mp", (req, res) => {
     const resourceId = req.query.id || req.query['data.id'];
 
     if (topic === 'payment' && resourceId) {
-        // Ação: Chamar a API do Mercado Pago para ver o status do pagamento
-        // Ex: fetch(`https://api.mercadopago.com/v1/payments/${resourceId}`, ...)
-        
-        // Se APROVADO:
-        // 1. Gerar Código VIP.
-        // 2. SALVAR CÓDIGO VIP no Firebase (associado ao external_reference).
-        
-        console.log(`Webhook de pagamento recebido para ID: ${resourceId}`);
+        console.log(`Webhook de pagamento recebido para ID: ${resourceId}. Próxima ação: Verificar status e ativar VIP no Firebase.`);
     }
 
-    // É ABSOLUTAMENTE ESSENCIAL responder com status 200 (OK) para o Mercado Pago
-    // para que ele não tente reenviar a notificação infinitamente.
+    // Resposta essencial para o Mercado Pago
     res.status(200).send("OK");
 });
 
