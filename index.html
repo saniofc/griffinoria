@@ -84,6 +84,7 @@ footer a{color:#b78cff;text-decoration:none}
 </style>
 </head>
 <body>
+
 <video id="video-bg" autoplay muted loop playsinline>
   <source src="https://files.catbox.moe/dymzif.mp4" type="video/mp4">
 </video>
@@ -145,7 +146,6 @@ footer a{color:#b78cff;text-decoration:none}
   <a href="#" id="privacidadeLink">Politica de Privacidade</a><br>
   © COPYRIGHT 2025 - <a href="https://saniofc.github.io/griffinoria/" target="_blank">saniofc.github.io/griffinoria/</a>
 </footer>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -509,36 +509,29 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
-const vipModal = document.getElementById('vipModal'); // Certifique-se que existe no HTML
-const menu = document.getElementById('menu'); // Certifique-se que existe no HTML
-const fecharVipIcon = document.getElementById('fecharVipIcon');
-const fecharVipBtn = document.getElementById('fecharVipBtn');
+const RENDER_API_URL = 'https://gri-t9jx.onrender.com/gerar-preferencia'; 
 
-comprarVipBtn?.addEventListener("click", async (e) => {
+comprarVipBtn.addEventListener("click", async (e) => {
   e.preventDefault();
-  
-  if (vipModal) vipModal.style.display = "flex";
-  if (menu) menu.classList.remove("open");
+  vipModal.style.display = "flex";
+  menu.classList.remove("open");
 
   // Fallback: ID de teste
   let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
-  
-  // URL do servidor Render
-  const RENDER_API_URL = 'https://gri-t9jx.onrender.com/gerar-preferencia'; 
 
   try {
     const response = await fetch(RENDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valor: 5, titulo: "VIP 24h" })
+      body: JSON.stringify({ valor: 5 }) 
     });
     
     if (!response.ok) {
-      throw new Error(`Servidor respondeu com erro: ${response.status}`);
+        throw new Error(`Servidor respondeu com erro: ${response.status}`);
     }
 
     const data = await response.json();
-
+    
     if (data.preferenceId) {
       preferenceIdReal = data.preferenceId; 
     } else {
@@ -547,19 +540,14 @@ comprarVipBtn?.addEventListener("click", async (e) => {
     
   } catch (err) {
     console.error('Falha na comunicação com o backend:', err.message);
-    alert('Erro ao se conectar com o servidor. Usando ID de teste para exibir o botão de pagamento.');
+    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
   } finally {
-    if (typeof renderizarMercadoPago === 'function') {
-      renderizarMercadoPago(preferenceIdReal); 
-    } else {
-      console.error('Função renderizarMercadoPago não encontrada!');
-    }
+    renderizarMercadoPago(preferenceIdReal); 
   }
 });
 
-// Fechar modal
-fecharVipIcon?.addEventListener('click', () => { if(vipModal) vipModal.style.display = 'none'; });
-fecharVipBtn?.addEventListener('click', () => { if(vipModal) vipModal.style.display = 'none'; });
+fecharVipIcon.onclick = () => { vipModal.style.display = 'none'; };
+fecharVipBtn.onclick = () => { vipModal.style.display = 'none'; };
 
 
 // ABRIR MODAL ENVIAR GRUPO
