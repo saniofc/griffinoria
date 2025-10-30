@@ -463,15 +463,14 @@ function renderizarGrupos(lista) {
 
 /**
  * RENDERIZA O BOTÃO DO MERCADO PAGO
- * IMPORTANTE: Você deve gerar o 'preferenceId' no seu Backend (srv-d41o4e6uk2gs73ebmb50)
- * usando o seu Token: APP_USR-8288615586101974-103009-82287b589444b35375a0ff5132fff5fc-2544883078
+ * IMPORTANTE: Você deve gerar o 'preferenceId' no seu Backend (https://gri-t9jx.onrender.com)
  */
 function renderizarMercadoPago(preferenceId) {
     const container = document.getElementById('mercadopago-button-container');
     container.innerHTML = '';
     
     if (preferenceId === "TEST-f463372c-f3e0-40e1-a083-d95b5420377e") {
-        container.innerHTML = `<p style="color:yellow; font-weight:bold;">⚠️ Substitua este ID de teste por um ID de Preferência real gerado no seu servidor Render para o pagamento funcionar!</p>`;
+        container.innerHTML = `<p style="color:yellow; font-weight:bold;">⚠️ ATENÇÃO: ID de Preferência de TESTE. O seu backend não retornou um ID real. Corrija a rota /gerar-preferencia no seu servidor Render para finalizar a integração.</p>`;
     }
 
     mp.checkout({
@@ -516,23 +515,42 @@ comprarVipBtn.addEventListener("click", async (e) => {
   vipModal.style.display = "flex";
   menu.classList.remove("open");
 
+  // 1. Define o ID de teste como fallback
+  let preferenceIdReal = "TEST-f463372c-f3e0-40e1-a083-d95b5420377e"; 
+  
+  // 2. 🚀 URL DO SEU SERVIDOR RENDER CORRIGIDA
+  const RENDER_API_URL = 'https://gri-t9jx.onrender.com/gerar-preferencia'; 
+
   try {
-    // Chama seu backend que gera o preferenceId
-    const response = await fetch('https://gri-t9jx.onrender.com', {
+    // 3. Tenta chamar o servidor Render
+    const response = await fetch(RENDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valor: 5 }) // pode mandar valor ou pacote VIP
+      body: JSON.stringify({ valor: 5 }) // Envia o valor do pacote
     });
+    
+    // Verifica o status HTTP da resposta
+    if (!response.ok) {
+        throw new Error(`Servidor respondeu com erro: ${response.status}`);
+    }
+
     const data = await response.json();
     
+    // 4. Se o backend retornar o preferenceId, usa ele
     if (data.preferenceId) {
-      renderizarMercadoPago(data.preferenceId); // usa o preference real
+      preferenceIdReal = data.preferenceId; 
     } else {
-      alert('Erro ao gerar o pagamento. Tente novamente.');
+      console.warn('Backend retornou sucesso, mas sem preferenceId. Usando ID de teste.');
     }
+    
   } catch (err) {
-    console.error(err);
-    alert('Erro ao se conectar com o servidor.');
+    // 5. Se houver erro de rede ou de API
+    console.error('Falha na comunicação com o backend:', err.message);
+    // Exibe a mensagem de erro que você estava recebendo, mas continua usando o ID de teste
+    alert('Erro ao se conectar com o servidor. O botão de pagamento será exibido usando um ID de TESTE.');
+  } finally {
+    // 6. Renderiza o botão com o ID real (se obtido) ou o ID de teste (fallback)
+    renderizarMercadoPago(preferenceIdReal); 
   }
 });
 
