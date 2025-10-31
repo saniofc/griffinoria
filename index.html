@@ -62,30 +62,19 @@ footer a{color:#b78cff;text-decoration:none}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:5000}
 .modal-content{background:#111;padding:20px;border-radius:20px;max-width:400px;width:90%;text-align:center;color:#fff;position:relative}
 .modal-content h3{margin-bottom:15px}
-.modal-content input, .modal-content select{width:90%;margin:5px 0;padding:8px;border-radius:10px;border:none}
+.modal-content input, .modal-content select{width:90%;margin:5px 0;padding:8px;border-radius:10px;border:none;background:#222;color:#fff;}
 .modal-content button{padding:10px 20px;margin-top:10px;border:none;border-radius:15px;background:#b78cff;color:#fff;cursor:pointer;transition:0.2s}
 .modal-content button:hover{background:#a56be0}
 .modal .close-modal{position:absolute;top:10px;right:15px;font-size:22px;cursor:pointer}
 
-/* Animação Modal VIP */
-@keyframes fadeZoom {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
 /* Estilo para o conteúdo do Modal VIP */
 #vipModal > .modal-content {
     animation: fadeZoom 0.25s ease;
     border: 1px solid gold;
     padding: 25px;
     max-width: 350px;
-    /* Ajuste para caber o QR Code */
     max-width: 90%; 
     width: 380px; 
-}
-/* Novo Estilo para o Modal de Aviso VIP/Geral - Mantido caso queira usar para outros avisos */
-#modalAvisoVip > .modal-content {
-    border: 3px solid gold;
-    background: #0d0d0d;
 }
 
 /* Estilo específico para o botão de Copiar e Enviar Comprovante */
@@ -124,6 +113,65 @@ footer a{color:#b78cff;text-decoration:none}
     background: #1eaa54;
 }
 
+/* NOVO ESTILO PARA O FORMULÁRIO DE ENVIO */
+#modalEnvioGrupo .modal-content {
+    background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+    border: 1px solid #b78cff;
+    padding: 30px;
+}
+#modalEnvioGrupo h3 {
+    color: #b78cff;
+    border-bottom: 2px solid #b78cff;
+    padding-bottom: 10px;
+}
+#modalEnvioGrupo .modal-content input,
+#modalEnvioGrupo .modal-content select {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    transition: border-color 0.2s;
+}
+#modalEnvioGrupo .modal-content input:focus,
+#modalEnvioGrupo .modal-content select:focus {
+    border-color: #b78cff;
+    outline: none;
+}
+#grupoFotoLabel {
+    display: block;
+    background: #555;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px auto;
+    width: 90%;
+    transition: background 0.2s;
+}
+#grupoFotoLabel:hover {
+    background: #777;
+}
+#grupoFotoUpload {
+    display: none; /* Esconde o input file original */
+}
+#previewContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+#previewFoto {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #b78cff;
+    box-shadow: 0 0 10px rgba(183,140,255,0.5);
+}
+#modalEnvioGrupo #salvarGrupo {
+    background: #2ecc71;
+    font-size: 16px;
+}
+#modalEnvioGrupo #salvarGrupo:hover {
+    background: #27ae60;
+}
 </style>
 </head>
 <body>
@@ -147,11 +195,9 @@ footer a{color:#b78cff;text-decoration:none}
 <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
   <h2>informações</h2>
-  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja da Miih</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20alugar%20bot" target="_blank">🤖 Alugar bot</a>
+  <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja</a>
   <a href="#" id="meusGrupos">📝 Meus Grupos</a>
   <a href="#" id="enviarGrupo">🚀 Enviar Meu Grupo</a>
-  <a href="https://wa.me/5521977231625?text=Quero%20comprar%20bot" target="_blank">🤖 Comprar bot</a>
   <a href="#" id="comprarVipBtn">⭐ Comprar VIP</a>
 </div>
 
@@ -214,25 +260,33 @@ footer a{color:#b78cff;text-decoration:none}
 </div>
 
 <div id="modalEnvioGrupo" class="modal">
-  <div class="modal-content" style="background:#111; padding:20px; border-radius:20px; text-align:center; max-width:400px; width:90%; position:relative; color:#fff;">
+  <div class="modal-content">
     <span class="close-modal" onclick="document.getElementById('modalEnvioGrupo').style.display = 'none';" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">❌</span>
     <h3>Enviar Meu Grupo</h3>
-    <input type="text" id="grupoNome" placeholder="Nome do grupo" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="text" id="grupoLink" placeholder="Link do grupo (https://chat.whatsapp.com/...)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <input type="file" id="grupoFotoUpload" accept="image/*" style="width:90%; margin:8px 0; color:#ccc;">
-    <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-top:5px; border:2px solid #fff;" alt="Prévia da foto">
-    <select id="grupoCategoria" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-      <option value="">Selecione a categoria</option>
+    
+    <input type="text" id="grupoNome" placeholder="1. Nome do grupo" required>
+    <input type="text" id="grupoLink" placeholder="2. Link do grupo (https://chat.whatsapp.com/...)" required>
+    
+    <select id="grupoCategoria" required>
+      <option value="">3. Selecione a Categoria</option>
       <option value="Amizade">Amizade</option>
       <option value="Zoeira">Zoeira</option>
       <option value="Namoro">Namoro</option>
     </select>
-    <input type="text" id="grupoVipCodigo" placeholder="Código VIP (opcional)" style="width:90%; margin:5px 0; padding:8px; border-radius:10px; border:none;">
-    <button id="salvarGrupo"
-      style="padding:10px 20px; margin-top:10px; border:none; border-radius:15px; background:#2ecc71; color:#fff; cursor:pointer; font-weight:bold; transition: background 0.2s;">
-      Enviar grupo
+    
+    <input type="text" id="grupoVipCodigo" placeholder="4. Código VIP (opcional)">
+
+    <div id="previewContainer">
+        <input type="file" id="grupoFotoUpload" accept="image/*">
+        <label for="grupoFotoUpload" id="grupoFotoLabel">5. Escolher Foto</label>
+        
+        <img id="previewFoto" src="https://files.catbox.moe/ls07y5.jpg" alt="Prévia da foto">
+    </div>
+    
+    <button id="salvarGrupo">
+      Enviar Grupo
     </button>
-    <p id="mensagemEnvio" style="margin-top:10px; color:#0f0; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
+    <p id="mensagemEnvio" style="margin-top:10px; color:#2ecc71; font-weight:bold; display:none;">Grupo enviado com sucesso!</p>
   </div>
 </div>
 
@@ -246,8 +300,6 @@ footer a{color:#b78cff;text-decoration:none}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-// REMOVIDAS AS VARIÁVEIS DO MERCADO PAGO E RENDER
-
 // Credenciais do Firebase (MANTIDAS)
 const firebaseConfig = {
   apiKey: "AIzaSyDsrYjO2yVTemKqwmJRzNjh5sfaMalPqhE",
@@ -257,14 +309,11 @@ const firebaseConfig = {
   storageBucket: "cliques-4a2c1.firebasestorage.app",
   messagingSenderId: "903875153255",
   appId: "1:903875153255:web:ff3cf25e059b10d665b3c2",
-  measurementId: "G-BQHZ7FWRJD"
+  measurementId: "G-BQ7FWRJD"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-// REMOVIDA A INICIALIZAÇÃO DO MERCADO PAGO
-// const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' });
 
 // Variáveis de Elementos (MANTIDAS)
 const menu = document.getElementById('sideMenu');
@@ -552,9 +601,6 @@ function renderizarGrupos(lista) {
   });
 }
 
-// REMOVIDA A FUNÇÃO renderizarMercadoPago
-
-
 // ================== NOVO: FUNÇÃO DE COPIAR PIX ================== //
 copyPixBtn.onclick = async () => {
     try {
@@ -668,8 +714,6 @@ document.getElementById('privacidadeLink').onclick = (e) => {
 };
 
 closeModalTermos.onclick = () => modalTermos.style.display = "none";
-
-// REMOVIDA A FUNÇÃO checkVipReturn
 
 // ================== INICIAR ================== //
 carregarGrupos();
