@@ -17,7 +17,7 @@
 body{font-family:Arial,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:120px;background:#000}
 #video-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.4)}
 
-/* Header e Categorias */
+/* --- Header e Categorias --- */
 header{position:fixed;top:0;left:0;width:100%;padding:12px 10px;background:rgba(0,0,0,0.6);text-align:center;z-index:1000}
 header h1{font-size:28px;text-shadow:2px 2px 5px #000}
 header p{margin-top:4px;text-shadow:1px 1px 3px #000}
@@ -27,8 +27,8 @@ header p{margin-top:4px;text-shadow:1px 1px 3px #000}
 .cat-btn:hover{background:rgba(255,255,255,0.25)}
 .cat-btn.active{background:#b78cff;border-color:#b78cff}
 
-/* Menu Lateral */
-.menu-icon{position:fixed;top:20px;right:20px;font-size:28px;z-index:1100;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:10px;cursor:pointer}
+/* --- Menu Lateral (Ícone Hambúrguer) --- */
+.menu-icon{position:fixed;top:20px;right:20px;font-size:28px;z-index:1100;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:10px;cursor:pointer; line-height: 1;} /* Ajuste de line-height para o ícone */
 .menu{position:fixed;top:0;right:-300px;width:250px;height:100%;background:rgba(0,0,0,0.9);padding:30px 20px;transition:right .3s;z-index:1200}
 .menu.open{right:0}
 .menu .close-btn{position:absolute;top:15px;right:20px;background:none;border:none;color:#fff;font-size:26px;cursor:pointer}
@@ -36,29 +36,120 @@ header p{margin-top:4px;text-shadow:1px 1px 3px #000}
 .menu a{display:block;text-decoration:none;color:#fff;background:rgba(183,140,255,0.12);padding:12px;border-radius:10px;margin-top:15px;text-align:left;font-size:18px}
 .menu a:hover{background:rgba(183,140,255,0.25)}
 
-/* Lista de Grupos */
+/* --- Lista de Grupos (Estilo NOVO - Como no Print) --- */
 #lista-grupos{width:100%;max-width:420px;padding:30px 20px 60px;display:flex;flex-direction:column;align-items:center;gap:22px}
-.grupo{width:100%;max-width:380px;display:flex;align-items:center;gap:14px;background:rgba(0,0,0,0.55);padding:14px 20px;border-radius:40px;text-decoration:none;color:#fff;position:relative;transition:transform .18s,background .18s;border:1px solid rgba(255,255,255,0.1)}
-.grupo:hover{transform:scale(1.02);background:rgba(0,0,0,0.65)}
-.grupo img.foto{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #fff}
-.grupo .info{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left}
-.grupo span.nome{font-size:19px;font-weight:bold;line-height:1.2}
-.grupo .categoria{font-size:14px;color:#ffd700;margin-top:4px}
 
-/* Estilo VIP (Estrela e Fundo Dourado) */
-.grupo.vip{box-shadow:0 0 18px 6px rgba(255,215,0,0.12),0 0 28px rgba(255,215,0,0.08) inset;border:1px solid rgba(255,215,0,0.35)}
-.grupo.vip::before{content:"⭐";position:absolute;left:-14px;top:50%;transform:translateY(-50%);font-size:24px;color:#ffd700;text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;animation:shine 1.4s infinite alternate}
-@keyframes shine{from{opacity:0.7;transform:translateY(-50%) scale(1);}to{opacity:1;transform:translateY(-50%) scale(1.2)}}
+/* Aprimoramento do Cartão do Grupo (Baseado no Print) */
+.grupo{
+    width:100%;
+    max-width:380px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    /* Fundo mais claro e arredondado */
+    background:rgba(255,255,255,0.05);
+    padding:16px 20px;
+    border-radius:25px; 
+    text-decoration:none;
+    color:#fff;
+    position:relative;
+    transition:transform .18s,background .18s,box-shadow .18s;
+    border:none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.grupo:hover{transform:scale(1.02);background:rgba(255,255,255,0.12); box-shadow: 0 6px 15px rgba(0,0,0,0.6);}
+
+/* Ajuste na Imagem */
+.grupo img.foto{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,0.2);
+}
+/* Estilo do Texto */
+.grupo .info{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left}
+.grupo span.nome{font-size:18px;font-weight:bold;line-height:1.2; text-shadow: 0 0 3px #000;}
+.grupo .categoria{font-size:13px;color:#ccc;margin-top:2px; padding: 2px 8px; border-radius: 10px; background: rgba(183,140,255, 0.2); text-transform: capitalize;}
+
+/* Estilo VIP (Estrela e Fundo Dourado - NOVO) */
+.grupo.vip{
+    /* Fundo com gradiente sutil para destaque */
+    background: linear-gradient(90deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05));
+    border:1px solid rgba(255,215,0,0.35);
+    box-shadow: 0 0 10px 4px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.5);
+}
+/* Estrela no Canto Superior Esquerdo */
+.grupo.vip::before{
+    content:"⭐";
+    position:absolute;
+    left:10px; /* Posicionamento dentro da caixa */
+    top:10px;
+    transform: none;
+    font-size:18px; 
+    color:#ffd700;
+    text-shadow:0 0 8px #ffda00,0 0 12px #ffb700;
+    animation:none;
+}
+.grupo.vip .categoria{color: #ffd700; background: rgba(255,215,0,0.2);}
+
+/* NOVO: Estilos para Botões de Ação (Editar/Excluir) */
+.grupo-acoes-wrapper { /* Classe para o wrapper onde ficam os botões */
+    display: flex; 
+    gap: 8px; 
+    margin-top: 10px; 
+    width: 100%;
+    justify-content: center; /* Centraliza as ações */
+}
+.grupo-acoes-wrapper button {
+    border: none;
+    padding: 6px 15px;
+    border-radius: 20px; /* Borda mais arredondada como no print */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.grupo-acoes-wrapper button:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+/* Estilo Específico para o botão Editar */
+.grupo-acoes-wrapper button.edit-btn {
+    background: rgba(46, 204, 113, 0.8); /* Verde suave */
+    color: #fff;
+}
+.grupo-acoes-wrapper button.edit-btn:hover {
+    background: rgba(46, 204, 113, 1);
+}
+/* Estilo Específico para o botão Excluir */
+.grupo-acoes-wrapper button.delete-btn {
+    background: rgba(231, 76, 60, 0.8); /* Vermelho suave */
+    color: #fff;
+}
+.grupo-acoes-wrapper button.delete-btn:hover {
+    background: rgba(231, 76, 60, 1);
+}
+
+/* Ajuste no estilo dos cliques */
+.grupo .cliques {
+    position: absolute;
+    top: 10px; 
+    right: 20px;
+    font-size: 13px;
+    color: #ffd700;
+    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
 
 /* Botão de Renda Extra */
 .botao{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;border-radius:30px;padding:12px 28px;margin-top:20px;text-decoration:none;font-size:18px;transition:transform .18s,box-shadow .18s;display:inline-block}
 .botao:hover{transform:scale(1.04)}
 
-/* Footer - CORRIGIDO: Fundo mais claro e text-shadow para legibilidade */
+/* Footer - Fundo Transparente */
 footer{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.0);color:#ccc;text-align:center;padding:14px 10px;font-size:14px;line-height:1.6;z-index:2000;text-shadow: 1px 1px 3px #000;}
 footer a{color:#b78cff;text-decoration:none}
 
-/* Modal Geral e Termos */
+/* Modal Geral e Termos (MANTIDOS) */
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:5000}
 .modal-content{background:#111;padding:20px;border-radius:20px;max-width:400px;width:90%;text-align:center;color:#fff;position:relative}
 .modal-content h3{margin-bottom:15px}
@@ -67,7 +158,7 @@ footer a{color:#b78cff;text-decoration:none}
 .modal-content button:hover{background:#a56be0}
 .modal .close-modal{position:absolute;top:10px;right:15px;font-size:22px;cursor:pointer}
 
-/* Estilo para o conteúdo do Modal VIP */
+/* Estilo para o conteúdo do Modal VIP (MANTIDO) */
 #vipModal > .modal-content {
     animation: fadeZoom 0.25s ease;
     border: 1px solid gold;
@@ -77,7 +168,7 @@ footer a{color:#b78cff;text-decoration:none}
     width: 380px; 
 }
 
-/* Estilo específico para o botão de Copiar e Enviar Comprovante */
+/* Estilo específico para o botão de Copiar e Enviar Comprovante (MANTIDO) */
 .pix-copy-btn {
     background: #00bfff; /* Cor do Pix */
     color: #fff;
@@ -113,7 +204,7 @@ footer a{color:#b78cff;text-decoration:none}
     background: #1eaa54;
 }
 
-/* NOVO ESTILO PARA O FORMULÁRIO DE ENVIO */
+/* NOVO ESTILO PARA O FORMULÁRIO DE ENVIO (MANTIDO) */
 #modalEnvioGrupo .modal-content {
     background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
     border: 1px solid #b78cff;
@@ -190,8 +281,7 @@ footer a{color:#b78cff;text-decoration:none}
     <button class="cat-btn" data-cat="namoro">Namoro</button>
   </div>
 </header>
-<div class="menu-icon" id="menuBtn">☰</div>
-<div class="menu" id="sideMenu">
+<div class="menu-icon" id="menuBtn">☰</div> <div class="menu" id="sideMenu">
   <button class="close-btn" id="closeBtn">❌</button>
   <h2>informações</h2>
   <a href="https://br.shp.ee/1r878lx?smtt=0.0.9" target="_blank">🛍️ Loja</a>
@@ -332,17 +422,14 @@ const avisoVipMensagem = document.getElementById('avisoVipMensagem');
 const avisoVipCodigo = document.getElementById('avisoVipCodigo');
 document.getElementById('fecharAvisoVip').onclick = () => modalAvisoVip.style.display = 'none';
 
-// NOVO: Elementos Pix
+// Elementos Pix
 const pixCodeField = document.getElementById('pix-code-field');
 const copyPixBtn = document.getElementById('copy-pix-btn');
 
 
 let todosGrupos = [];
 
-// ==============================================================================
-// 🌟 REGEX CORRIGIDO PARA ACEITAR ?mode=...
-// A inclusão de (\?.*)? no final permite que o link tenha parâmetros de consulta.
-// ==============================================================================
+// REGEX CORRIGIDO
 const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}(\?.*)?$/;
 
 
@@ -426,7 +513,7 @@ async function salvarNovoGrupo() {
 
 salvarGrupoBtn.onclick = salvarNovoGrupo;
 
-// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR E RENDERIZAR GRUPOS (MANTIDAS) ================== //
+// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR GRUPOS (MANTIDAS) ================== //
 
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
@@ -525,6 +612,8 @@ async function carregarGrupos() {
     renderizarGrupos(todosGrupos);
   });
 }
+
+// ================== RENDERIZAR GRUPOS (ATUALIZADO com novo CSS e botões) ================== //
 function renderizarGrupos(lista) {
   const container = document.getElementById('lista-grupos');
   container.innerHTML = '';
@@ -558,7 +647,7 @@ function renderizarGrupos(lista) {
       <div class="info">
         <span class="nome">${g.nome}</span>
         <div class="categoria">${g.categoria || ''}</div>
-        <div class="cliques" style="position:absolute;top:6px;right:14px;font-size:12px;color:#ffd700;">0</div>
+        <div class="cliques">0</div>
       </div>
     `;
 
@@ -574,24 +663,19 @@ function renderizarGrupos(lista) {
 
     wrapper.appendChild(btn);
 
+    // Criação dos botões de ação (Editar/Excluir) com o novo estilo
     if (g.dono === usuario) {
       const box = document.createElement('div');
-      box.style.display = 'flex';
-      box.style.gap = '6px';
-      box.style.marginTop = '8px';
+      box.className = 'grupo-acoes-wrapper'; // Usando a nova classe CSS
 
       const edit = document.createElement('button');
       edit.textContent = 'Editar';
-      edit.style.cssText = 'background:#2ecc71;color:#fff;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:13px;transition:0.2s;';
-      edit.addEventListener('mouseover', () => edit.style.background = '#27ae60');
-      edit.addEventListener('mouseout', () => edit.style.background = '#2ecc71');
+      edit.className = 'edit-btn'; // Usando a nova classe CSS
       edit.onclick = () => abrirEdicao(g);
 
       const del = document.createElement('button');
       del.textContent = 'Excluir';
-      del.style.cssText = 'background:#e74c3c;color:#fff;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:13px;transition:0.2s;';
-      del.addEventListener('mouseover', () => del.style.background = '#c0392b');
-      del.addEventListener('mouseout', () => del.style.background = '#e74c3c');
+      del.className = 'delete-btn'; // Usando a nova classe CSS
       del.onclick = () => excluirGrupo(g);
 
       box.appendChild(edit);
@@ -603,7 +687,8 @@ function renderizarGrupos(lista) {
   });
 }
 
-// ================== NOVO: FUNÇÃO DE COPIAR PIX ================== //
+
+// ================== FUNÇÃO DE COPIAR PIX (MANTIDA) ================== //
 copyPixBtn.onclick = async () => {
     try {
         await navigator.clipboard.writeText(pixCodeField.value);
@@ -618,7 +703,7 @@ copyPixBtn.onclick = async () => {
 };
 
 
-// ================== INICIALIZAÇÃO DE EVENTOS (ATUALIZADA) ================== //
+// ================== INICIALIZAÇÃO DE EVENTOS (MANTIDA) ================== //
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
 
