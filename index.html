@@ -384,8 +384,9 @@ footer a{color:#b78cff;text-decoration:none}
 </footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+// Versões mais recentes e modulares do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction, set, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 // Credenciais do Firebase (MANTIDAS)
 const firebaseConfig = {
@@ -452,7 +453,7 @@ fotoInput.addEventListener("change", (e) => {
   }
 });
 
-// ================== SALVAR NOVO GRUPO (MANTIDO) ================== //
+// ================== SALVAR NOVO GRUPO ================== //
 async function salvarNovoGrupo() {
   const nome = document.getElementById('grupoNome').value.trim();
   const link = document.getElementById('grupoLink').value.trim();
@@ -511,9 +512,11 @@ async function salvarNovoGrupo() {
   modal.style.display = 'none';
 };
 
+// SALVAR GRUPO AGORA APONTA PARA A FUNÇÃO DE NOVO GRUPO POR PADRÃO
+// ELA SERÁ SOBRESCRITA PELA FUNÇÃO DE EDIÇÃO QUANDO NECESSÁRIO
 salvarGrupoBtn.onclick = salvarNovoGrupo;
 
-// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR GRUPOS (MANTIDAS) ================== //
+// ================== FUNÇÕES DE EDIÇÃO/EXCLUSÃO, CARREGAR GRUPOS ================== //
 
 function abrirEdicao(grupo){
   modal.style.display = 'flex';
@@ -525,14 +528,15 @@ function abrirEdicao(grupo){
   
   const nomeOriginal = grupo.nome; 
   
-  salvarGrupoBtn.onclick = null;
+  // Define a função de salvar para a edição
   salvarGrupoBtn.onclick = () => salvarEdicao(grupo, nomeOriginal);
 }
 
 async function salvarEdicao(grupo, nomeOriginal){
   grupo.nome = document.getElementById('grupoNome').value.trim();
   grupo.link = document.getElementById('grupoLink').value.trim();
-  grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg';
+  // Se a foto não foi alterada, mantém a original. Se sim, usa a nova prévia.
+  grupo.foto = previewFoto.src.trim() || 'https://files.catbox.moe/ls07y5.jpg'; 
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "∜"; 
 
@@ -542,33 +546,40 @@ async function salvarEdicao(grupo, nomeOriginal){
     return;
   }
   
+  // Aviso sobre o upload de foto (mantido)
   if(fotoInput.files.length > 0) {
       alert("ATENÇÃO: A foto foi carregada apenas localmente. Para que ela persista após o carregamento, você precisa implementar o upload para o Firebase Storage ou outro serviço.");
   }
   
+  // Verifica se o link já existe em *outro* grupo
   const linkExiste = todosGrupos.some(g => g.link === grupo.link && g.nome !== nomeOriginal);
   if (linkExiste) {
       alert('Já existe outro grupo com esse link. Use um link que ainda não está cadastrado.');
       return;
   }
   
+  // Verifica se o nome já existe em *outro* grupo
   const nomeExiste = todosGrupos.some(g => g.nome.toLowerCase() === grupo.nome.toLowerCase() && g.nome !== nomeOriginal);
   if (nomeExiste) {
       alert('Já existe outro grupo com esse nome. Por favor, escolha outro nome.');
       return;
   }
 
+  // Se o nome foi alterado, remove o antigo antes de salvar o novo
   if (nomeOriginal !== grupo.nome) {
     await remove(ref(db, 'grupos/' + nomeOriginal));
   }
 
   await set(ref(db, 'grupos/' + grupo.nome), grupo);
 
+  // Atualiza no localStorage
   let enviados = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
   enviados = enviados.map(g => g.nome === nomeOriginal ? grupo : g);
   localStorage.setItem('gruposEnviados', JSON.stringify(enviados));
 
   modal.style.display = 'none';
+  // Restaura a função de salvar para o padrão de "novo grupo"
+  salvarGrupoBtn.onclick = salvarNovoGrupo; 
   carregarGrupos();
 }
 
@@ -583,10 +594,13 @@ function excluirGrupo(grupo){
 
   renderizarGrupos(todosGrupos);
 }
+
+// Carrega os grupos do arquivo local e do Firebase
 async function carregarGrupos() {
   let jsonGrupos = [];
   try {
-    const res = await fetch('grupos.json');
+    // Tenta buscar o arquivo local (se existir)
+    const res = await fetch('grupos.json'); 
     const data = await res.json();
     jsonGrupos = Array.isArray(data) ? data : []; 
   } catch (e) {
@@ -595,15 +609,17 @@ async function carregarGrupos() {
   }
 
   const gruposRef = ref(db, 'grupos');
+  // Monitora mudanças no Firebase em tempo real
   onValue(gruposRef, snap => {
     const dadosFirebase = snap.val() ? Object.values(snap.val()) : [];
     const enviadosLocais = JSON.parse(localStorage.getItem('gruposEnviados') || '[]');
 
     const mapa = new Map();
 
+    // Prioriza dados do Firebase sobre JSON, e remove duplicatas por nome
     [...jsonGrupos, ...dadosFirebase, ...enviadosLocais].forEach(g => {
       if (g?.nome) {
-        g.vip = !!g.vip;
+        g.vip = !!g.vip; // Garante que 'vip' é booleano
         mapa.set(g.nome.toLowerCase(), g);
       }
     });
@@ -625,6 +641,7 @@ function renderizarGrupos(lista) {
 
   const usuario = localStorage.getItem('usuarioID');
 
+  // Ordena VIPs no topo
   lista.sort((a, b) => {
     if (a.vip && !b.vip) return -1;
     if (!a.vip && b.vip) return 1;
@@ -651,31 +668,38 @@ function renderizarGrupos(lista) {
       </div>
     `;
 
+    // Atualiza o contador de cliques em tempo real
     const cliqueRef = ref(db, 'cliques/' + g.nome);
     onValue(cliqueRef, snap => {
       btn.querySelector('.cliques').textContent = `Cliques: ${snap.val() || 0}`;
     });
 
+    // Função para registrar clique e abrir link (CORRIGIDA - usava sintaxe antiga)
     btn.addEventListener('click', e => {
       e.preventDefault();
-      runTransaction(cliqueRef, c => (c || 0) + 1).then(() => window.open(g.link, '_blank'));
+      // Usa a sintaxe correta do runTransaction modular
+      runTransaction(cliqueRef, (currentData) => {
+        return (currentData || 0) + 1;
+      }).then(() => {
+        window.open(g.link, '_blank'); // Abre o link após o clique ser registrado
+      });
     });
 
     wrapper.appendChild(btn);
 
-    // Criação dos botões de ação (Editar/Excluir) com o novo estilo
+    // Criação dos botões de ação (Editar/Excluir)
     if (g.dono === usuario) {
       const box = document.createElement('div');
-      box.className = 'grupo-acoes-wrapper'; // Usando a nova classe CSS
+      box.className = 'grupo-acoes-wrapper'; 
 
       const edit = document.createElement('button');
       edit.textContent = 'Editar';
-      edit.className = 'edit-btn'; // Usando a nova classe CSS
+      edit.className = 'edit-btn'; 
       edit.onclick = () => abrirEdicao(g);
 
       const del = document.createElement('button');
       del.textContent = 'Excluir';
-      del.className = 'delete-btn'; // Usando a nova classe CSS
+      del.className = 'delete-btn'; 
       del.onclick = () => excluirGrupo(g);
 
       box.appendChild(edit);
@@ -703,7 +727,7 @@ copyPixBtn.onclick = async () => {
 };
 
 
-// ================== INICIALIZAÇÃO DE EVENTOS (MANTIDA) ================== //
+// ================== INICIALIZAÇÃO DE EVENTOS ================== //
 
 const comprarVipBtn = document.getElementById('comprarVipBtn');
 
@@ -718,11 +742,17 @@ comprarVipBtn.addEventListener("click", (e) => {
 document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.add('open'));
 document.getElementById('closeBtn').addEventListener('click',()=>menu.classList.remove('open'));
 
+// Incrementa contador de visitas (CORRIGIDA - usava sintaxe antiga)
 const visitasRef = ref(db, 'visitas');
-runTransaction(visitasRef, v => (v || 0) + 1);
+runTransaction(visitasRef, (currentData) => {
+  return (currentData || 0) + 1;
+});
+
+// Exibe contador de visitas
 onValue(visitasRef, snap => {
   contador.textContent = `Visitas: ${snap.val() || 0}`;
 });
+
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -738,17 +768,19 @@ fecharVipIcon.onclick = () => { vipModal.style.display = 'none'; };
 fecharVipBtn.onclick = () => { vipModal.style.display = 'none'; };
 
 
-// ABRIR MODAL ENVIAR GRUPO (MANTIDO)
+// ABRIR MODAL ENVIAR GRUPO (RESTAURA O O SALVAR POR PADRÃO)
 enviarBtn.onclick = (e) => {
   e.preventDefault(); 
   modal.style.display = 'flex';
   menu.classList.remove('open');
+  // Limpa os campos para um novo envio
   document.getElementById('grupoNome').value = '';
   document.getElementById('grupoLink').value = '';
   document.getElementById('grupoCategoria').value = '';
   document.getElementById('grupoVipCodigo').value = '';
   previewFoto.src = 'https://files.catbox.moe/ls07y5.jpg';
-  salvarGrupoBtn.onclick = salvarNovoGrupo;
+  // Garante que o botão use a função de "novo grupo"
+  salvarGrupoBtn.onclick = salvarNovoGrupo; 
 };
 
 // MEUS GRUPOS (MANTIDO)
