@@ -342,8 +342,12 @@ const copyPixBtn = document.getElementById('copy-pix-btn');
 
 let todosGrupos = [];
 
-// Regex para validar link de convite do WhatsApp (MANTIDO)
-const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}$/;
+// ==============================================================================
+// 🌟 REGEX CORRIGIDO PARA ACEITAR ?mode=...
+// A inclusão de (\?.*)? no final permite que o link tenha parâmetros de consulta.
+// ==============================================================================
+const WHATSAPP_LINK_REGEX = /^https?:\/\/(chat\.)?whatsapp\.com\/(invite\/)?[A-Za-z0-9]{22}(\?.*)?$/;
+
 
 // ================== CRIAÇÃO E MANIPULAÇÃO DO MODAL DE GRUPO (MANTIDO) ================== //
 
@@ -372,7 +376,7 @@ async function salvarNovoGrupo() {
   const categoria = document.getElementById('grupoCategoria').value;
   const vipCodigo = document.getElementById('grupoVipCodigo').value.trim();
 
-  // Validação conforme solicitado: Nome, Link do WhatsApp e Categoria OBRIGATÓRIOS
+  // Validação CORRIGIDA usando o novo Regex
   if (!nome) {
     alert('O nome do grupo é obrigatório.');
     return;
@@ -448,6 +452,7 @@ async function salvarEdicao(grupo, nomeOriginal){
   grupo.categoria = document.getElementById('grupoCategoria').value;
   grupo.vip = document.getElementById('grupoVipCodigo').value.trim() === "∜"; 
 
+  // Validação CORRIGIDA usando o novo Regex
   if (!grupo.nome || !WHATSAPP_LINK_REGEX.test(grupo.link) || !grupo.categoria) {
     alert('Preencha corretamente o nome, link válido do WhatsApp e a categoria!');
     return;
@@ -690,7 +695,7 @@ document.getElementById('termosLink').onclick = (e) => {
       <li>Os grupos VIPs são destacados apenas para fins de visibilidade dentro do site.</li>
       <li>Podemos alterar os termos de uso a qualquer momento, sendo sua responsabilidade consultar atualizações.</li>
       <li>O uso do site é gratuito, mas o envio de grupos e pagamentos VIP seguem as regras aqui descritas.</li>
-    </ul>
+      </ul>
     <p>Se você não concorda com estes termos, por favor, não utilize o site.</p>
   `;
   modalTermos.style.display = "flex";
